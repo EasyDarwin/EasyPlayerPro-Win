@@ -3,7 +3,7 @@
 #include "EasyPlayerProDlg.h"
 #include "afxdialogex.h"
 
-
+#include "xmlConfig.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -72,6 +72,7 @@ BEGIN_MESSAGE_MAP(CLivePlayerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_SHOWNTOSCALE, &CLivePlayerDlg::OnBnClickedCheckShowntoscale)
 	ON_WM_MOUSEWHEEL()
 	ON_BN_CLICKED(IDC_CHECKMULTIPLEX, &CLivePlayerDlg::OnBnClickedCheckmultiplex)
+	ON_BN_CLICKED(IDC_CHECK_FULLSCREEN, &CLivePlayerDlg::OnBnClickedCheckFullscreen)
 END_MESSAGE_MAP()
 
 
@@ -112,6 +113,29 @@ BOOL CLivePlayerDlg::OnInitDialog()
 
 	CreateComponents();
 
+	PRO_CONFIG_T	proConfig;
+	XMLConfig		xmlConfig;
+	memset(&proConfig, 0x00, sizeof(PRO_CONFIG_T));
+	xmlConfig.LoadConfig(XML_CONFIG_FILENAME, &proConfig);
+
+
+	if (NULL!=pVideoWindow)		pVideoWindow->channels		=	proConfig.splitWindow;
+	if (NULL != pComboxSplitScreen)
+	{
+		if (4 == proConfig.splitWindow)	pComboxSplitScreen->SetCurSel(0);
+		else if (8 == proConfig.splitWindow)	pComboxSplitScreen->SetCurSel(1);
+		else if (9 == proConfig.splitWindow)	pComboxSplitScreen->SetCurSel(2);
+		else if (16 == proConfig.splitWindow)	pComboxSplitScreen->SetCurSel(3);
+	}
+
+
+	if (NULL!=pChkShownToScale)		pChkShownToScale->SetCheck(proConfig.scale);
+	if (NULL!=pChkMultiplex)		pChkMultiplex->SetCheck(proConfig.multiple);
+	if (NULL!=pChkFullScreen)		pChkFullScreen->SetCheck(proConfig.fullScreen);
+	if (proConfig.fullScreen==0x01)
+	{
+		FullScreen();
+	}
 
 	if (NULL != pVideoWindow && NULL!=pVideoWindow->pDlgVideo)
 	{
@@ -119,11 +143,25 @@ BOOL CLivePlayerDlg::OnInitDialog()
 		int idx = 0;
 		for (int i=0; i<_SURV_MAX_WINDOW_NUM; i++)
 		{
-			pVideoWindow->pDlgVideo[i].SetURL((char *)url_header[idx++]);
+			pVideoWindow->pDlgVideo[i].SetURL((char *)url_header[idx++], 0, 1, 1, 1, 3, 1, 0);
 
 			if (idx>=4)	idx = 0;
 		}
 
+		int cfg_channel_num = sizeof(proConfig.channel)/sizeof(proConfig.channel[0]);
+		for (int i=0; i<_SURV_MAX_WINDOW_NUM; i++)
+		{
+			if (i>=cfg_channel_num)		break;
+
+			if ( (int)strlen(proConfig.channel[i].url) < 10)		continue;
+
+			pVideoWindow->pDlgVideo[i].SetURL(proConfig.channel[i].url, 
+				proConfig.scale, proConfig.channel[i].showOSD, 
+				proConfig.channel[i].protocol, proConfig.multiple, 
+				proConfig.channel[i].cache, proConfig.channel[i].showToolbar,
+				proConfig.channel[i].autoPlay);
+		}
+		/*
 		FILE *f = fopen("url.txt", "rb");
 		if (NULL != f)
 		{
@@ -140,7 +178,12 @@ BOOL CLivePlayerDlg::OnInitDialog()
 				}
 			}
 		}
+		*/
 	}
+
+
+
+
 
 	OnCbnSelchangeComboRenderFormat();
 
@@ -224,6 +267,7 @@ void	CLivePlayerDlg::InitialComponents()
 	pVideoWindow		=	NULL;
 	pChkShownToScale	=	NULL;
 	pChkMultiplex		=	NULL;
+	pChkFullScreen		=	NULL;
 	pStaticCopyright	=	NULL;
 
 	RenderFormat	=	RENDER_FORMAT_RGB24_GDI;//RGB565
@@ -237,6 +281,7 @@ void	CLivePlayerDlg::CreateComponents()
 	__CREATE_WINDOW(pComboxRenderFormat, CComboBox,		IDC_COMBO_RENDER_FORMAT);
 	__CREATE_WINDOW(pChkShownToScale, CButton,		IDC_CHECK_SHOWNTOSCALE);
 	__CREATE_WINDOW(pChkMultiplex, CButton,		IDC_CHECKMULTIPLEX);
+	__CREATE_WINDOW(pChkFullScreen, CButton,		IDC_CHECK_FULLSCREEN);
 	__CREATE_WINDOW(pStaticCopyright, CStatic,		IDC_STATIC_COPYRIGHT);
 
 	pStaticCopyright->ShowWindow(FALSE);
@@ -244,6 +289,7 @@ void	CLivePlayerDlg::CreateComponents()
 
 	if (NULL != pChkShownToScale)		pChkShownToScale->SetWindowText(TEXT("按比例显示"));
 	if (NULL != pChkMultiplex)			pChkMultiplex->SetWindowText(TEXT("复用源"));
+	if (NULL != pChkFullScreen)			pChkFullScreen->SetWindowText(TEXT("全屏"));
 
 	if (NULL == pVideoWindow)
 	{
@@ -268,8 +314,8 @@ void	CLivePlayerDlg::CreateComponents()
 		pComboxSplitScreen->AddString(TEXT("8画面"));
 		pComboxSplitScreen->AddString(TEXT("9画面"));
 		pComboxSplitScreen->AddString(TEXT("16画面"));
-		pComboxSplitScreen->AddString(TEXT("36画面"));
-		pComboxSplitScreen->AddString(TEXT("64画面"));
+		//pComboxSplitScreen->AddString(TEXT("36画面"));
+		//pComboxSplitScreen->AddString(TEXT("64画面"));
 		pComboxSplitScreen->SetCurSel(0);
 	}
 	if (NULL != pComboxRenderFormat)
@@ -308,6 +354,11 @@ void	CLivePlayerDlg::UpdateComponents()
 	CRect	rcMultiplex;
 	rcMultiplex.SetRect(rcShownToScale.right+10, rcShownToScale.top, rcShownToScale.right+10+70, rcShownToScale.bottom);
 	__MOVE_WINDOW(pChkMultiplex, rcMultiplex);
+
+	CRect	rcFullScreen;
+	rcFullScreen.SetRect(rcMultiplex.right+10, rcMultiplex.top, rcMultiplex.right+10+70, rcMultiplex.bottom);
+	__MOVE_WINDOW(pChkFullScreen, rcFullScreen);
+	
 
 	CRect	rcCopyright;
 	rcCopyright.SetRect(rcClient.right-200, rcSplitScreen.top+5, rcClient.right-2, rcClient.bottom);
@@ -641,3 +692,46 @@ BOOL CLivePlayerDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 }
 
 
+
+
+
+void	CLivePlayerDlg::FullScreen()
+{
+	INT		x, y, w, h;
+	DWORD dwStyle = GetWindowLong( this->m_hWnd, GWL_STYLE );
+
+	static bool bFullScreen = false;
+
+	bFullScreen = !bFullScreen;
+	if (bFullScreen)
+	{
+		x = 0;
+		y = 0;
+		w = GetSystemMetrics(SM_CXSCREEN);
+		h = GetSystemMetrics(SM_CYSCREEN);
+
+		//SetWindowPos(NULL, 0, 0, w, h, 0);
+		// 去掉标题栏  
+		ModifyStyle(WS_CAPTION, 0); 
+		 // 去掉边框
+		ModifyStyleEx(WS_EX_DLGMODALFRAME, 0);  
+		//窗口位置和大小保持原来不变
+		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED); 
+		//最大化窗口
+		ShowWindow(SW_MAXIMIZE);
+	}
+	else
+	{
+		ModifyStyle(0, WS_CAPTION);
+		ModifyStyleEx(0, WS_EX_DLGMODALFRAME);
+		//SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+		ShowWindow(SW_NORMAL);
+	}
+
+}
+
+
+void CLivePlayerDlg::OnBnClickedCheckFullscreen()
+{
+	FullScreen();
+}

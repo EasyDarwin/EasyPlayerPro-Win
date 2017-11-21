@@ -90,7 +90,7 @@ void CDlgVideo::OnLButtonDblClk(UINT nFlags, CPoint point)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 
 	HWND hWnd = ::GetParent(GetSafeHwnd());
-	::PostMessageW(hWnd, WM_WINDOW_MAXIMIZED, m_WindowId, 0);
+	::SendMessageW(hWnd, WM_WINDOW_MAXIMIZED, m_WindowId, 0);
 
 	CDialogEx::OnLButtonDblClk(nFlags, point);
 }
@@ -143,18 +143,41 @@ void	CDlgVideo::SetWindowId(int _windowId)
 		//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://192.168.1.100"));
 	}
 }
-void	CDlgVideo::SetURL(char *url)
+void	CDlgVideo::SetURL(char *url, int scale, int osd, int tcp, int multiple, int cache, int showToolbar, int autoplay)
 {
 	wchar_t wszURL[128] = {0};
 	MByteToWChar(url, wszURL, sizeof(wszURL)/sizeof(wszURL[0]));
 	if (NULL != pEdtURL)		pEdtURL->SetWindowText(wszURL);
+
+	if (NULL != pChkOSD)		pChkOSD->SetCheck(osd);
+	if (NULL != pChkTCP)		pChkTCP->SetCheck(tcp);
+	if (NULL != pSliderCache)	pSliderCache->SetPos(cache);
+
+	shownToScale = scale;
+	sourceMultiplex = multiple;
+
+	if (showToolbar==0x00)
+	{
+		pEdtURL->ShowWindow(SW_HIDE);
+		pChkOSD->ShowWindow(SW_HIDE);
+		pChkTCP->ShowWindow(SW_HIDE);
+		pSliderCache->ShowWindow(SW_HIDE);
+		pBtnPreview->ShowWindow(SW_HIDE);
+	}
+
+	if (autoplay==0x01)
+	{
+		OnBnClickedButtonPreview();
+	}
+
+
 }
 
-void	CDlgVideo::SetShownToScale(int shownToScale)
+void	CDlgVideo::SetShownToScale(int _shownToScale)
 {
 	if (m_ChannelId > 0)
 	{
-		//Player_SetShownToScale(m_ChannelId, shownToScale);
+		shownToScale = _shownToScale;
 		libEasyPlayerPro_SetScaleDisplay(playerHandle, m_ChannelId, shownToScale, RGB(0x26,0x26,0x26));
 	}
 }
@@ -207,10 +230,15 @@ void	CDlgVideo::UpdateComponents()
 	GetClientRect(&rcClient);
 	if (rcClient.IsRectEmpty())		return;
 
+	bool bShowToolbar = true;
+	if (NULL != pEdtURL && (!pEdtURL->IsWindowVisible()))	bShowToolbar = false;
+
 	CRect	rcRender;
-	rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-20);
+	rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-(bShowToolbar?20:0));
 	__MOVE_WINDOW(pDlgRender, rcRender);
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
+
+	if (! bShowToolbar)	return;
 
 	CRect	rcURL;
 	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-200, rcClient.bottom);
@@ -319,6 +347,8 @@ void CDlgVideo::OnBnClickedButtonPreview()
 			//libEasyPlayerPro_StartPlaySound(playerHandle, m_ChannelId);				//播放声音
 			if (NULL != pDlgRender)	pDlgRender->SetChannelId(m_ChannelId);
 
+			libEasyPlayerPro_SetScaleDisplay(playerHandle, m_ChannelId, shownToScale, RGB(0x26,0x26,0x26));
+
 			OnBnClickedCheckOsd();
 
 			if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Stop"));
@@ -405,9 +435,11 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 	}
 	else if (callbackType == EASY_TYPE_FILE_DURATION)
 	{
+		/*
 		wchar_t wszLog[128] = {0};
 		wsprintf(wszLog, TEXT("总时长: %u\n"), frameInfo->timestamp_sec);
 		OutputDebugString(wszLog);
+		*/
 	}
 	else if (callbackType == EASY_TYPE_CODEC_DATA)
 	{
@@ -419,9 +451,11 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 		}
 		else if (mediaType == MEDIA_TYPE_VIDEO)
 		{
+			/*
 			wchar_t wszLog[128] = {0};
 			wsprintf(wszLog, TEXT("播放时间: %u\n"), frameInfo->timestamp_sec);
 			OutputDebugString(wszLog);
+			*/
 		}
 		//else if (mediaType == 
 

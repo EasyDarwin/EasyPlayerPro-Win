@@ -55,6 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -111,6 +112,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="sys_common.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="xmlConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DlgRender.cpp" />
@@ -122,9 +124,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="sys_common.cpp" />
+    <ClCompile Include="xmlConfig.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EasyPlayerPro.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="tinyxml\tinyxml.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

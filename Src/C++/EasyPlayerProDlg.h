@@ -2,7 +2,7 @@
 
 #include "DlgVideo.h"
 
-#define	_SURV_MAX_WINDOW_NUM		64
+#define	_SURV_MAX_WINDOW_NUM		16
 
 typedef struct __VIDEO_NODE_T
 {
@@ -27,6 +27,7 @@ public:
 	VIDEO_NODE_T	*pVideoWindow;		//视频窗口
 	CButton			*pChkShownToScale;	//按比例显示
 	CButton			*pChkMultiplex;		//源复用	IDC_CHECKMULTIPLEX
+	CButton			*pChkFullScreen;	//IDC_CHECK_FULLSCREEN
 	CStatic			*pStaticCopyright;	//IDC_STATIC_COPYRIGHT
 
 	void	InitialComponents();
@@ -34,6 +35,7 @@ public:
 	void	UpdateComponents();
 	void	DeleteComponents();
 	void	UpdateVideoPosition(LPRECT lpRect);
+	void	FullScreen();
 
 // 对话框数据
 	enum { IDD = IDD_PLAYER_DIALOG };
@@ -61,4 +63,5 @@ public:
 	afx_msg void OnBnClickedCheckShowntoscale();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnBnClickedCheckmultiplex();
+	afx_msg void OnBnClickedCheckFullscreen();
 };

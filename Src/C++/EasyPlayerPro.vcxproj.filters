@@ -60,6 +60,9 @@
     <ClInclude Include="sys_common.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="xmlConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EasyPlayerPro.cpp">
@@ -80,10 +83,16 @@
     <ClCompile Include="sys_common.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="xmlConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EasyPlayerPro.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="tinyxml\tinyxml.lib" />
   </ItemGroup>
 </Project>

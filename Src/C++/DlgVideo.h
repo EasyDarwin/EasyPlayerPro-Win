@@ -26,10 +26,11 @@ public:
 	void	SetWindowId(int _windowId);
 	void	SetShownToScale(int shownToScale);
 	void	SetMultiplex(unsigned char multiplex);
-	void	SetURL(char *url);
+	void	SetURL(char *url, int scale, int osd, int tcp, int multiple, int cache, int showToolbar, int autoplay);
 	void	OnMouseWheel(short zDelta, CPoint pt);
 
 	bool	bDrag;
+	int		shownToScale;
 
 	int		m_WindowId;
 	int		m_ChannelId;
