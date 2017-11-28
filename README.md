@@ -1,1 +1,1 @@
-# EasyPlayerPro Windows°æ #
+# EasyPlayerPro Windows #
