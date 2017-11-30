@@ -593,6 +593,8 @@ LRESULT CDlgVideo::OnSetFileDuration(WPARAM wParam, LPARAM lParam)
 {
 	if (NULL != pDlgFileToolbar)		pDlgFileToolbar->SetMaxTime((int)lParam);
 
+	if (pDlgFileToolbar && (!pDlgFileToolbar->IsWindowVisible()) && ((int)lParam>0))		pDlgFileToolbar->ShowWindow(SW_SHOW);
+
 	return 0;
 }
 LRESULT CDlgVideo::OnSetProgress(WPARAM wParam, LPARAM lParam)
