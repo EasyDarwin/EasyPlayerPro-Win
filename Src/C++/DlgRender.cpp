@@ -67,6 +67,10 @@ void CDlgRender::ClosePopupMenu()
 	}
 }
 
+void	CDlgRender::SetSourceType(EASY_CHANNEL_SOURCE_TYPE_ENUM sourceType)
+{
+	mSourceType	=	sourceType;
+}
 
 void	CDlgRender::ResetChannel()
 {
@@ -110,6 +114,7 @@ void CDlgRender::OnLButtonDblClk(UINT nFlags, CPoint point)
 #define POP_MENU_STREAM_SLOW_X2			10024		// 2/1倍速播放
 #define POP_MENU_STREAM_SLOW_X4			10025		// 4/1倍速播放
 #define POP_MENU_STREAM_SLOW_X8			10026		// 8/1倍速播放
+#define POP_MENU_STREAM_SINGLE_FRAME	10027		//单帧
 
 
 #define POP_MENU_VA_WARNING_AREA		10031		//警戒区
@@ -145,36 +150,39 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 			{
 				//播放声音
 				channelStatus.audio = (libEasyPlayerPro_SoundPlaying(playerHandle, mChannelId) == 0x00?0x01:0x00);
-				AppendMenu(hMenu, MF_STRING|(channelStatus.audio==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_AUDIO, TEXT("Audio"));
+				AppendMenu(hMenu, MF_STRING|(channelStatus.audio==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_AUDIO, TEXT("声音监听"));
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 
 				//录像
-				AppendMenu(hMenu, MF_STRING|(channelStatus.recording==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_RECORDING, TEXT("Recording"));
+				AppendMenu(hMenu, MF_STRING|(channelStatus.recording==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_RECORDING, TEXT("手动录像"));
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 
 				//视频翻转
-				AppendMenu(hMenu, MF_STRING|(channelStatus.flip==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_VIDEO_FLIP, TEXT("Video Flip"));
+				AppendMenu(hMenu, MF_STRING|(channelStatus.flip==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_VIDEO_FLIP, TEXT("视频翻转"));
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 
 				//抓图
-				AppendMenu(hMenu, MF_STRING, POP_MENU_SNAPSHOT_BMP, TEXT("Snapshot(BMP)"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_SNAPSHOT_JPG, TEXT("Snapshot(JPG)"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_SNAPSHOT_BMP, TEXT("抓图(BMP)"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_SNAPSHOT_JPG, TEXT("抓图(JPG)"));
 
 				//电子放大
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-				AppendMenu(hMenu, MF_STRING|(channelStatus.digitalZoom==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_ELECTORIC_ZOOM, TEXT("Digital Zoom"));
+				AppendMenu(hMenu, MF_STRING|(channelStatus.digitalZoom==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_ELECTORIC_ZOOM, TEXT("电子放大"));
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-				AppendMenu(hMenu, MF_STRING|(channelStatus.decodeKeyframeOnly==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_DECODE_KEYFRAME_ONLY, TEXT("Only decode keyframes"));
+				AppendMenu(hMenu, MF_STRING|(channelStatus.decodeKeyframeOnly==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_DECODE_KEYFRAME_ONLY, TEXT("仅解码关键帧"));
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 
-				AppendMenu(hMenu, MF_STRING, POP_MENU_STREAM_PAUSE, TEXT("Pause"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_STREAM_RESUME, TEXT("Resume"));
 
-				AppendMenu(hMenu, MF_STRING|(channelStatus.instantReplay==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_INSTANT_REPLAY, TEXT("Instant Replay"));	//即时回放
+				if (EASY_CHANNEL_SOURCE_TYPE_FILE == mSourceType)
+				{
+					AppendMenu(hMenu, MF_STRING, POP_MENU_STREAM_PAUSE, TEXT("暂停"));
+					AppendMenu(hMenu, MF_STRING, POP_MENU_STREAM_RESUME, TEXT("恢复"));
+				}
+				AppendMenu(hMenu, MF_STRING|(channelStatus.instantReplay==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_INSTANT_REPLAY, TEXT("即时回放"));	//即时回放
 		
 
 				//AppendMenu(hMenu, MF_STRING, POP_MENU_STREAM_PREVIOUS_FRAME, TEXT("Previous Frame"));
@@ -183,24 +191,30 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 				if (channelStatus.instantReplay == 0x01)
 				{
 					AppendMenu(hMenu, MF_STRING|(channelStatus.instantReplaySave==0x01?MF_CHECKED:MF_UNCHECKED), 
-						POP_MENU_STREAM_INSTANT_REPLAY_RECORDING, TEXT("Instant Replay Save"));	//即时回放保存
+						POP_MENU_STREAM_INSTANT_REPLAY_RECORDING, TEXT("即时回放另存为"));	//即时回放保存
 				}
 
-				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+				if (EASY_CHANNEL_SOURCE_TYPE_FILE == mSourceType)
+				{
+					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 
-				AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X2?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X2, TEXT("x2"));
-				AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X4?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X4, TEXT("x4"));
-				AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X8?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X8, TEXT("x8"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X2?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X2, TEXT("快进(x2)"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X4?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X4, TEXT("快进(x4)"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X8?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X8, TEXT("快进(x8)"));
 
-				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-				AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_NORMAL?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_NORMAL_X1, TEXT("x1"));
+					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_NORMAL?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_NORMAL_X1, TEXT("正常(x1)"));
 		
-				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 
-				AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X2?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X2, TEXT("1/2"));
-				AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X4?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X4, TEXT("1/4"));
-				AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X8?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X8, TEXT("1/8"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X2?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X2, TEXT("慢放(1/2x)"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X4?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X4, TEXT("慢放(1/4x)"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X8?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X8, TEXT("慢放(1/8x)"));
+
+					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==POP_MENU_STREAM_SINGLE_FRAME?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SINGLE_FRAME, TEXT("单帧"));
+				}
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
@@ -208,13 +222,13 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 				//if (channelStatus.videoAnalysis == 0x01)
 				{
 					RENDER_MODE_ENUM	renderMode = libVA_GetRenderMode(playerHandle,mChannelId);
-					AppendMenu(hMenu, MF_STRING|(renderMode==RENDER_MODE_ZONE?MF_CHECKED:MF_UNCHECKED), POP_MENU_VA_WARNING_AREA, TEXT("Warning Area"));
+					AppendMenu(hMenu, MF_STRING|(renderMode==RENDER_MODE_ZONE?MF_CHECKED:MF_UNCHECKED), POP_MENU_VA_WARNING_AREA, TEXT("警戒区"));
 				}
 
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_SET_OVERLAY_TEXT, TEXT("SetOverlayText"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_CLEAR_OVERLAY_TEXT, TEXT("Clear Overlay Text"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_SET_OVERLAY_TEXT, TEXT("设置叠加文字"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_CLEAR_OVERLAY_TEXT, TEXT("清除叠加文字"));
 
 				CPoint	pMousePosition;
 				GetCursorPos(&pMousePosition);
@@ -410,6 +424,12 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 	case POP_MENU_STREAM_SLOW_X8:
 		{
 			channelStatus.playSpeed = PLAY_SPEED_SLOW_X8;
+			libEasyPlayerPro_SetPlaySpeed(playerHandle, mChannelId, (PLAY_SPEED_ENUM)channelStatus.playSpeed);
+		}
+		break;
+	case POP_MENU_STREAM_SINGLE_FRAME:
+		{
+			channelStatus.playSpeed = PLAY_SPEED_SINGLE_FRAME;
 			libEasyPlayerPro_SetPlaySpeed(playerHandle, mChannelId, (PLAY_SPEED_ENUM)channelStatus.playSpeed);
 		}
 		break;

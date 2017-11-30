@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DlgRender.h"
+#include "DlgFileToolbar.h"
 // CDlgVideo ¶Ô»°¿ò
 
 #define		DIALOG_BASE_BACKGROUND_COLOR		RGB(0x75,0x75,0x75)
@@ -41,6 +42,7 @@ public:
 	CButton *pChkTCP;		//IDC_CHECK_TCP
 	CSliderCtrl	*pSliderCache;	//IDC_SLIDER_CACHE
 	CButton	*pBtnPreview;	//IDC_BUTTON_PREVIEW
+	CDlgFileToolbar		*pDlgFileToolbar;
 	void	InitialComponents();
 	void	CreateComponents();
 	void	UpdateComponents();
@@ -58,6 +60,10 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg LRESULT OnRecordingComplete(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnSetFileDuration(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnSetProgress(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnSeekFile(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnPlayComplete(WPARAM wParam, LPARAM lParam);
 public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);

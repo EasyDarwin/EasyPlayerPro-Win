@@ -63,6 +63,9 @@
     <ClInclude Include="xmlConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DlgFileToolbar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EasyPlayerPro.cpp">
@@ -84,6 +87,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="xmlConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgFileToolbar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

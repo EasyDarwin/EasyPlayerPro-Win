@@ -35,11 +35,13 @@ public:
 	void	SetChannelId(int _channelId)	{mChannelId = _channelId;}
 	void	OnMouseWheel(short zDelta, CPoint pt);
 	void	SetRecordingFlag(int flag);
+	void	SetSourceType(EASY_CHANNEL_SOURCE_TYPE_ENUM sourceType);
 
 	int		mChannelId;
 	CHANNELSTATUS	channelStatus;
 	HMENU	hMenu;
 	void	ClosePopupMenu();
+	EASY_CHANNEL_SOURCE_TYPE_ENUM	mSourceType;
 
 	bool	mDrag;
 	POINT	startPoint;

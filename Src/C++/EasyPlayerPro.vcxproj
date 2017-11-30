@@ -104,6 +104,7 @@
     <None Include="res\LivePlayer.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DlgFileToolbar.h" />
     <ClInclude Include="DlgRender.h" />
     <ClInclude Include="DlgVideo.h" />
     <ClInclude Include="EasyPlayerPro.h" />
@@ -115,6 +116,7 @@
     <ClInclude Include="xmlConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DlgFileToolbar.cpp" />
     <ClCompile Include="DlgRender.cpp" />
     <ClCompile Include="DlgVideo.cpp" />
     <ClCompile Include="EasyPlayerPro.cpp" />

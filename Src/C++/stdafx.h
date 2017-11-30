@@ -42,6 +42,10 @@
 
 #define	WM_WINDOW_MAXIMIZED		(WM_USER+2001)
 #define	WM_MANU_RECORDING		(WM_USER+2002)
+#define WM_SET_FILE_DURATION	(WM_USER+2003)
+#define	WM_SET_FILE_PROGRESS	(WM_USER+2004)
+#define WM_SEEK_FILE					(WM_USER+2005)
+#define	WM_PLAY_COMPLETE			(WM_USER+2006)
 
 #define __CREATE_WINDOW(_x, _class, _id) {if (NULL == _x) {_x = (_class*)GetDlgItem(_id);}}
 #define __MOVE_WINDOW(x, _rect)	{if (NULL != x) {x->MoveWindow(&_rect);}}
@@ -51,6 +55,7 @@
 
 bool MByteToWChar(LPCSTR lpcszStr, LPWSTR lpwszStr, DWORD dwSize);
 bool WCharToMByte(LPCWSTR lpcwszStr, LPSTR lpszStr, DWORD dwSize);
+int CheckFolder(wchar_t *folderName, int bCreate);
 
 extern RENDER_FORMAT		RenderFormat;
 extern PLAYER_HANDLE		playerHandle;

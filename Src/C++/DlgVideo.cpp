@@ -46,6 +46,10 @@ BEGIN_MESSAGE_MAP(CDlgVideo, CDialogEx)
 	ON_WM_HSCROLL()
 	ON_WM_RBUTTONUP()
 	ON_MESSAGE(WM_RECORDING_CMPLETE, OnRecordingComplete)
+	ON_MESSAGE(WM_SET_FILE_DURATION, OnSetFileDuration)
+	ON_MESSAGE(WM_SET_FILE_PROGRESS, OnSetProgress)
+	ON_MESSAGE(WM_SEEK_FILE, OnSeekFile)
+	ON_MESSAGE(WM_PLAY_COMPLETE, OnPlayComplete)
 	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
@@ -90,7 +94,10 @@ void CDlgVideo::OnLButtonDblClk(UINT nFlags, CPoint point)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 
 	HWND hWnd = ::GetParent(GetSafeHwnd());
-	::SendMessageW(hWnd, WM_WINDOW_MAXIMIZED, m_WindowId, 0);
+	if (NULL != hWnd)
+	{
+		::SendMessageW(hWnd, WM_WINDOW_MAXIMIZED, m_WindowId, 0);
+	}
 
 	CDialogEx::OnLButtonDblClk(nFlags, point);
 }
@@ -188,6 +195,7 @@ void	CDlgVideo::SetMultiplex(unsigned char multiplex)
 void	CDlgVideo::InitialComponents()
 {
 	pDlgRender	=	NULL;
+	pDlgFileToolbar	=	NULL;
 	pEdtURL		=	NULL;
 	//pEdtUsername=	NULL;
 	//pEdtPassword=	NULL;
@@ -204,6 +212,12 @@ void	CDlgVideo::CreateComponents()
 		pDlgRender = new CDlgRender();
 		pDlgRender->Create(IDD_DIALOG_RENDER, this);
 		pDlgRender->ShowWindow(SW_SHOW);
+	}
+	if (NULL == pDlgFileToolbar)
+	{
+		pDlgFileToolbar = new CDlgFileToolbar();
+		pDlgFileToolbar->Create(CDlgFileToolbar::IDD, this);
+		pDlgFileToolbar->ShowWindow(SW_HIDE);
 	}
 
 	__CREATE_WINDOW(pEdtURL,		CEdit,		IDC_EDIT_RTSP_URL);
@@ -233,15 +247,27 @@ void	CDlgVideo::UpdateComponents()
 	bool bShowToolbar = true;
 	if (NULL != pEdtURL && (!pEdtURL->IsWindowVisible()))	bShowToolbar = false;
 
+	bool bShowFileToolbar = false;
+	if (pDlgFileToolbar && pDlgFileToolbar->IsWindowVisible())		bShowFileToolbar = true;
+
 	CRect	rcRender;
 	rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-(bShowToolbar?20:0));
+	if (bShowFileToolbar)	rcRender.bottom-=20;
 	__MOVE_WINDOW(pDlgRender, rcRender);
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
+
+
+	CRect	rcFileToolbar;
+	if (bShowFileToolbar)
+	{
+		rcFileToolbar.SetRect(rcRender.left, rcRender.bottom, rcRender.right, rcRender.bottom+20);
+		__MOVE_WINDOW(pDlgFileToolbar, rcFileToolbar);
+	}
 
 	if (! bShowToolbar)	return;
 
 	CRect	rcURL;
-	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-200, rcClient.bottom);
+	rcURL.SetRect(rcClient.left, (bShowFileToolbar?rcFileToolbar.bottom+2:rcRender.bottom+2), rcClient.right-200, rcClient.bottom);
 	__MOVE_WINDOW(pEdtURL, rcURL);
 	if (NULL != pEdtURL)		pEdtURL->Invalidate();
 
@@ -270,6 +296,8 @@ void	CDlgVideo::DeleteComponents()
 		m_ChannelId = -1;
 	}
 	__DELETE_WINDOW(pDlgRender);
+	__DELETE_WINDOW(pDlgFileToolbar);
+	
 }
 
 void CDlgVideo::OnBnClickedButtonPreview()
@@ -294,6 +322,9 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 		if (NULL != pDlgRender)			pDlgRender->Invalidate();
 		if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Play"));
+
+		PostMessageW(WM_SET_FILE_DURATION, 0, 0);
+		PostMessageW(WM_SET_FILE_PROGRESS, 0, 0);
 	}
 	else
 	{
@@ -328,6 +359,11 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		else if (0 == strncmp(szURL, "http", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_HLS;
 		else if (0 == strncmp(szURL, "file", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_FILE;
 
+		if (pDlgFileToolbar)
+		{
+			pDlgFileToolbar->ShowWindow(sourceType == EASY_CHANNEL_SOURCE_TYPE_FILE ? SW_SHOW : SW_HIDE);
+		}
+
 		int queueSize = 1024 * 1024 * 2;		//2MB
 		if (sourceType == EASY_CHANNEL_SOURCE_TYPE_HLS)		queueSize = 1024 * 1024 * 5;		//5MB
 
@@ -345,7 +381,11 @@ void CDlgVideo::OnBnClickedButtonPreview()
 			int iPos = pSliderCache->GetPos();
 			libEasyPlayerPro_SetPlayFrameCache(playerHandle, m_ChannelId, iPos);		//设置缓存
 			//libEasyPlayerPro_StartPlaySound(playerHandle, m_ChannelId);				//播放声音
-			if (NULL != pDlgRender)	pDlgRender->SetChannelId(m_ChannelId);
+			if (NULL != pDlgRender)
+			{
+				pDlgRender->SetChannelId(m_ChannelId);
+				pDlgRender->SetSourceType(sourceType);
+			}
 
 			libEasyPlayerPro_SetScaleDisplay(playerHandle, m_ChannelId, shownToScale, RGB(0x26,0x26,0x26));
 
@@ -353,6 +393,8 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 			if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Stop"));
 		}
+
+		UpdateComponents();
 	}
 }
 
@@ -428,6 +470,8 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 	else if (callbackType == EASY_TYPE_DISCONNECT)
 	{
 		OutputDebugString(TEXT("EASY_TYPE_DISCONNECT.\n"));
+		
+		if (NULL!=pLiveVideo)		pLiveVideo->PostMessageW(WM_PLAY_COMPLETE);
 	}
 	else if (callbackType == EASY_TYPE_RECONNECT)
 	{
@@ -435,11 +479,11 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 	}
 	else if (callbackType == EASY_TYPE_FILE_DURATION)
 	{
-		/*
 		wchar_t wszLog[128] = {0};
-		wsprintf(wszLog, TEXT("总时长: %u\n"), frameInfo->timestamp_sec);
+		wsprintf(wszLog, TEXT("EASY_TYPE_FILE_DURATION::总时长: %u\n"), frameInfo->timestamp_sec);
 		OutputDebugString(wszLog);
-		*/
+
+		if (NULL!=pLiveVideo)		pLiveVideo->PostMessageW(WM_SET_FILE_DURATION, 0, (int)frameInfo->timestamp_sec);
 	}
 	else if (callbackType == EASY_TYPE_CODEC_DATA)
 	{
@@ -451,11 +495,11 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 		}
 		else if (mediaType == MEDIA_TYPE_VIDEO)
 		{
-			/*
 			wchar_t wszLog[128] = {0};
 			wsprintf(wszLog, TEXT("播放时间: %u\n"), frameInfo->timestamp_sec);
 			OutputDebugString(wszLog);
-			*/
+
+			if (NULL!=pLiveVideo)		pLiveVideo->PostMessageW(WM_SET_FILE_PROGRESS, 0, (int)frameInfo->timestamp_sec);
 		}
 		//else if (mediaType == 
 
@@ -542,4 +586,35 @@ HBRUSH CDlgVideo::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
 	return hbr;
+}
+
+
+LRESULT CDlgVideo::OnSetFileDuration(WPARAM wParam, LPARAM lParam)
+{
+	if (NULL != pDlgFileToolbar)		pDlgFileToolbar->SetMaxTime((int)lParam);
+
+	return 0;
+}
+LRESULT CDlgVideo::OnSetProgress(WPARAM wParam, LPARAM lParam)
+{
+	if (NULL != pDlgFileToolbar)		pDlgFileToolbar->SetCurrentTime((int)lParam);
+
+	return 0;
+}
+
+LRESULT CDlgVideo::OnSeekFile(WPARAM wParam, LPARAM lParam)
+{
+	unsigned int uiSeekTime = (unsigned int)lParam;
+	libEasyPlayerPro_SeekFile(playerHandle, m_ChannelId, uiSeekTime);
+
+	return 0;
+}
+
+LRESULT CDlgVideo::OnPlayComplete(WPARAM wParam, LPARAM lParam)
+{
+	if (m_ChannelId > 0)
+	{
+		OnBnClickedButtonPreview();
+	}
+	return 0;
 }
