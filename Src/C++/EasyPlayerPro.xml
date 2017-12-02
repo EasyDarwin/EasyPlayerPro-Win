@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<XMLConfig>
+    <SplitWindow>4</SplitWindow>
+    <Scale>0</Scale>
+    <Multiple>1</Multiple>
+    <FullScreen>0</FullScreen>
+    <Channel>
+        <CH No="1" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="2" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="3" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="4" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="5" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="6" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="7" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="8" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="9" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="10" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="11" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="12" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="13" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="14" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="15" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="16" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+    </Channel>
+</XMLConfig>

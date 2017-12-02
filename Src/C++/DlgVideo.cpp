@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "DlgVideo.h"
 #include "afxdialogex.h"
-
+#include "CaptionConfig.h"
 
 // CDlgVideo ¶Ô»°¿ò
 int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, void *userPtr, int mediaType, char *pbuf, EASY_FRAME_INFO *frameInfo);
@@ -307,11 +307,17 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		libEasyPlayerPro_Create(&playerHandle, 128);
 	}
 
+    if (NULL != pDlgRender)
+    {
+        pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->ShowWindow(SW_HIDE);
+    }
+
 	if (m_ChannelId > 0)
 	{
 		//Player_CloseStream(m_ChannelId);
 		libEasyPlayerPro_StopPlayStream(playerHandle, m_ChannelId);
 		libEasyPlayerPro_CloseStream(playerHandle, m_ChannelId);
+        libEasyPlayerPro_ClearOverlayText(playerHandle, m_ChannelId);
 		m_ChannelId = -1;
 
 		if (NULL != pDlgRender)
@@ -389,6 +395,11 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 			libEasyPlayerPro_SetScaleDisplay(playerHandle, m_ChannelId, shownToScale, RGB(0x26,0x26,0x26));
 
+            const std::string *strCap = CCaptionConfig::GetInstance()->GetCaption(szURL);
+            if (NULL != strCap)
+            {
+                libEasyPlayerPro_SetOverlayText(playerHandle, m_ChannelId, strCap->c_str());
+            }
 			OnBnClickedCheckOsd();
 
 			if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Stop"));
@@ -476,6 +487,10 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 	else if (callbackType == EASY_TYPE_RECONNECT)
 	{
 		OutputDebugString(TEXT("EASY_TYPE_RECONNECT.\n"));
+        if (NULL != pLiveVideo && NULL != pLiveVideo->pDlgRender)
+        {
+            pLiveVideo->pDlgRender->PostMessageW(WM_PLAY_ABROTED);
+        }
 	}
 	else if (callbackType == EASY_TYPE_FILE_DURATION)
 	{

@@ -34,6 +34,9 @@
     <None Include="res\APP_MIN.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\nosignal.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EasyPlayerPro.h">
@@ -66,6 +69,12 @@
     <ClInclude Include="DlgFileToolbar.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Caption.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptionConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EasyPlayerPro.cpp">
@@ -90,6 +99,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DlgFileToolbar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Caption.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptionConfig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

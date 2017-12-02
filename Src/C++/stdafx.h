@@ -46,6 +46,7 @@
 #define	WM_SET_FILE_PROGRESS	(WM_USER+2004)
 #define WM_SEEK_FILE					(WM_USER+2005)
 #define	WM_PLAY_COMPLETE			(WM_USER+2006)
+#define	WM_PLAY_ABROTED			(WM_USER+2007)
 
 #define __CREATE_WINDOW(_x, _class, _id) {if (NULL == _x) {_x = (_class*)GetDlgItem(_id);}}
 #define __MOVE_WINDOW(x, _rect)	{if (NULL != x) {x->MoveWindow(&_rect);}}

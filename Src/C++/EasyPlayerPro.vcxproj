@@ -102,8 +102,11 @@
     <None Include="res\EasyPlayerPro.ico" />
     <None Include="res\EasyPlayerPro.rc2" />
     <None Include="res\LivePlayer.ico" />
+    <None Include="res\nosignal.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Caption.h" />
+    <ClInclude Include="CaptionConfig.h" />
     <ClInclude Include="DlgFileToolbar.h" />
     <ClInclude Include="DlgRender.h" />
     <ClInclude Include="DlgVideo.h" />
@@ -116,6 +119,8 @@
     <ClInclude Include="xmlConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Caption.cpp" />
+    <ClCompile Include="CaptionConfig.cpp" />
     <ClCompile Include="DlgFileToolbar.cpp" />
     <ClCompile Include="DlgRender.cpp" />
     <ClCompile Include="DlgVideo.cpp" />
@@ -140,4 +145,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="EasyPlayerPro.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

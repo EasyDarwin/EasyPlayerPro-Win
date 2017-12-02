@@ -5,6 +5,9 @@
 
 #include "./libEasyPlayerPro/libEasyPlayerProAPI.h"
 #include "./libEasyPlayerPro/libVideoAnalysisAPI.h"
+#include "Caption.h"
+#include "DlgVideo.h"
+#include "CaptionConfig.h"
 
 // CDlgRender 对话框
 
@@ -42,6 +45,7 @@ BEGIN_MESSAGE_MAP(CDlgRender, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSEWHEEL()
 	ON_WM_SIZE()
+    ON_MESSAGE(WM_PLAY_ABROTED, &CDlgRender::OnPlayAbroted)
 END_MESSAGE_MAP()
 
 
@@ -227,8 +231,8 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_SET_OVERLAY_TEXT, TEXT("设置叠加文字"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_CLEAR_OVERLAY_TEXT, TEXT("清除叠加文字"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_SET_OVERLAY_TEXT, TEXT("设置标题"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_CLEAR_OVERLAY_TEXT, TEXT("清除标题"));
 
 				CPoint	pMousePosition;
 				GetCursorPos(&pMousePosition);
@@ -474,7 +478,26 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 		break;
 	case POP_MENU_SET_OVERLAY_TEXT:
 		{
-			libEasyPlayerPro_SetOverlayText(playerHandle, mChannelId, "测试叠加文字");
+            CCaption dlgCap;
+            dlgCap.DoModal();
+            if (dlgCap.m_strCaption != "")
+            {
+                // 设置标题
+                char szCap[1024] = {0};
+                WCharToMByte(dlgCap.m_strCaption.GetString(), szCap, sizeof(szCap)/sizeof(char));
+                libEasyPlayerPro_SetOverlayText(playerHandle, mChannelId, szCap);
+
+                // 记录标题
+                CDlgVideo* pDlgWnd = (CDlgVideo*)GetParent();
+                wchar_t wszURL[256] = {0};
+                if (NULL != pDlgWnd->pEdtURL)	pDlgWnd->pEdtURL->GetWindowTextW(wszURL, sizeof(wszURL));
+                if (wcslen(wszURL) >= 1)
+                {
+                    char szURL[256] = {0};
+                    WCharToMByte(wszURL, szURL, sizeof(szURL)/sizeof(szURL[0]));
+                    CCaptionConfig::GetInstance()->AddCaption(szURL, szCap);
+                }
+            }
 		}
 		break;
 	case POP_MENU_CLEAR_OVERLAY_TEXT:
@@ -669,4 +692,12 @@ void CDlgRender::OnSize(UINT nType, int cx, int cy)
 		libVA_UpdateCustomZonePosition(playerHandle, mChannelId, rcClient);
 	}
 
+}
+
+
+afx_msg LRESULT CDlgRender::OnPlayAbroted(WPARAM wParam, LPARAM lParam)
+{
+    GetDlgItem(IDC_STATIC_NOSIGNAL)->ShowWindow(SW_SHOW);GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
+    Invalidate();
+    return 0;
 }

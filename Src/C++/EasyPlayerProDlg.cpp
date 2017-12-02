@@ -4,6 +4,7 @@
 #include "afxdialogex.h"
 
 #include "xmlConfig.h"
+#include "CaptionConfig.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -118,6 +119,8 @@ BOOL CLivePlayerDlg::OnInitDialog()
 	memset(&proConfig, 0x00, sizeof(PRO_CONFIG_T));
 	xmlConfig.LoadConfig(XML_CONFIG_FILENAME, &proConfig);
 
+    // 加载标题配置文件
+    CCaptionConfig::GetInstance()->LoadCaption();
 
 	if (NULL!=pVideoWindow)		pVideoWindow->channels		=	proConfig.splitWindow;
 	if (NULL != pComboxSplitScreen)
@@ -243,6 +246,9 @@ BOOL CLivePlayerDlg::DestroyWindow()
 {
 	libEasyPlayerPro_Release(&playerHandle);
 	DeleteComponents();
+
+    // 保存标题配置
+    CCaptionConfig::GetInstance()->SaveCaption();
 
 	return CDialogEx::DestroyWindow();
 }
@@ -457,6 +463,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 						pVideoWindow->pDlgVideo[n].MoveWindow(&rcTmp);
 						if (! pVideoWindow->pDlgVideo[n].IsWindowVisible())
 							pVideoWindow->pDlgVideo[n].ShowWindow(SW_SHOW);
+                        pVideoWindow->pDlgVideo[n].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 
 
 						n ++;
@@ -488,7 +495,8 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 						pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
-				
+                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
+
 					nLeft += nWidth;
 				}
 				nLeft -= nWidth;
@@ -500,6 +508,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 						pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
+                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 					nTop += nHeight;
 				}
 			
@@ -507,6 +516,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 				pVideoWindow->pDlgVideo[0].MoveWindow(&rcTmp);
 				if (! pVideoWindow->pDlgVideo[0].IsWindowVisible())
 					pVideoWindow->pDlgVideo[0].ShowWindow(SW_SHOW);
+                pVideoWindow->pDlgVideo[0].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 			}
 			break;
 		case 8:		//8分屏
@@ -530,6 +540,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 							pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
+                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 
 					nLeft += nWidth;
 				}
@@ -542,6 +553,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 						pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
+                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 					nTop += nHeight;
 				}
 
@@ -549,6 +561,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 				pVideoWindow->pDlgVideo[0].MoveWindow(&rcTmp);
 				if (! pVideoWindow->pDlgVideo[0].IsWindowVisible())
 					pVideoWindow->pDlgVideo[0].ShowWindow(SW_SHOW);
+                pVideoWindow->pDlgVideo[0].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 
 			}
 			break;
@@ -571,6 +584,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 		rcTmp.SetRect(lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
 		pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].MoveWindow(&rcTmp);
 		pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].ShowWindow(SW_SHOW);
+        pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 	}
 }
 
