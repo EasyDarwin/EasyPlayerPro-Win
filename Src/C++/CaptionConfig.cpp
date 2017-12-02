@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CaptionConfig.h"
-#include "tinyxml/tinystr.h"
 #include "tinyxml/tinyxml.h"
 
 #define	XML_CAPTION_CONFIG_FILENAME "CaptionConfig.xml"
