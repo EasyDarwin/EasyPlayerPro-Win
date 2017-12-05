@@ -28,6 +28,8 @@ public:
 	CButton			*pChkShownToScale;	//按比例显示
 	CButton			*pChkMultiplex;		//源复用	IDC_CHECKMULTIPLEX
 	CButton			*pChkFullScreen;	//IDC_CHECK_FULLSCREEN
+	CStatic			*pStaticVolume;			//IDC_STATIC_VOLUME
+	CSliderCtrl		*pSliderCtrlVolume;	//IDC_SLIDER_VOLUME
 	CStatic			*pStaticCopyright;	//IDC_STATIC_COPYRIGHT
 
 	void	InitialComponents();
@@ -36,6 +38,8 @@ public:
 	void	DeleteComponents();
 	void	UpdateVideoPosition(LPRECT lpRect);
 	void	FullScreen();
+	HBRUSH	m_BrushStatic;
+
 
 // 对话框数据
 	enum { IDD = IDD_PLAYER_DIALOG };
@@ -64,4 +68,6 @@ public:
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnBnClickedCheckmultiplex();
 	afx_msg void OnBnClickedCheckFullscreen();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };
