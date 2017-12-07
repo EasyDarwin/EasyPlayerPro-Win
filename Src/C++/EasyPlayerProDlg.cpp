@@ -74,6 +74,8 @@ BEGIN_MESSAGE_MAP(CLivePlayerDlg, CDialogEx)
 	ON_WM_MOUSEWHEEL()
 	ON_BN_CLICKED(IDC_CHECKMULTIPLEX, &CLivePlayerDlg::OnBnClickedCheckmultiplex)
 	ON_BN_CLICKED(IDC_CHECK_FULLSCREEN, &CLivePlayerDlg::OnBnClickedCheckFullscreen)
+	ON_WM_CTLCOLOR()
+	ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -274,9 +276,13 @@ void	CLivePlayerDlg::InitialComponents()
 	pChkShownToScale	=	NULL;
 	pChkMultiplex		=	NULL;
 	pChkFullScreen		=	NULL;
+	pStaticVolume		=	NULL;
+	pSliderCtrlVolume	=	NULL;
 	pStaticCopyright	=	NULL;
 
 	RenderFormat	=	RENDER_FORMAT_RGB24_GDI;//RGB565
+
+	m_BrushStatic = ::CreateSolidBrush(RGB(0x5b,0x5b,0x5b));
 
 	libEasyPlayerPro_Create(&playerHandle, 128);
 }
@@ -288,6 +294,9 @@ void	CLivePlayerDlg::CreateComponents()
 	__CREATE_WINDOW(pChkShownToScale, CButton,		IDC_CHECK_SHOWNTOSCALE);
 	__CREATE_WINDOW(pChkMultiplex, CButton,		IDC_CHECKMULTIPLEX);
 	__CREATE_WINDOW(pChkFullScreen, CButton,		IDC_CHECK_FULLSCREEN);
+	__CREATE_WINDOW(pStaticVolume, CStatic,		IDC_STATIC_VOLUME);
+	__CREATE_WINDOW(pSliderCtrlVolume, CSliderCtrl,		IDC_SLIDER_VOLUME);
+	
 	__CREATE_WINDOW(pStaticCopyright, CStatic,		IDC_STATIC_COPYRIGHT);
 
 	pStaticCopyright->ShowWindow(FALSE);
@@ -296,6 +305,13 @@ void	CLivePlayerDlg::CreateComponents()
 	if (NULL != pChkShownToScale)		pChkShownToScale->SetWindowText(TEXT("按比例显示"));
 	if (NULL != pChkMultiplex)			pChkMultiplex->SetWindowText(TEXT("复用源"));
 	if (NULL != pChkFullScreen)			pChkFullScreen->SetWindowText(TEXT("全屏"));
+	if (NULL != pSliderCtrlVolume)	
+	{
+		pSliderCtrlVolume->SetRange(0, 100);
+
+		int volume = libEasyPlayerPro_GetAudioVolume(playerHandle);
+		pSliderCtrlVolume->SetPos(volume);
+	}
 
 	if (NULL == pVideoWindow)
 	{
@@ -365,6 +381,12 @@ void	CLivePlayerDlg::UpdateComponents()
 	rcFullScreen.SetRect(rcMultiplex.right+10, rcMultiplex.top, rcMultiplex.right+10+70, rcMultiplex.bottom);
 	__MOVE_WINDOW(pChkFullScreen, rcFullScreen);
 	
+	CRect	rcVolume;
+	rcVolume.SetRect(rcFullScreen.right+10, rcFullScreen.top+5, rcFullScreen.right+10+35, rcFullScreen.bottom);
+	__MOVE_WINDOW(pStaticVolume, rcVolume);
+	rcVolume.SetRect(rcVolume.right+2, rcVolume.top, rcVolume.right+2+160, rcVolume.bottom-3);
+	__MOVE_WINDOW(pSliderCtrlVolume, rcVolume);
+
 
 	CRect	rcCopyright;
 	rcCopyright.SetRect(rcClient.right-200, rcSplitScreen.top+5, rcClient.right-2, rcClient.bottom);
@@ -386,6 +408,8 @@ void	CLivePlayerDlg::DeleteComponents()
 		delete pVideoWindow;
 		pVideoWindow = NULL;
 	}
+
+	DeleteObject(m_BrushStatic);
 }
 
 
@@ -748,4 +772,40 @@ void	CLivePlayerDlg::FullScreen()
 void CLivePlayerDlg::OnBnClickedCheckFullscreen()
 {
 	FullScreen();
+}
+
+
+HBRUSH CLivePlayerDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	switch (nCtlColor)
+	{
+	case CTLCOLOR_STATIC:	
+		{
+			pDC->SetBkColor(RGB(0x5b,0x5b,0x5b));
+			pDC->SetTextColor(DIALOG_BASE_TEXT_COLOR);
+			return m_BrushStatic;
+		}
+		break;
+	default:
+		break;
+	}
+
+	// TODO:  Return a different brush if the default is not desired
+	return hbr;
+}
+
+
+void CLivePlayerDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	if( NULL != pScrollBar && NULL != pSliderCtrlVolume &&
+		pSliderCtrlVolume->GetDlgCtrlID() == pScrollBar->GetDlgCtrlID())
+	{
+		int iPos = pSliderCtrlVolume->GetPos();
+		
+		libEasyPlayerPro_SetAudioVolume(playerHandle, iPos);
+	}
+
+	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
 }
