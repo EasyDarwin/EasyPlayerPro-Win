@@ -2,6 +2,7 @@
 
 #include "DlgRender.h"
 #include "DlgFileToolbar.h"
+#include "DlgBarCaption.h"
 // CDlgVideo ¶Ô»°¿ò
 
 #define		DIALOG_BASE_BACKGROUND_COLOR		RGB(0x75,0x75,0x75)
@@ -43,6 +44,7 @@ public:
 	CSliderCtrl	*pSliderCache;	//IDC_SLIDER_CACHE
 	CButton	*pBtnPreview;	//IDC_BUTTON_PREVIEW
 	CDlgFileToolbar		*pDlgFileToolbar;
+    CDlgBarCaption *pDlgBarCaption;
 	void	InitialComponents();
 	void	CreateComponents();
 	void	UpdateComponents();

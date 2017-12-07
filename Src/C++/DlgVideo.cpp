@@ -196,6 +196,7 @@ void	CDlgVideo::InitialComponents()
 {
 	pDlgRender	=	NULL;
 	pDlgFileToolbar	=	NULL;
+    pDlgBarCaption = NULL;
 	pEdtURL		=	NULL;
 	//pEdtUsername=	NULL;
 	//pEdtPassword=	NULL;
@@ -219,6 +220,12 @@ void	CDlgVideo::CreateComponents()
 		pDlgFileToolbar->Create(CDlgFileToolbar::IDD, this);
 		pDlgFileToolbar->ShowWindow(SW_HIDE);
 	}
+    if (NULL == pDlgBarCaption)
+    {
+        pDlgBarCaption = new CDlgBarCaption();
+        pDlgBarCaption->Create(IDD_DIALOGBAR_CAPTION, this);
+        pDlgBarCaption->ShowWindow(SW_SHOW);
+    }
 
 	__CREATE_WINDOW(pEdtURL,		CEdit,		IDC_EDIT_RTSP_URL);
 	//__CREATE_WINDOW(pEdtUsername,	CEdit,		IDC_EDIT_USERNAME);
@@ -250,9 +257,18 @@ void	CDlgVideo::UpdateComponents()
 	bool bShowFileToolbar = false;
 	if (pDlgFileToolbar && pDlgFileToolbar->IsWindowVisible())		bShowFileToolbar = true;
 
+    bool bShowCaptionBar = false;
+    if (pDlgBarCaption && pDlgBarCaption->IsWindowVisible())		bShowCaptionBar = true;
+
+    CRect	rcCaptionBar;
+    rcCaptionBar.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.top + 20);
+    __MOVE_WINDOW(pDlgBarCaption, rcCaptionBar);
+    if (NULL != pDlgBarCaption)		pDlgBarCaption->Invalidate();
+
 	CRect	rcRender;
 	rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-(bShowToolbar?20:0));
 	if (bShowFileToolbar)	rcRender.bottom-=20;
+    if (bShowCaptionBar)	rcRender.top+=20;
 	__MOVE_WINDOW(pDlgRender, rcRender);
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
@@ -297,7 +313,7 @@ void	CDlgVideo::DeleteComponents()
 	}
 	__DELETE_WINDOW(pDlgRender);
 	__DELETE_WINDOW(pDlgFileToolbar);
-	
+    __DELETE_WINDOW(pDlgBarCaption);
 }
 
 void CDlgVideo::OnBnClickedButtonPreview()
@@ -398,9 +414,11 @@ void CDlgVideo::OnBnClickedButtonPreview()
             const std::string *strCap = CCaptionConfig::GetInstance()->GetCaption(szURL);
             if (NULL != strCap)
             {
-                libEasyPlayerPro_SetOverlayText(playerHandle, m_ChannelId, strCap->c_str());
+                CString str(strCap->c_str());
+                pDlgBarCaption->SetDlgItemText(IDC_STATIC_CAP, str);
+//                libEasyPlayerPro_SetOverlayText(playerHandle, m_ChannelId, strCap->c_str());
             }
-			OnBnClickedCheckOsd();
+//			OnBnClickedCheckOsd();
 
 			if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Stop"));
 		}

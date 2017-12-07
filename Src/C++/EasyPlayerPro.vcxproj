@@ -107,6 +107,7 @@
   <ItemGroup>
     <ClInclude Include="Caption.h" />
     <ClInclude Include="CaptionConfig.h" />
+    <ClInclude Include="DlgBarCaption.h" />
     <ClInclude Include="DlgFileToolbar.h" />
     <ClInclude Include="DlgRender.h" />
     <ClInclude Include="DlgVideo.h" />
@@ -121,6 +122,7 @@
   <ItemGroup>
     <ClCompile Include="Caption.cpp" />
     <ClCompile Include="CaptionConfig.cpp" />
+    <ClCompile Include="DlgBarCaption.cpp" />
     <ClCompile Include="DlgFileToolbar.cpp" />
     <ClCompile Include="DlgRender.cpp" />
     <ClCompile Include="DlgVideo.cpp" />

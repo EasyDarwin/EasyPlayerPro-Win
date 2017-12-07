@@ -75,6 +75,9 @@
     <ClInclude Include="CaptionConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DlgBarCaption.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EasyPlayerPro.cpp">
@@ -105,6 +108,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CaptionConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgBarCaption.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

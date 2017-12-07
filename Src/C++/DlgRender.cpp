@@ -482,13 +482,14 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
             dlgCap.DoModal();
             if (dlgCap.m_strCaption != "")
             {
+                CDlgVideo* pDlgWnd = (CDlgVideo*)GetParent();
                 // 设置标题
                 char szCap[1024] = {0};
                 WCharToMByte(dlgCap.m_strCaption.GetString(), szCap, sizeof(szCap)/sizeof(char));
-                libEasyPlayerPro_SetOverlayText(playerHandle, mChannelId, szCap);
+//                 libEasyPlayerPro_SetOverlayText(playerHandle, mChannelId, szCap);
+                pDlgWnd->pDlgBarCaption->SetDlgItemText(IDC_STATIC_CAP, dlgCap.m_strCaption);
 
                 // 记录标题
-                CDlgVideo* pDlgWnd = (CDlgVideo*)GetParent();
                 wchar_t wszURL[256] = {0};
                 if (NULL != pDlgWnd->pEdtURL)	pDlgWnd->pEdtURL->GetWindowTextW(wszURL, sizeof(wszURL));
                 if (wcslen(wszURL) >= 1)
@@ -502,7 +503,10 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 		break;
 	case POP_MENU_CLEAR_OVERLAY_TEXT:
 		{
-			libEasyPlayerPro_ClearOverlayText(playerHandle, mChannelId);
+            CDlgVideo* pDlgWnd = (CDlgVideo*)GetParent();
+            pDlgWnd->pDlgBarCaption->SetDlgItemText(IDC_STATIC_CAP, _T(""));
+
+//			libEasyPlayerPro_ClearOverlayText(playerHandle, mChannelId);
 
 			//libEasyPlayerPro_SeekFile(playerHandle, mChannelId, 20);
 		}
