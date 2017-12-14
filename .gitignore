@@ -238,3 +238,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+*.manifest
+*.config
+Bin/C#/EasyPlayerProClient.vshost.exe

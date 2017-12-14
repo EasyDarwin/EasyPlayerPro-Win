@@ -38,6 +38,7 @@
             this.视频翻转ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.获取媒体信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.叠加文字ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.区域放大ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.切换显示模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.录制D盘AAA文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,7 +60,6 @@
             this.DecodeType = new System.Windows.Forms.ComboBox();
             this.CachetrackBar = new System.Windows.Forms.TrackBar();
             this.volumn_CB = new System.Windows.Forms.CheckBox();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CachetrackBar)).BeginInit();
             this.SuspendLayout();
@@ -96,7 +96,7 @@
             this.获取播放速度ToolStripMenuItem,
             this.声音ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(178, 334);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(178, 312);
             // 
             // StatisticTML
             // 
@@ -139,6 +139,13 @@
             this.叠加文字ToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.叠加文字ToolStripMenuItem.Text = "叠加文字";
             this.叠加文字ToolStripMenuItem.Click += new System.EventHandler(this.叠加文字ToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 22);
+            this.toolStripMenuItem1.Text = "电子放大";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // 区域放大ToolStripMenuItem
             // 
@@ -271,7 +278,7 @@
             this.StreamURI.Name = "StreamURI";
             this.StreamURI.Size = new System.Drawing.Size(314, 21);
             this.StreamURI.TabIndex = 6;
-            this.StreamURI.Text = "rtmp://live.hkstv.hk.lxdns.com/live/hks";
+            this.StreamURI.Text = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
             // 
             // tcpCheck
             // 
@@ -327,13 +334,6 @@
             this.volumn_CB.Text = "声音";
             this.volumn_CB.UseVisualStyleBackColor = true;
             this.volumn_CB.CheckedChanged += new System.EventHandler(this.volumn_CB_CheckedChanged);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 22);
-            this.toolStripMenuItem1.Text = "电子放大";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // PalyerForm
             // 

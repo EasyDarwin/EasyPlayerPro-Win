@@ -45,9 +45,11 @@ namespace EasyPlayerProClient
                 EASY_CHANNEL_SOURCE_TYPE_ENUM sourceType = GetSourceTypeByStreamURI(streamURI);
                 bool overtcpType = tcpCheck.CheckState == CheckState.Checked;
 
-                channelID = PlayerSDK.LibEasyPlayerPro_OpenStream(palyerHandle, sourceType, streamURI, MEDIA_TYPE.MEDIA_TYPE_VIDEO, RealProCallBack, IntPtr.Zero, overTcp: overtcpType);
+                int queueSize = sourceType == EASY_CHANNEL_SOURCE_TYPE_ENUM.EASY_CHANNEL_SOURCE_TYPE_HLS ? 1024 * 1024 * 5 : 1024 * 1024 * 2;
+                channelID = PlayerSDK.LibEasyPlayerPro_OpenStream(palyerHandle, sourceType, streamURI, MEDIA_TYPE.MEDIA_TYPE_VIDEO | MEDIA_TYPE.MEDIA_TYPE_AUDIO | MEDIA_TYPE.MEDIA_TYPE_EVENT, RealProCallBack, IntPtr.Zero, overTcp: overtcpType, queueSize: (uint)queueSize);
 
                 ret = PlayerSDK.LibEasyPlayerPro_StartPlayStream(palyerHandle, channelID, this.playerPanel.Handle, renderFormat);
+                //PlayerSDK.LibEasyPlayerPro_SetPlayFrameCache(palyerHandle, channelID, 6);
                 if (ret == 0)
                 {
                     PlayerSDK.LibEasyPlayerPro_StartPlaySound(palyerHandle, channelID);
@@ -301,7 +303,7 @@ namespace EasyPlayerProClient
 
         private void PalyerForm_Load(object sender, EventArgs e)
         {
-            if (PlayerSDK.LibEasyPlayerPro_Create(ref palyerHandle, 3) == 0)
+            if (PlayerSDK.LibEasyPlayerPro_Create(ref palyerHandle, 128) == 0)
                 isInit = true;
             RealProCallBack = new PlayerSDK.EasyPlayerProCallBack(RealProSourceCallBack);
 
@@ -341,12 +343,11 @@ namespace EasyPlayerProClient
             if (checkState)
             {
                 ret = PlayerSDK.LibEasyPlayerPro_StartPlaySound(palyerHandle, channelID);
-
                 (sender as CheckBox).CheckState = CheckState.Checked;
             }
             else
             {
-                ret = PlayerSDK.LibEasyPlayerPro_StopPlaySound(palyerHandle);
+                ret = PlayerSDK.LibEasyPlayerPro_StopPlaySound(palyerHandle, channelID);
                 (sender as CheckBox).CheckState = CheckState.Unchecked;
             }
         }
@@ -401,12 +402,12 @@ namespace EasyPlayerProClient
                 return EASY_CHANNEL_SOURCE_TYPE_ENUM.EASY_CHANNEL_SOURCE_TYPE_RTSP;
             if (_streamUri.IndexOf("rtmp") == 0)
                 return EASY_CHANNEL_SOURCE_TYPE_ENUM.EASY_CHANNEL_SOURCE_TYPE_RTMP;
-            if (_streamUri.IndexOf("hls") == 0)
+            if (_streamUri.IndexOf("http") == 0)
                 return EASY_CHANNEL_SOURCE_TYPE_ENUM.EASY_CHANNEL_SOURCE_TYPE_HLS;
             if (_streamUri.IndexOf("file") == 0)
                 return EASY_CHANNEL_SOURCE_TYPE_ENUM.EASY_CHANNEL_SOURCE_TYPE_FILE;
 
-            return EASY_CHANNEL_SOURCE_TYPE_ENUM.EASY_CHANNEL_SOURCE_TYPE_ENCODE_DATA;
+            return EASY_CHANNEL_SOURCE_TYPE_ENUM.EASY_CHANNEL_SOURCE_TYPE_RTSP;
         }
         #endregion
     }

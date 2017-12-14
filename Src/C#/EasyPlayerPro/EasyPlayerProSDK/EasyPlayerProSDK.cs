@@ -422,8 +422,8 @@ namespace EasyPlayerProSDK
         /// </summary>
         /// <param name="playerHandle">播放句柄.</param>
         /// <returns>System.Int32.</returns>
-        [DllImport(@"Lib\libEasyPlayerPro.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "_libEasyPlayerPro_StopPlaySound@4")]
-        public static extern int LibEasyPlayerPro_StopPlaySound(IntPtr playerHandle);
+        [DllImport(@"Lib\libEasyPlayerPro.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "_libEasyPlayerPro_StopPlaySound@8")]
+        public static extern int LibEasyPlayerPro_StopPlaySound(IntPtr playerHandle, int channelId);
 
         /// <summary>
         /// 获取声音播放状态: 是否在播放中
@@ -580,6 +580,7 @@ namespace EasyPlayerProSDK
     /// <summary>
     /// 媒体类型
     /// </summary>
+    [Flags]
     public enum MEDIA_TYPE
     {
         MEDIA_TYPE_VIDEO = 0x00000001,
