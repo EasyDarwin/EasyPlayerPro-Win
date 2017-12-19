@@ -1,8 +1,7 @@
 #pragma once
 
 #include "DlgRender.h"
-#include "DlgFileToolbar.h"
-#include "DlgBarCaption.h"
+#include "EasyProgressCtrl.h"
 // CDlgVideo ¶Ô»°¿ò
 
 #define		DIALOG_BASE_BACKGROUND_COLOR		RGB(0x75,0x75,0x75)
@@ -43,8 +42,7 @@ public:
 	CButton *pChkTCP;		//IDC_CHECK_TCP
 	CSliderCtrl	*pSliderCache;	//IDC_SLIDER_CACHE
 	CButton	*pBtnPreview;	//IDC_BUTTON_PREVIEW
-	CDlgFileToolbar		*pDlgFileToolbar;
-    CDlgBarCaption *pDlgBarCaption;
+	CEasyProgressCtrl	*pProgressCtrl;	//
 	void	InitialComponents();
 	void	CreateComponents();
 	void	UpdateComponents();

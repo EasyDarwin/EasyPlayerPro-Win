@@ -41,6 +41,8 @@ public:
 	HBRUSH	m_BrushStatic;
 
 
+	void GetApplicationVersion(wchar_t *pVersion);
+
 // 对话框数据
 	enum { IDD = IDD_PLAYER_DIALOG };
 

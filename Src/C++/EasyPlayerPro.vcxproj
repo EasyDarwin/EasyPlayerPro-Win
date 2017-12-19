@@ -51,11 +51,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;</IgnoreSpecificDefaultLibraries>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -102,17 +103,13 @@
     <None Include="res\EasyPlayerPro.ico" />
     <None Include="res\EasyPlayerPro.rc2" />
     <None Include="res\LivePlayer.ico" />
-    <None Include="res\nosignal.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Caption.h" />
-    <ClInclude Include="CaptionConfig.h" />
-    <ClInclude Include="DlgBarCaption.h" />
-    <ClInclude Include="DlgFileToolbar.h" />
     <ClInclude Include="DlgRender.h" />
     <ClInclude Include="DlgVideo.h" />
     <ClInclude Include="EasyPlayerPro.h" />
     <ClInclude Include="EasyPlayerProDlg.h" />
+    <ClInclude Include="EasyProgressCtrl.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="sys_common.h" />
@@ -120,22 +117,19 @@
     <ClInclude Include="xmlConfig.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Caption.cpp" />
-    <ClCompile Include="CaptionConfig.cpp" />
-    <ClCompile Include="DlgBarCaption.cpp" />
-    <ClCompile Include="DlgFileToolbar.cpp" />
     <ClCompile Include="DlgRender.cpp" />
     <ClCompile Include="DlgVideo.cpp" />
     <ClCompile Include="EasyPlayerPro.cpp" />
     <ClCompile Include="EasyPlayerProDlg.cpp" />
+    <ClCompile Include="EasyProgressCtrl.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="sys_common.cpp" />
     <ClCompile Include="xmlConfig.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

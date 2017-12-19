@@ -73,6 +73,4 @@ public:
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual BOOL OnInitDialog();
-protected:
-    afx_msg LRESULT OnPlayAbroted(WPARAM wParam, LPARAM lParam);
 };

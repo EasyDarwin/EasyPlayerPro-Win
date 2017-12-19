@@ -274,7 +274,7 @@ extern "C"
 	//播放声音
 	LIB_EASYPLAYER_PRO_API int LIB_APICALL	libEasyPlayerPro_StartPlaySound(PLAYER_HANDLE handle, int channelId);
 	//停止播放声音
-	LIB_EASYPLAYER_PRO_API int LIB_APICALL	libEasyPlayerPro_StopPlaySound(PLAYER_HANDLE handle);
+	LIB_EASYPLAYER_PRO_API int LIB_APICALL	libEasyPlayerPro_StopPlaySound(PLAYER_HANDLE handle, int channelId);
 	//获取声音播放状态: 是否在播放中		0:播放中, <0:非播放中
 	LIB_EASYPLAYER_PRO_API int LIB_APICALL	libEasyPlayerPro_SoundPlaying(PLAYER_HANDLE handle, int channelId);
 

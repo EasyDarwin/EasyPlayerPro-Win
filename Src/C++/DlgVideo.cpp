@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "DlgVideo.h"
 #include "afxdialogex.h"
-#include "CaptionConfig.h"
+
 
 // CDlgVideo 对话框
 int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, void *userPtr, int mediaType, char *pbuf, EASY_FRAME_INFO *frameInfo);
@@ -195,8 +195,7 @@ void	CDlgVideo::SetMultiplex(unsigned char multiplex)
 void	CDlgVideo::InitialComponents()
 {
 	pDlgRender	=	NULL;
-	pDlgFileToolbar	=	NULL;
-    pDlgBarCaption = NULL;
+	pProgressCtrl	=	NULL;
 	pEdtURL		=	NULL;
 	//pEdtUsername=	NULL;
 	//pEdtPassword=	NULL;
@@ -214,18 +213,12 @@ void	CDlgVideo::CreateComponents()
 		pDlgRender->Create(IDD_DIALOG_RENDER, this);
 		pDlgRender->ShowWindow(SW_SHOW);
 	}
-	if (NULL == pDlgFileToolbar)
+	if (NULL == pProgressCtrl)
 	{
-		pDlgFileToolbar = new CDlgFileToolbar();
-		pDlgFileToolbar->Create(CDlgFileToolbar::IDD, this);
-		pDlgFileToolbar->ShowWindow(SW_HIDE);
+		pProgressCtrl = new CEasyProgressCtrl();
+		pProgressCtrl->Create(NULL, NULL, WS_CHILD, CRect(0, 0, 20, 20), this, IDC_EASY_PROGRESS_CTRL);
+		pProgressCtrl->ShowWindow(SW_HIDE);
 	}
-    if (NULL == pDlgBarCaption)
-    {
-        pDlgBarCaption = new CDlgBarCaption();
-        pDlgBarCaption->Create(IDD_DIALOGBAR_CAPTION, this);
-        pDlgBarCaption->ShowWindow(SW_SHOW);
-    }
 
 	__CREATE_WINDOW(pEdtURL,		CEdit,		IDC_EDIT_RTSP_URL);
 	//__CREATE_WINDOW(pEdtUsername,	CEdit,		IDC_EDIT_USERNAME);
@@ -255,20 +248,11 @@ void	CDlgVideo::UpdateComponents()
 	if (NULL != pEdtURL && (!pEdtURL->IsWindowVisible()))	bShowToolbar = false;
 
 	bool bShowFileToolbar = false;
-	if (pDlgFileToolbar && pDlgFileToolbar->IsWindowVisible())		bShowFileToolbar = true;
-
-    bool bShowCaptionBar = false;
-    if (pDlgBarCaption && pDlgBarCaption->IsWindowVisible())		bShowCaptionBar = true;
-
-    CRect	rcCaptionBar;
-    rcCaptionBar.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.top + 20);
-    __MOVE_WINDOW(pDlgBarCaption, rcCaptionBar);
-    if (NULL != pDlgBarCaption)		pDlgBarCaption->Invalidate();
+	if (pProgressCtrl && pProgressCtrl->IsWindowVisible())		bShowFileToolbar = true;
 
 	CRect	rcRender;
 	rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-(bShowToolbar?20:0));
 	if (bShowFileToolbar)	rcRender.bottom-=20;
-    if (bShowCaptionBar)	rcRender.top+=20;
 	__MOVE_WINDOW(pDlgRender, rcRender);
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
@@ -277,7 +261,7 @@ void	CDlgVideo::UpdateComponents()
 	if (bShowFileToolbar)
 	{
 		rcFileToolbar.SetRect(rcRender.left, rcRender.bottom, rcRender.right, rcRender.bottom+20);
-		__MOVE_WINDOW(pDlgFileToolbar, rcFileToolbar);
+		__MOVE_WINDOW(pProgressCtrl, rcFileToolbar);
 	}
 
 	if (! bShowToolbar)	return;
@@ -312,8 +296,8 @@ void	CDlgVideo::DeleteComponents()
 		m_ChannelId = -1;
 	}
 	__DELETE_WINDOW(pDlgRender);
-	__DELETE_WINDOW(pDlgFileToolbar);
-    __DELETE_WINDOW(pDlgBarCaption);
+	__DELETE_WINDOW(pProgressCtrl);
+	
 }
 
 void CDlgVideo::OnBnClickedButtonPreview()
@@ -323,17 +307,11 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		libEasyPlayerPro_Create(&playerHandle, 128);
 	}
 
-    if (NULL != pDlgRender)
-    {
-        pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->ShowWindow(SW_HIDE);
-    }
-
 	if (m_ChannelId > 0)
 	{
 		//Player_CloseStream(m_ChannelId);
 		libEasyPlayerPro_StopPlayStream(playerHandle, m_ChannelId);
 		libEasyPlayerPro_CloseStream(playerHandle, m_ChannelId);
-        libEasyPlayerPro_ClearOverlayText(playerHandle, m_ChannelId);
 		m_ChannelId = -1;
 
 		if (NULL != pDlgRender)
@@ -381,9 +359,9 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		else if (0 == strncmp(szURL, "http", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_HLS;
 		else if (0 == strncmp(szURL, "file", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_FILE;
 
-		if (pDlgFileToolbar)
+		if (pProgressCtrl)
 		{
-			pDlgFileToolbar->ShowWindow(sourceType == EASY_CHANNEL_SOURCE_TYPE_FILE ? SW_SHOW : SW_HIDE);
+			pProgressCtrl->ShowWindow(sourceType == EASY_CHANNEL_SOURCE_TYPE_FILE ? SW_SHOW : SW_HIDE);
 		}
 
 		int queueSize = 1024 * 1024 * 2;		//2MB
@@ -411,14 +389,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 			libEasyPlayerPro_SetScaleDisplay(playerHandle, m_ChannelId, shownToScale, RGB(0x26,0x26,0x26));
 
-            const std::string *strCap = CCaptionConfig::GetInstance()->GetCaption(szURL);
-            if (NULL != strCap)
-            {
-                CString str(strCap->c_str());
-                pDlgBarCaption->SetDlgItemText(IDC_STATIC_CAP, str);
-//                libEasyPlayerPro_SetOverlayText(playerHandle, m_ChannelId, strCap->c_str());
-            }
-//			OnBnClickedCheckOsd();
+			OnBnClickedCheckOsd();
 
 			if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Stop"));
 		}
@@ -505,16 +476,12 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 	else if (callbackType == EASY_TYPE_RECONNECT)
 	{
 		OutputDebugString(TEXT("EASY_TYPE_RECONNECT.\n"));
-        if (NULL != pLiveVideo && NULL != pLiveVideo->pDlgRender)
-        {
-            pLiveVideo->pDlgRender->PostMessageW(WM_PLAY_ABROTED);
-        }
 	}
 	else if (callbackType == EASY_TYPE_FILE_DURATION)
 	{
-		wchar_t wszLog[128] = {0};
-		wsprintf(wszLog, TEXT("EASY_TYPE_FILE_DURATION::总时长: %u\n"), frameInfo->timestamp_sec);
-		OutputDebugString(wszLog);
+		//wchar_t wszLog[128] = {0};
+		//wsprintf(wszLog, TEXT("EASY_TYPE_FILE_DURATION::总时长: %u\n"), frameInfo->timestamp_sec);
+		//OutputDebugString(wszLog);
 
 		if (NULL!=pLiveVideo)		pLiveVideo->PostMessageW(WM_SET_FILE_DURATION, 0, (int)frameInfo->timestamp_sec);
 	}
@@ -528,9 +495,9 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 		}
 		else if (mediaType == MEDIA_TYPE_VIDEO)
 		{
-			wchar_t wszLog[128] = {0};
-			wsprintf(wszLog, TEXT("播放时间: %u\n"), frameInfo->timestamp_sec);
-			OutputDebugString(wszLog);
+			//wchar_t wszLog[128] = {0};
+			//wsprintf(wszLog, TEXT("播放时间: %u\n"), frameInfo->timestamp_sec);
+			//OutputDebugString(wszLog);
 
 			if (NULL!=pLiveVideo)		pLiveVideo->PostMessageW(WM_SET_FILE_PROGRESS, 0, (int)frameInfo->timestamp_sec);
 		}
@@ -624,15 +591,15 @@ HBRUSH CDlgVideo::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 LRESULT CDlgVideo::OnSetFileDuration(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL != pDlgFileToolbar)		pDlgFileToolbar->SetMaxTime((int)lParam);
+	if (NULL != pProgressCtrl)		pProgressCtrl->SetRange(1, (int)lParam);
 
-	if (pDlgFileToolbar && (!pDlgFileToolbar->IsWindowVisible()) && ((int)lParam>0))		pDlgFileToolbar->ShowWindow(SW_SHOW);
+	if (pProgressCtrl && (!pProgressCtrl->IsWindowVisible()) && ((int)lParam>0))		pProgressCtrl->ShowWindow(SW_SHOW);
 
 	return 0;
 }
 LRESULT CDlgVideo::OnSetProgress(WPARAM wParam, LPARAM lParam)
 {
-	if (NULL != pDlgFileToolbar)		pDlgFileToolbar->SetCurrentTime((int)lParam);
+	if (NULL != pProgressCtrl)		pProgressCtrl->SetPos((int)lParam);
 
 	return 0;
 }

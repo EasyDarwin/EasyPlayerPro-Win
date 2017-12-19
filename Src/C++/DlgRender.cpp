@@ -5,9 +5,7 @@
 
 #include "./libEasyPlayerPro/libEasyPlayerProAPI.h"
 #include "./libEasyPlayerPro/libVideoAnalysisAPI.h"
-#include "Caption.h"
-#include "DlgVideo.h"
-#include "CaptionConfig.h"
+
 
 // CDlgRender 对话框
 
@@ -45,7 +43,6 @@ BEGIN_MESSAGE_MAP(CDlgRender, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSEWHEEL()
 	ON_WM_SIZE()
-    ON_MESSAGE(WM_PLAY_ABROTED, &CDlgRender::OnPlayAbroted)
 END_MESSAGE_MAP()
 
 
@@ -114,11 +111,13 @@ void CDlgRender::OnLButtonDblClk(UINT nFlags, CPoint point)
 #define POP_MENU_STREAM_FAST_X2			10020		//2倍速播放
 #define POP_MENU_STREAM_FAST_X4			10021		//4倍速播放
 #define POP_MENU_STREAM_FAST_X8			10022		//8倍速播放
-#define POP_MENU_STREAM_NORMAL_X1		10023		//1倍速播放
-#define POP_MENU_STREAM_SLOW_X2			10024		// 2/1倍速播放
-#define POP_MENU_STREAM_SLOW_X4			10025		// 4/1倍速播放
-#define POP_MENU_STREAM_SLOW_X8			10026		// 8/1倍速播放
-#define POP_MENU_STREAM_SINGLE_FRAME	10027		//单帧
+#define POP_MENU_STREAM_FAST_X16		10023
+#define POP_MENU_STREAM_NORMAL_X1		10024		//1倍速播放
+#define POP_MENU_STREAM_SLOW_X2			10025		// 2/1倍速播放
+#define POP_MENU_STREAM_SLOW_X4			10026		// 4/1倍速播放
+#define POP_MENU_STREAM_SLOW_X8			10027		// 8/1倍速播放
+#define POP_MENU_STREAM_SLOW_X16		10028		// 16/1倍速播放
+#define POP_MENU_STREAM_SINGLE_FRAME	10029		//单帧
 
 
 #define POP_MENU_VA_WARNING_AREA		10031		//警戒区
@@ -206,6 +205,7 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X2?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X2, TEXT("快进(x2)"));
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X4?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X4, TEXT("快进(x4)"));
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X8?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X8, TEXT("快进(x8)"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_FAST_X16?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_FAST_X16, TEXT("快进(x16)"));
 
 					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_NORMAL?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_NORMAL_X1, TEXT("正常(x1)"));
@@ -215,6 +215,7 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X2?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X2, TEXT("慢放(1/2x)"));
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X4?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X4, TEXT("慢放(1/4x)"));
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X8?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X8, TEXT("慢放(1/8x)"));
+					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==PLAY_SPEED_SLOW_X16?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SLOW_X16, TEXT("慢放(1/16x)"));
 
 					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 					AppendMenu(hMenu, MF_STRING|(channelStatus.playSpeed==POP_MENU_STREAM_SINGLE_FRAME?MF_CHECKED:MF_UNCHECKED), POP_MENU_STREAM_SINGLE_FRAME, TEXT("单帧"));
@@ -231,8 +232,8 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_SET_OVERLAY_TEXT, TEXT("设置标题"));
-				AppendMenu(hMenu, MF_STRING, POP_MENU_CLEAR_OVERLAY_TEXT, TEXT("清除标题"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_SET_OVERLAY_TEXT, TEXT("设置叠加文字"));
+				AppendMenu(hMenu, MF_STRING, POP_MENU_CLEAR_OVERLAY_TEXT, TEXT("清除叠加文字"));
 
 				CPoint	pMousePosition;
 				GetCursorPos(&pMousePosition);
@@ -264,7 +265,7 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 				}
 				else
 				{
-					libEasyPlayerPro_StopPlaySound(playerHandle);
+					libEasyPlayerPro_StopPlaySound(playerHandle, mChannelId);
 				}
 			}
 		}
@@ -407,6 +408,12 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 			libEasyPlayerPro_SetPlaySpeed(playerHandle, mChannelId, (PLAY_SPEED_ENUM)channelStatus.playSpeed);
 		}
 		break;
+	case POP_MENU_STREAM_FAST_X16:
+		{
+			channelStatus.playSpeed = PLAY_SPEED_FAST_X16;
+			libEasyPlayerPro_SetPlaySpeed(playerHandle, mChannelId, (PLAY_SPEED_ENUM)channelStatus.playSpeed);
+		}
+		break;
 	case POP_MENU_STREAM_NORMAL_X1:
 		{
 			channelStatus.playSpeed = PLAY_SPEED_NORMAL;
@@ -428,6 +435,12 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 	case POP_MENU_STREAM_SLOW_X8:
 		{
 			channelStatus.playSpeed = PLAY_SPEED_SLOW_X8;
+			libEasyPlayerPro_SetPlaySpeed(playerHandle, mChannelId, (PLAY_SPEED_ENUM)channelStatus.playSpeed);
+		}
+		break;
+	case POP_MENU_STREAM_SLOW_X16:
+		{
+			channelStatus.playSpeed = PLAY_SPEED_SLOW_X16;
 			libEasyPlayerPro_SetPlaySpeed(playerHandle, mChannelId, (PLAY_SPEED_ENUM)channelStatus.playSpeed);
 		}
 		break;
@@ -478,35 +491,12 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 		break;
 	case POP_MENU_SET_OVERLAY_TEXT:
 		{
-            CCaption dlgCap;
-            dlgCap.DoModal();
-            if (dlgCap.m_strCaption != "")
-            {
-                CDlgVideo* pDlgWnd = (CDlgVideo*)GetParent();
-                // 设置标题
-                char szCap[1024] = {0};
-                WCharToMByte(dlgCap.m_strCaption.GetString(), szCap, sizeof(szCap)/sizeof(char));
-//                 libEasyPlayerPro_SetOverlayText(playerHandle, mChannelId, szCap);
-                pDlgWnd->pDlgBarCaption->SetDlgItemText(IDC_STATIC_CAP, dlgCap.m_strCaption);
-
-                // 记录标题
-                wchar_t wszURL[256] = {0};
-                if (NULL != pDlgWnd->pEdtURL)	pDlgWnd->pEdtURL->GetWindowTextW(wszURL, sizeof(wszURL));
-                if (wcslen(wszURL) >= 1)
-                {
-                    char szURL[256] = {0};
-                    WCharToMByte(wszURL, szURL, sizeof(szURL)/sizeof(szURL[0]));
-                    CCaptionConfig::GetInstance()->AddCaption(szURL, szCap);
-                }
-            }
+			libEasyPlayerPro_SetOverlayText(playerHandle, mChannelId, "测试叠加文字");
 		}
 		break;
 	case POP_MENU_CLEAR_OVERLAY_TEXT:
 		{
-            CDlgVideo* pDlgWnd = (CDlgVideo*)GetParent();
-            pDlgWnd->pDlgBarCaption->SetDlgItemText(IDC_STATIC_CAP, _T(""));
-
-//			libEasyPlayerPro_ClearOverlayText(playerHandle, mChannelId);
+			libEasyPlayerPro_ClearOverlayText(playerHandle, mChannelId);
 
 			//libEasyPlayerPro_SeekFile(playerHandle, mChannelId, 20);
 		}
@@ -696,12 +686,4 @@ void CDlgRender::OnSize(UINT nType, int cx, int cy)
 		libVA_UpdateCustomZonePosition(playerHandle, mChannelId, rcClient);
 	}
 
-}
-
-
-afx_msg LRESULT CDlgRender::OnPlayAbroted(WPARAM wParam, LPARAM lParam)
-{
-    GetDlgItem(IDC_STATIC_NOSIGNAL)->ShowWindow(SW_SHOW);GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
-    Invalidate();
-    return 0;
 }

@@ -4,7 +4,6 @@
 #include "afxdialogex.h"
 
 #include "xmlConfig.h"
-#include "CaptionConfig.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -13,6 +12,7 @@
 #pragma comment(lib, "./libEasyPlayerPro/libEasyPlayerPro.lib")
 
 
+#pragma comment (lib, "Version.lib")
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -121,8 +121,6 @@ BOOL CLivePlayerDlg::OnInitDialog()
 	memset(&proConfig, 0x00, sizeof(PRO_CONFIG_T));
 	xmlConfig.LoadConfig(XML_CONFIG_FILENAME, &proConfig);
 
-    // 加载标题配置文件
-    CCaptionConfig::GetInstance()->LoadCaption();
 
 	if (NULL!=pVideoWindow)		pVideoWindow->channels		=	proConfig.splitWindow;
 	if (NULL != pComboxSplitScreen)
@@ -249,9 +247,6 @@ BOOL CLivePlayerDlg::DestroyWindow()
 	libEasyPlayerPro_Release(&playerHandle);
 	DeleteComponents();
 
-    // 保存标题配置
-    CCaptionConfig::GetInstance()->SaveCaption();
-
 	return CDialogEx::DestroyWindow();
 }
 
@@ -300,7 +295,9 @@ void	CLivePlayerDlg::CreateComponents()
 	__CREATE_WINDOW(pStaticCopyright, CStatic,		IDC_STATIC_COPYRIGHT);
 
 	pStaticCopyright->ShowWindow(FALSE);
-	SetWindowText(TEXT("EasyPlayerPro"));
+	wchar_t wszName[64] = {0};
+	GetApplicationVersion(wszName);
+	SetWindowText(wszName);
 
 	if (NULL != pChkShownToScale)		pChkShownToScale->SetWindowText(TEXT("按比例显示"));
 	if (NULL != pChkMultiplex)			pChkMultiplex->SetWindowText(TEXT("复用源"));
@@ -486,8 +483,9 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 
 						pVideoWindow->pDlgVideo[n].MoveWindow(&rcTmp);
 						if (! pVideoWindow->pDlgVideo[n].IsWindowVisible())
+						{
 							pVideoWindow->pDlgVideo[n].ShowWindow(SW_SHOW);
-                        pVideoWindow->pDlgVideo[n].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
+						}
 
 
 						n ++;
@@ -519,8 +517,7 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 						pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
-                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
-
+				
 					nLeft += nWidth;
 				}
 				nLeft -= nWidth;
@@ -532,7 +529,6 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 						pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
-                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 					nTop += nHeight;
 				}
 			
@@ -540,7 +536,6 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 				pVideoWindow->pDlgVideo[0].MoveWindow(&rcTmp);
 				if (! pVideoWindow->pDlgVideo[0].IsWindowVisible())
 					pVideoWindow->pDlgVideo[0].ShowWindow(SW_SHOW);
-                pVideoWindow->pDlgVideo[0].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 			}
 			break;
 		case 8:		//8分屏
@@ -564,7 +559,6 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 							pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
-                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 
 					nLeft += nWidth;
 				}
@@ -577,7 +571,6 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 					pVideoWindow->pDlgVideo[i].MoveWindow(&rcTmp);
 					if (! pVideoWindow->pDlgVideo[i].IsWindowVisible())
 						pVideoWindow->pDlgVideo[i].ShowWindow(SW_SHOW);
-                    pVideoWindow->pDlgVideo[i].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 					nTop += nHeight;
 				}
 
@@ -585,7 +578,6 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 				pVideoWindow->pDlgVideo[0].MoveWindow(&rcTmp);
 				if (! pVideoWindow->pDlgVideo[0].IsWindowVisible())
 					pVideoWindow->pDlgVideo[0].ShowWindow(SW_SHOW);
-                pVideoWindow->pDlgVideo[0].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 
 			}
 			break;
@@ -608,7 +600,6 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 		rcTmp.SetRect(lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
 		pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].MoveWindow(&rcTmp);
 		pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].ShowWindow(SW_SHOW);
-        pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].pDlgRender->GetDlgItem(IDC_STATIC_NOSIGNAL)->CenterWindow(NULL);
 	}
 }
 
@@ -808,4 +799,49 @@ void CLivePlayerDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	}
 
 	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+
+
+
+
+void CLivePlayerDlg::GetApplicationVersion(wchar_t *pVersion)
+{
+    TCHAR szFullPath[MAX_PATH];
+    DWORD dwVerInfoSize = 0;
+    DWORD dwVerHnd;
+    VS_FIXEDFILEINFO * pFileInfo;
+   
+    GetModuleFileName(NULL, szFullPath, sizeof(szFullPath));
+    dwVerInfoSize = GetFileVersionInfoSize(szFullPath, &dwVerHnd);
+    if (dwVerInfoSize)
+    {
+        // If we were able to get the information, process it:
+        HANDLE hMem;
+        LPVOID lpvMem;
+        unsigned int uInfoSize = 0;
+       
+        hMem = GlobalAlloc(GMEM_MOVEABLE, dwVerInfoSize);
+        lpvMem = GlobalLock(hMem);
+        GetFileVersionInfo(szFullPath, dwVerHnd, dwVerInfoSize, lpvMem);
+       
+        ::VerQueryValue(lpvMem, TEXT("\\"), (void**)&pFileInfo, &uInfoSize);
+       
+        int ret = GetLastError();
+        WORD m_nProdVersion[4];
+       
+        // Product version from the FILEVERSION of the version info resource
+        m_nProdVersion[0] = HIWORD(pFileInfo->dwProductVersionMS);
+        m_nProdVersion[1] = LOWORD(pFileInfo->dwProductVersionMS);
+        m_nProdVersion[2] = HIWORD(pFileInfo->dwProductVersionLS);
+        m_nProdVersion[3] = LOWORD(pFileInfo->dwProductVersionLS);
+       
+        CString strVersion ;
+        strVersion.Format(_T("EasyPlayerPro V%d.%d.%d%d"),m_nProdVersion[0],
+            m_nProdVersion[1],m_nProdVersion[2],m_nProdVersion[3]);
+       
+        GlobalUnlock(hMem);
+        GlobalFree(hMem);
+       
+		wcscpy(pVersion, strVersion);
+    }
 }
