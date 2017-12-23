@@ -1,4 +1,4 @@
-#EasyPlayerPro 功能简介
+## EasyPlayerPro简介 ##
 
 EasyPlayerPro是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP、HLS、UDP、RTP、File等多种流媒体协议播放、支持本地文件播放，支持本地抓拍、本地录像、播放旋转、多屏播放等多种功能特性，核心基于ffmpeg，稳定、高效、可靠，支持Windows、Android、iOS三个平台，EasyPlayerPro播放器可广泛应用于流媒体客户端、互联网直播、在线教育、IPTV、赛事直播、本地视频文件播放等项目中。目前在多家教育、安防、行业型公司都得到稳定的应用，广受好评！
 
