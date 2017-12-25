@@ -127,6 +127,8 @@ void CDlgRender::OnLButtonDblClk(UINT nFlags, CPoint point)
 #define POP_MENU_SET_OVERLAY_TEXT		10100		//设置叠加文字
 #define POP_MENU_CLEAR_OVERLAY_TEXT		10101		//清除叠加文字
 
+#define POP_MENU_SHOW_TOOLBAR			10200		//显示工具栏
+
 void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	ClosePopupMenu();
@@ -234,6 +236,11 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 				AppendMenu(hMenu, MF_STRING, POP_MENU_SET_OVERLAY_TEXT, TEXT("设置叠加文字"));
 				AppendMenu(hMenu, MF_STRING, POP_MENU_CLEAR_OVERLAY_TEXT, TEXT("清除叠加文字"));
+
+				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+				AppendMenu(hMenu, MF_STRING|(channelStatus.bShowToolbar?MF_CHECKED:MF_UNCHECKED), POP_MENU_SHOW_TOOLBAR, TEXT("工具栏"));
+			
 
 				CPoint	pMousePosition;
 				GetCursorPos(&pMousePosition);
@@ -499,6 +506,15 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 			libEasyPlayerPro_ClearOverlayText(playerHandle, mChannelId);
 
 			//libEasyPlayerPro_SeekFile(playerHandle, mChannelId, 20);
+		}
+		break;
+	case POP_MENU_SHOW_TOOLBAR:
+		{
+			CWnd *pWnd = GetParent();
+			if (NULL != pWnd)
+			{
+				pWnd->PostMessageW(WM_SHOW_TOOLBAR);
+			}
 		}
 		break;
 	default:

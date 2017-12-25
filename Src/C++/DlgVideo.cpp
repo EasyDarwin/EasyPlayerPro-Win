@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(CDlgVideo, CDialogEx)
 	ON_MESSAGE(WM_SET_FILE_PROGRESS, OnSetProgress)
 	ON_MESSAGE(WM_SEEK_FILE, OnSeekFile)
 	ON_MESSAGE(WM_PLAY_COMPLETE, OnPlayComplete)
+	ON_MESSAGE(WM_SHOW_TOOLBAR, OnShowToolbar)
 	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
@@ -150,6 +151,18 @@ void	CDlgVideo::SetWindowId(int _windowId)
 		//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://192.168.1.100"));
 	}
 }
+
+void	CDlgVideo::ShowToolbar(bool bShow)
+{
+	if (NULL!=pEdtURL)		pEdtURL->ShowWindow(bShow?SW_SHOW:SW_HIDE);
+	if (NULL!=pChkOSD)		pChkOSD->ShowWindow(bShow?SW_SHOW:SW_HIDE);
+	if (NULL!=pChkTCP)		pChkTCP->ShowWindow(bShow?SW_SHOW:SW_HIDE);
+	if (NULL!=pSliderCache)	pSliderCache->ShowWindow(bShow?SW_SHOW:SW_HIDE);
+	if (NULL!=pBtnPreview)	pBtnPreview->ShowWindow(bShow?SW_SHOW:SW_HIDE);
+
+	if (NULL != pDlgRender)	pDlgRender->ShowToolbar(bShow);
+}
+
 void	CDlgVideo::SetURL(char *url, int scale, int osd, int tcp, int multiple, int cache, int showToolbar, int autoplay)
 {
 	wchar_t wszURL[128] = {0};
@@ -163,14 +176,7 @@ void	CDlgVideo::SetURL(char *url, int scale, int osd, int tcp, int multiple, int
 	shownToScale = scale;
 	sourceMultiplex = multiple;
 
-	if (showToolbar==0x00)
-	{
-		pEdtURL->ShowWindow(SW_HIDE);
-		pChkOSD->ShowWindow(SW_HIDE);
-		pChkTCP->ShowWindow(SW_HIDE);
-		pSliderCache->ShowWindow(SW_HIDE);
-		pBtnPreview->ShowWindow(SW_HIDE);
-	}
+	ShowToolbar(showToolbar==0x01?true:false);
 
 	if (autoplay==0x01)
 	{
@@ -618,5 +624,16 @@ LRESULT CDlgVideo::OnPlayComplete(WPARAM wParam, LPARAM lParam)
 	{
 		OnBnClickedButtonPreview();
 	}
+	return 0;
+}
+
+LRESULT CDlgVideo::OnShowToolbar(WPARAM wParam, LPARAM lParam)
+{
+	if (NULL == pEdtURL)		return 0;
+
+	BOOL isVisible = pEdtURL->IsWindowVisible();
+
+	ShowToolbar(! isVisible);
+
 	return 0;
 }

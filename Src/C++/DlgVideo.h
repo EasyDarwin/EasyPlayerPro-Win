@@ -29,6 +29,7 @@ public:
 	void	SetMultiplex(unsigned char multiplex);
 	void	SetURL(char *url, int scale, int osd, int tcp, int multiple, int cache, int showToolbar, int autoplay);
 	void	OnMouseWheel(short zDelta, CPoint pt);
+	void	ShowToolbar(bool bShow);
 
 	bool	bDrag;
 	int		shownToScale;
@@ -64,6 +65,7 @@ protected:
 	afx_msg LRESULT OnSetProgress(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnSeekFile(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPlayComplete(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnShowToolbar(WPARAM wParam, LPARAM lParam);
 public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
