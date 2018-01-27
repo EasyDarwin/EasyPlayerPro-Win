@@ -38,7 +38,7 @@ EasyPlayerPro是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP�
 
 - Git Clone源码：https://github.com/EasyDSS/EasyPlayerPro-Win.git
 
-- 版本下载：[点击下载](https://github.com/EasyDSS/EasyPlayerPro-Win/archive/master.zip "EasyPlayerPro Windows")
+- 版本下载：[Github下载](https://github.com/EasyDSS/EasyPlayerPro-Win/archive/master.zip "EasyPlayerPro Windows")    /    [OSChina镜像下载](https://gitee.com/easydarwin/EasyPlayerPro-Win/repository/archive/master.zip "EasyPlayerPro")
 
 
 ## 技术支持 ##
