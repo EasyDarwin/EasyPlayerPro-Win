@@ -20,6 +20,9 @@ typedef struct __PRO_CONFIG_T
 	int			scale;
 	int			multiple;
 	int			fullScreen;
+	int			recordingFileSize;
+	int			recordingDuration;
+	int			recordingFileAutoSegmentation;	//???????t¡Á??¡¥¡¤???
 
 	CHANNEL_INFO_T	channel[16];
 }PRO_CONFIG_T;

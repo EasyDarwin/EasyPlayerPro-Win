@@ -69,6 +69,18 @@
     <ClInclude Include="EasyProgressCtrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DlgMediaInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgAbout.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EasyPlayerPro.cpp">
@@ -93,6 +105,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EasyProgressCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgMediaInfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgAbout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

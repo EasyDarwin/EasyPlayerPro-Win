@@ -28,6 +28,7 @@ int		XMLConfig::LoadConfig(char *filename, PRO_CONFIG_T *pConfig)
 		proConfig.scale	=	0;
 		proConfig.multiple = 1;
 		proConfig.fullScreen = 0;
+		proConfig.recordingFileSize = 512;
 
 		int channel_num = sizeof(proConfig.channel)/sizeof(proConfig.channel[0]);
 		for (int i=0; i<channel_num; i++)		
@@ -68,6 +69,15 @@ int		XMLConfig::LoadConfig(char *filename, PRO_CONFIG_T *pConfig)
 		pE = pConfigXML->FirstChildElement("FullScreen");
 		if (pE && pE->GetText())		proConfig.fullScreen = atoi(pE->GetText());
 
+		pE = pConfigXML->FirstChildElement("RecordingFileSize");
+		if (pE && pE->GetText())		proConfig.recordingFileSize = atoi(pE->GetText());
+
+		pE = pConfigXML->FirstChildElement("RecordingDuration");
+		if (pE && pE->GetText())		proConfig.recordingDuration = atoi(pE->GetText());
+
+		pE = pConfigXML->FirstChildElement("AutoSegmentation");
+		if (pE && pE->GetText())		proConfig.recordingFileAutoSegmentation = atoi(pE->GetText());
+		
 
 		TiXmlNode *pNode = pConfigXML->FirstChild("Channel");
 		if (NULL != pNode)
@@ -155,6 +165,9 @@ void	XMLConfig::SaveConfig(char *filename, PRO_CONFIG_T *pConfig)
 	AddElement("Scale",				proConfig.scale,			pRootElm);
 	AddElement("Multiple",			proConfig.multiple,			pRootElm);
 	AddElement("FullScreen",		proConfig.fullScreen,		pRootElm);
+	AddElement("RecordingFileSize",	proConfig.recordingFileSize,pRootElm);
+	AddElement("RecordingDuration",	proConfig.recordingDuration,pRootElm);
+	AddElement("AutoSegmentation",	proConfig.recordingFileAutoSegmentation,pRootElm);
 
 	TiXmlElement* pChannel = NULL;
 	pChannel = new TiXmlElement( "Channel" );

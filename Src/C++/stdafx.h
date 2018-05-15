@@ -39,6 +39,7 @@
 
 #include "resource.h"
 #include "libEasyPlayerPro/libEasyPlayerProAPI.h"
+#include "xmlConfig.h"
 
 #define	WM_WINDOW_MAXIMIZED		(WM_USER+2001)
 #define	WM_MANU_RECORDING		(WM_USER+2002)
@@ -60,6 +61,9 @@ int CheckFolder(wchar_t *folderName, int bCreate);
 
 extern RENDER_FORMAT		RenderFormat;
 extern PLAYER_HANDLE		playerHandle;
+
+
+extern PRO_CONFIG_T	proConfig;
 
 #ifdef _UNICODE
 #if defined _M_IX86

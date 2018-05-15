@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "DlgVideo.h"
 #include "afxdialogex.h"
-
+#include "gui_common.h"
 
 // CDlgVideo 对话框
 int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, void *userPtr, int mediaType, char *pbuf, EASY_FRAME_INFO *frameInfo);
@@ -386,7 +386,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 			int iPos = pSliderCache->GetPos();
 			libEasyPlayerPro_SetPlayFrameCache(playerHandle, m_ChannelId, iPos);		//设置缓存
-			//libEasyPlayerPro_StartPlaySound(playerHandle, m_ChannelId);				//播放声音
+			libEasyPlayerPro_StartPlaySound(playerHandle, m_ChannelId);				//播放声音
 			if (NULL != pDlgRender)
 			{
 				pDlgRender->SetChannelId(m_ChannelId);
@@ -623,6 +623,13 @@ LRESULT CDlgVideo::OnPlayComplete(WPARAM wParam, LPARAM lParam)
 	if (m_ChannelId > 0)
 	{
 		OnBnClickedButtonPreview();
+
+
+		if (NULL != pDlgRender && pDlgRender->GetSourceType() == EASY_CHANNEL_SOURCE_TYPE_FILE)
+		{
+			MessageBox(TEXT("文件播放完成"), TEXT("OK"), MB_OK);
+		}
+
 	}
 	return 0;
 }

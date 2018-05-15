@@ -105,11 +105,15 @@
     <None Include="res\LivePlayer.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DialogBase.h" />
+    <ClInclude Include="DlgAbout.h" />
+    <ClInclude Include="DlgMediaInfo.h" />
     <ClInclude Include="DlgRender.h" />
     <ClInclude Include="DlgVideo.h" />
     <ClInclude Include="EasyPlayerPro.h" />
     <ClInclude Include="EasyPlayerProDlg.h" />
     <ClInclude Include="EasyProgressCtrl.h" />
+    <ClInclude Include="gui_common.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="sys_common.h" />
@@ -117,11 +121,15 @@
     <ClInclude Include="xmlConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DialogBase.cpp" />
+    <ClCompile Include="DlgAbout.cpp" />
+    <ClCompile Include="DlgMediaInfo.cpp" />
     <ClCompile Include="DlgRender.cpp" />
     <ClCompile Include="DlgVideo.cpp" />
     <ClCompile Include="EasyPlayerPro.cpp" />
     <ClCompile Include="EasyPlayerProDlg.cpp" />
     <ClCompile Include="EasyProgressCtrl.cpp" />
+    <ClCompile Include="gui_common.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

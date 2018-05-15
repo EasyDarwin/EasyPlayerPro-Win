@@ -216,7 +216,8 @@ extern "C"
 	//   注:   当开启即时回放时，不允许手动录像, 即会返回-3
 	LIB_EASYPLAYER_PRO_API int LIB_APICALL	libEasyPlayerPro_StartRecording(PLAYER_HANDLE handle, int channelId, const char *foldername, const char *filename, 
 														unsigned int filesize/*录像文件大小 MB*/, int duration/*录像时长(second)*/,  
-														unsigned char preRecording/*0x01:预录  0x00:不预录*/);
+														unsigned char preRecording/*0x01:预录  0x00:不预录*/,
+														unsigned char autoSegmentation/*自动分割文件  0x01:录满指定大小或时长后,创建下一个文件继续录像  0x00:录满指定大小或时长后,停止录像*/);
 	//停止手动录像
 	LIB_EASYPLAYER_PRO_API int LIB_APICALL	libEasyPlayerPro_StopRecording(PLAYER_HANDLE handle, int channelId);
 
