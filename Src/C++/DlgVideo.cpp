@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CDlgVideo, CDialogEx)
 	ON_MESSAGE(WM_SEEK_FILE, OnSeekFile)
 	ON_MESSAGE(WM_PLAY_COMPLETE, OnPlayComplete)
 	ON_MESSAGE(WM_SHOW_TOOLBAR, OnShowToolbar)
+	ON_MESSAGE(WM_OPEN_FILE, OnOpenFilePlay)
 	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
@@ -641,6 +642,25 @@ LRESULT CDlgVideo::OnShowToolbar(WPARAM wParam, LPARAM lParam)
 	BOOL isVisible = pEdtURL->IsWindowVisible();
 
 	ShowToolbar(! isVisible);
+
+	return 0;
+}
+
+LRESULT CDlgVideo::OnOpenFilePlay(WPARAM wParam, LPARAM lParam)
+{
+	CFileDialog file(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,L"媒体文件(*.*)|*.*||");
+	if(file.DoModal() != IDOK)		return 0;
+
+	//获取文件名称
+	file.GetFileName();
+	//获取文件路径,此处只想说明下file.GetPathName()的返回值类型。
+	CString filePath = file.GetPathName();
+
+	char	szURL[MAX_PATH] = {0};
+	strcat(szURL, "file://");
+	WCharToMByte(filePath.GetString(), szURL+7, sizeof(szURL)/sizeof(szURL[0])-7);
+
+	SetURL(szURL, 0x00, 0x00, 0x01, 0x00, 3, 1, 1);
 
 	return 0;
 }

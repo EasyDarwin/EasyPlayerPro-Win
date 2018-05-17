@@ -95,6 +95,8 @@ void CDlgRender::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 #define POP_MENU_SEPARATOR	10000
 
+#define	POP_MENU_OPEN_FILE	10005
+
 #define	POP_MENU_AUDIO	10009
 
 #define	POP_MENU_RECORDING	10010
@@ -254,6 +256,21 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 				TrackPopupMenu(hMenu, TPM_LEFTALIGN, pMousePosition.x, pMousePosition.y, 0, GetSafeHwnd(), NULL);
 			}
 		}
+		else
+		{
+			hMenu = CreatePopupMenu();
+			if (NULL != hMenu)
+			{
+				AppendMenu(hMenu, MF_STRING, POP_MENU_OPEN_FILE, TEXT("打开文件"));
+
+
+				CPoint	pMousePosition;
+				GetCursorPos(&pMousePosition);
+				SetForegroundWindow();
+				TrackPopupMenu(hMenu, TPM_LEFTALIGN, pMousePosition.x, pMousePosition.y, 0, GetSafeHwnd(), NULL);
+			}
+
+		}
 	}
 
 	CDialogEx::OnRButtonUp(nFlags, point);
@@ -265,6 +282,15 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 	WORD	wID = (WORD)wParam;
 	switch (wID)
 	{
+	case POP_MENU_OPEN_FILE:
+		{
+			CWnd *pWnd = GetParent();
+			if (NULL != pWnd)
+			{
+				pWnd->PostMessageW(WM_OPEN_FILE);
+			}
+		}
+		break;
 	case POP_MENU_AUDIO:
 		{
 			if (mChannelId > 0)
