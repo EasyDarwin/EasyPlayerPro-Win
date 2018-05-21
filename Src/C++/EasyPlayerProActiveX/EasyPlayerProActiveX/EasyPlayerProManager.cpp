@@ -123,7 +123,7 @@ int EasyPlayerProManager::StartRecord(const char *foldername,
 	if (m_sSourceInfo.recording == 0x01)
 	{
 		int ret = libEasyPlayerPro_StartRecording(NULL, m_sSourceInfo.sourceId, foldername, 
-			szFilename, filesize, duration, preRecording);
+			szFilename, filesize, duration, preRecording, 0x01);
 		if (ret < 0)	
 			m_sSourceInfo.recording = 0x00;
 	}
