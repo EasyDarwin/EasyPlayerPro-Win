@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<TITLE>EasyPlayer</TITLE>
+<script type="text/javascript">
+	
+
+
+		function config(){
+		var obj = document.getElementById("EasyPlayerOcx");
+
+		var cache = document.getElementById("cache").value;
+		var playsound = document.getElementById("playsound").value;
+		var showtoscale= document.getElementById("showtoscale").value;
+		var showsatic = document.getElementById("showsatic").value;
+
+		obj.Config(cache, playsound, showtoscale, showsatic);
+		obj.SetOSD(1,255,0,0,255,100,100, 1000,150,"我勒个去");	
+				
+		//alert(cache+";"+playsound+";"+showtoscale+";"+showsatic);
+
+	}
+
+	function startplay(){
+		var obj = document.getElementById("EasyPlayerOcx");
+		var url = document.getElementById("url").value;
+		var rendertype = document.getElementById("rendertype").value;
+		var rtpovertcp = document.getElementById("rtpovertcp").value;
+		var cache = document.getElementById("cache").value;
+		var playsound = document.getElementById("playsound").value;
+		var showtoscale= document.getElementById("showtoscale").value;
+		var showsatic = document.getElementById("showsatic").value;
+
+		var ret = obj.Start(url, rendertype, rtpovertcp, cache, showtoscale,playsound,showsatic);
+
+
+		//alert(url+";"+rendertype+";"+rtpovertcp+";"+cache+";"+ret);
+
+	}
+
+		function stopplay(){
+		//alert("Close()!!!!!");
+		var obj = document.getElementById("EasyPlayerOcx");
+
+		obj.Close();
+	}
+	
+</script>
+</HEAD>
+
+<BODY>
+<center>
+EasyPlayer Plugin Example
+<p></p>
+
+
+<OBJECT ID="EasyPlayerOcx" WIDTH=100% HEIGHT=100%
+ CLASSID="CLSID:C826A1CE-34E6-4BB1-B844-681E7AC98D9A">
+
+</OBJECT>
+
+界面信息<br>
+RTSP URL：<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks"/>
+RenderFormat：<input type="text" name="rendertype" id="rendertype" VALUE="0"/>
+UDP Over TCP：<input type="text" name="rtpovertcp" id="rtpovertcp" size=25 value="1"/>
+采用硬解码：<input type="text" name="harddecode" id="harddecode" size=25 value="1"/>
+
+<br>
+缓存：<input type="text" name="cache" id="cache" size=25 value ="3"/>
+播放声音：<input type="text" name="playsound" id="playsound" size=25 value ="1"/>
+按比例显示：<input type="text" name="showtoscale" id="showtoscale" size=25 value ="1"/>
+显示码率信息：<input type="text" name="showsatic" id="showsatic" size=25 value ="1"/><br>
+
+
+<button type="button" onclick="startplay();">Start</button>
+<button type="button" onclick="stopplay();">Stop</button>
+
+</center>
+</BODY>
+</HTML>

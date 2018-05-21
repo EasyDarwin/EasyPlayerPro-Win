@@ -1,0 +1,63 @@
+// EasyPlayerProActiveX.idl : ActiveX 控件项目的类型库源。
+
+// 此文件将由 MIDL 编译器工具处理以
+// 产生类型库(EasyPlayerProActiveX.tlb)，该类型库将成为
+// EasyPlayerProActiveX.ocx.
+
+#include <olectl.h>
+#include <idispids.h>
+
+[ uuid(B2278043-73E4-4CB3-BB4E-488CDAD170FB), version(1.0),
+  control ]
+library EasyPlayerProActiveXLib
+{
+	importlib(STDOLE_TLB);
+
+	//  CEasyPlayerProActiveXCtrl 的主调度接口
+	[ 
+		uuid(4FEB3DC3-9794-4E94-A928-05E02BADE855)	
+	]
+	dispinterface _DEasyPlayerProActiveX
+	{
+		properties:
+		methods:
+
+			[id(DISPID_ABOUTBOX)] void AboutBox();
+	};
+
+	//  CEasyPlayerProActiveXCtrl 的事件调度接口
+
+	[ 
+		uuid(194E1B18-4C63-4155-9783-EB383F95DFFD)	
+	]
+	dispinterface _DEasyPlayerProActiveXEvents
+	{
+		properties:
+			//  事件接口没有任何属性
+
+		methods:
+			[id(1)] LONG Start(BSTR sURL, BSTR sRenderFormat, BSTR sRTPOverTCP, BSTR sCache, BSTR sShownToScale, BSTR sPlaySound, BSTR sStatisticalInfo);
+			[id(2)] void Close(void);
+			[id(3)] void SetOSD(BSTR show, BSTR osd);
+			[id(4)] LONG StartRecord(BSTR sFoldername, BSTR sFilename, BSTR sFilesize/*录像文件大小 MB*/, BSTR sDuration/*录像时长(second)*/,  BSTR sPreRecording/*0x01:预录  0x00:不预录*/);
+			[id(5)] LONG StopRecord(void);
+			[id(6)] LONG Snapshot( BSTR sFilename);
+			[id(7)] LONG PlaySound(BSTR sbPlay);
+			[id(8)] LONG SetAudioVolume( BSTR sVolume);
+			[id(9)] LONG GetAudioVolume(void);
+			[id(10)] LONG SetPlaySpeed(BSTR sSpeed);
+			[id(11)] LONG PlaySingleFrame(void);
+			[id(12)] LONG SeekFile( BSTR sPlayTimeSecs/*秒*/ );
+	};
+
+	//  CEasyPlayerProActiveXCtrl 的类信息
+	[
+		uuid(C826A1CE-34E6-4BB1-B844-681E7AC98D9A), licensed
+	]
+	coclass EasyPlayerProActiveX
+	{
+		[default] dispinterface _DEasyPlayerProActiveX;
+		[default, source] dispinterface _DEasyPlayerProActiveXEvents;
+	};
+
+};

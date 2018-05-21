@@ -135,7 +135,6 @@ void CDlgVideo::OnMouseMove(UINT nFlags, CPoint point)
 		}
 	}
 
-
 	CDialogEx::OnMouseMove(nFlags, point);
 }
 
@@ -347,7 +346,6 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		if (NULL != pEdtUsername)	pEdtUsername->GetWindowText(wszUsername, sizeof(wszUsername));
 		if (NULL != pEdtPassword)	pEdtPassword->GetWindowText(wszPassword, sizeof(wszPassword));
 
-
 		char szUsername[32] = {0};
 		char szPassword[32] = {0};
 		WCharToMByte(wszUsername, szUsername, sizeof(szUsername)/sizeof(szUsername[0]));
@@ -377,7 +375,6 @@ void CDlgVideo::OnBnClickedButtonPreview()
 												rtpOverTcp, 
 												MEDIA_TYPE_VIDEO|MEDIA_TYPE_AUDIO|MEDIA_TYPE_EVENT,
 											__EasyPlayerCallBack, this, 0x01, 0x00, queueSize, sourceMultiplex);
-		
 
 		if (m_ChannelId > 0)
 		{
