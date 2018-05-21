@@ -9,7 +9,7 @@
     <AutoSegmentation>0</AutoSegmentation>
     <Channel>
         <CH No="1" URL="rtmp://live.hkstv.hk.lxdns.com/live/hks" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
-        <CH No="2" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="2" URL="http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
         <CH No="3" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
         <CH No="4" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
         <CH No="5" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
