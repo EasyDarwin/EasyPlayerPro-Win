@@ -38,6 +38,7 @@ public:
 	void	OnMouseWheel(short zDelta, CPoint pt);
 	void	SetRecordingFlag(int flag);
 	void	SetSourceType(EASY_CHANNEL_SOURCE_TYPE_ENUM sourceType);
+	EASY_CHANNEL_SOURCE_TYPE_ENUM	GetSourceType()	{return mSourceType;}
 	void	ShowToolbar(bool bShow)	{channelStatus.bShowToolbar = bShow;}
 
 	int		mChannelId;

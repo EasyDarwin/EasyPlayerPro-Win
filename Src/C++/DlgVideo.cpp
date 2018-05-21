@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "DlgVideo.h"
 #include "afxdialogex.h"
-
+#include "gui_common.h"
 
 // CDlgVideo 对话框
 int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, void *userPtr, int mediaType, char *pbuf, EASY_FRAME_INFO *frameInfo);
@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CDlgVideo, CDialogEx)
 	ON_MESSAGE(WM_SEEK_FILE, OnSeekFile)
 	ON_MESSAGE(WM_PLAY_COMPLETE, OnPlayComplete)
 	ON_MESSAGE(WM_SHOW_TOOLBAR, OnShowToolbar)
+	ON_MESSAGE(WM_OPEN_FILE, OnOpenFilePlay)
 	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
@@ -383,7 +384,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 			int iPos = pSliderCache->GetPos();
 			libEasyPlayerPro_SetPlayFrameCache(playerHandle, m_ChannelId, iPos);		//设置缓存
-			//libEasyPlayerPro_StartPlaySound(playerHandle, m_ChannelId);				//播放声音
+			libEasyPlayerPro_StartPlaySound(playerHandle, m_ChannelId);				//播放声音
 			if (NULL != pDlgRender)
 			{
 				pDlgRender->SetChannelId(m_ChannelId);
@@ -620,6 +621,13 @@ LRESULT CDlgVideo::OnPlayComplete(WPARAM wParam, LPARAM lParam)
 	if (m_ChannelId > 0)
 	{
 		OnBnClickedButtonPreview();
+
+
+		if (NULL != pDlgRender && pDlgRender->GetSourceType() == EASY_CHANNEL_SOURCE_TYPE_FILE)
+		{
+			MessageBox(TEXT("文件播放完成"), TEXT("OK"), MB_OK);
+		}
+
 	}
 	return 0;
 }
@@ -631,6 +639,25 @@ LRESULT CDlgVideo::OnShowToolbar(WPARAM wParam, LPARAM lParam)
 	BOOL isVisible = pEdtURL->IsWindowVisible();
 
 	ShowToolbar(! isVisible);
+
+	return 0;
+}
+
+LRESULT CDlgVideo::OnOpenFilePlay(WPARAM wParam, LPARAM lParam)
+{
+	CFileDialog file(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,L"媒体文件(*.*)|*.*||");
+	if(file.DoModal() != IDOK)		return 0;
+
+	//获取文件名称
+	file.GetFileName();
+	//获取文件路径,此处只想说明下file.GetPathName()的返回值类型。
+	CString filePath = file.GetPathName();
+
+	char	szURL[MAX_PATH] = {0};
+	strcat(szURL, "file://");
+	WCharToMByte(filePath.GetString(), szURL+7, sizeof(szURL)/sizeof(szURL[0])-7);
+
+	SetURL(szURL, 0x00, 0x00, 0x01, 0x00, 3, 1, 1);
 
 	return 0;
 }

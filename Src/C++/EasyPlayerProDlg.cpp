@@ -2,7 +2,7 @@
 #include "EasyPlayerPro.h"
 #include "EasyPlayerProDlg.h"
 #include "afxdialogex.h"
-
+#include "DlgAbout.h"
 #include "xmlConfig.h"
 
 #ifdef _DEBUG
@@ -13,7 +13,7 @@
 
 
 #pragma comment (lib, "Version.lib")
-
+wchar_t wszApplicationVersion[64] = {0};
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -197,8 +197,18 @@ void CLivePlayerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
+#if 0
 		CAboutDlg dlgAbout;
+		CWnd *pWnd = dlgAbout.GetDlgItem(IDC_STATIC_VER);
+		if (NULL != pWnd)
+		{
+			pWnd->SetWindowTextW(wszApplicationVersion);
+		}
 		dlgAbout.DoModal();
+#else
+		CDlgAbout	dlgAbout(wszApplicationVersion);
+		dlgAbout.DoModal();
+#endif
 	}
 	else
 	{
@@ -295,9 +305,8 @@ void	CLivePlayerDlg::CreateComponents()
 	__CREATE_WINDOW(pStaticCopyright, CStatic,		IDC_STATIC_COPYRIGHT);
 
 	pStaticCopyright->ShowWindow(FALSE);
-	wchar_t wszName[64] = {0};
-	GetApplicationVersion(wszName);
-	SetWindowText(wszName);
+	GetApplicationVersion(wszApplicationVersion);
+	SetWindowText(wszApplicationVersion);
 
 	if (NULL != pChkShownToScale)		pChkShownToScale->SetWindowText(TEXT("按比例显示"));
 	if (NULL != pChkMultiplex)			pChkMultiplex->SetWindowText(TEXT("复用源"));

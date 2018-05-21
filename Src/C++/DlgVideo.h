@@ -66,6 +66,7 @@ protected:
 	afx_msg LRESULT OnSeekFile(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPlayComplete(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnShowToolbar(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnOpenFilePlay(WPARAM wParam, LPARAM lParam);
 public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);

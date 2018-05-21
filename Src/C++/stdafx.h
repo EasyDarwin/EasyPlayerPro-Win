@@ -39,6 +39,7 @@
 
 #include "resource.h"
 #include "libEasyPlayerPro/libEasyPlayerProAPI.h"
+#include "xmlConfig.h"
 
 #define	WM_WINDOW_MAXIMIZED		(WM_USER+2001)
 #define	WM_MANU_RECORDING		(WM_USER+2002)
@@ -47,6 +48,7 @@
 #define WM_SEEK_FILE					(WM_USER+2005)
 #define	WM_PLAY_COMPLETE			(WM_USER+2006)
 #define	WM_SHOW_TOOLBAR			(WM_USER+2007)
+#define WM_OPEN_FILE			(WM_USER+2008)
 
 #define __CREATE_WINDOW(_x, _class, _id) {if (NULL == _x) {_x = (_class*)GetDlgItem(_id);}}
 #define __MOVE_WINDOW(x, _rect)	{if (NULL != x) {x->MoveWindow(&_rect);}}
@@ -60,6 +62,9 @@ int CheckFolder(wchar_t *folderName, int bCreate);
 
 extern RENDER_FORMAT		RenderFormat;
 extern PLAYER_HANDLE		playerHandle;
+
+
+extern PRO_CONFIG_T	proConfig;
 
 #ifdef _UNICODE
 #if defined _M_IX86
