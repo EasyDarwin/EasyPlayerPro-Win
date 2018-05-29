@@ -89,7 +89,7 @@ BOOL CLivePlayerApp::InitInstance()
 
 BOOL CLivePlayerApp::PreTranslateMessage(MSG* pMsg)
 {
-	if (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)
+	if (pMsg->wParam == VK_RETURN)
 	{
 		return TRUE;
 	}

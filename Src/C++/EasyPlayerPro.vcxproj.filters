@@ -34,9 +34,6 @@
     <None Include="res\APP_MIN.bmp">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="res\nosignal.bmp">
-      <Filter>资源文件</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EasyPlayerPro.h">

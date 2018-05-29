@@ -49,6 +49,7 @@
 #define	WM_PLAY_COMPLETE			(WM_USER+2006)
 #define	WM_SHOW_TOOLBAR			(WM_USER+2007)
 #define WM_OPEN_FILE			(WM_USER+2008)
+#define WM_EXIT_FULLSCREEN		(WM_USER+2009)
 
 #define __CREATE_WINDOW(_x, _class, _id) {if (NULL == _x) {_x = (_class*)GetDlgItem(_id);}}
 #define __MOVE_WINDOW(x, _rect)	{if (NULL != x) {x->MoveWindow(&_rect);}}
@@ -56,8 +57,6 @@
 #define __DELETE_WINDOW(x)	{if (NULL != x) {x->DestroyWindow(); delete x; x=NULL;}}
 
 
-bool MByteToWChar(LPCSTR lpcszStr, LPWSTR lpwszStr, DWORD dwSize);
-bool WCharToMByte(LPCWSTR lpcwszStr, LPSTR lpszStr, DWORD dwSize);
 int CheckFolder(wchar_t *folderName, int bCreate);
 
 extern RENDER_FORMAT		RenderFormat;

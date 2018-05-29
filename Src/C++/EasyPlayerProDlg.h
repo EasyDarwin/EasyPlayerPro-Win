@@ -39,7 +39,8 @@ public:
 	void	UpdateVideoPosition(LPRECT lpRect);
 	void	FullScreen();
 	HBRUSH	m_BrushStatic;
-
+	CRect m_rcVideoSingle;
+	BOOL M_bMaxWnd;
 
 	void GetApplicationVersion(wchar_t *pVersion);
 
@@ -61,6 +62,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 	LRESULT OnWindowMaximized(WPARAM wParam, LPARAM lParam);
+	LRESULT OnExitFullScreen(WPARAM wParam, LPARAM lParam);
 public:
 	virtual BOOL DestroyWindow();
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
@@ -72,4 +74,5 @@ public:
 	afx_msg void OnBnClickedCheckFullscreen();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

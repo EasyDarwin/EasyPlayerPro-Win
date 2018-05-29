@@ -7,8 +7,7 @@
 #include "./libEasyPlayerPro/libVideoAnalysisAPI.h"
 
 #include "DlgMediaInfo.h"
-
-// CDlgRender ???
+// CDlgRender 对话框
 
 IMPLEMENT_DYNAMIC(CDlgRender, CDialogEx)
 
@@ -106,33 +105,35 @@ void CDlgRender::OnLButtonDblClk(UINT nFlags, CPoint point)
 #define POP_MENU_STREAM_PAUSE	10014
 #define POP_MENU_STREAM_RESUME	10015
 
-#define POP_MENU_STREAM_INSTANT_REPLAY	10016		//????
+#define POP_MENU_STREAM_INSTANT_REPLAY	10016		//即时回放
 #define POP_MENU_STREAM_PREVIOUS_FRAME	10017
 #define POP_MENU_STREAM_NEXT_FRAME	10018
-#define POP_MENU_STREAM_INSTANT_REPLAY_RECORDING		10019		//??????
+#define POP_MENU_STREAM_INSTANT_REPLAY_RECORDING		10019		//即时回放录像
 
-#define POP_MENU_STREAM_FAST_X2			10020		//2????
-#define POP_MENU_STREAM_FAST_X4			10021		//4????
-#define POP_MENU_STREAM_FAST_X8			10022		//8????
+#define POP_MENU_STREAM_FAST_X2			10020		//2倍速播放
+#define POP_MENU_STREAM_FAST_X4			10021		//4倍速播放
+#define POP_MENU_STREAM_FAST_X8			10022		//8倍速播放
 #define POP_MENU_STREAM_FAST_X16		10023
-#define POP_MENU_STREAM_NORMAL_X1		10024		//1????
-#define POP_MENU_STREAM_SLOW_X2			10025		// 2/1????
-#define POP_MENU_STREAM_SLOW_X4			10026		// 4/1????
-#define POP_MENU_STREAM_SLOW_X8			10027		// 8/1????
-#define POP_MENU_STREAM_SLOW_X16		10028		// 16/1????
-#define POP_MENU_STREAM_SINGLE_FRAME	10029		//??
+#define POP_MENU_STREAM_NORMAL_X1		10024		//1倍速播放
+#define POP_MENU_STREAM_SLOW_X2			10025		// 2/1倍速播放
+#define POP_MENU_STREAM_SLOW_X4			10026		// 4/1倍速播放
+#define POP_MENU_STREAM_SLOW_X8			10027		// 8/1倍速播放
+#define POP_MENU_STREAM_SLOW_X16		10028		// 16/1倍速播放
+#define POP_MENU_STREAM_SINGLE_FRAME	10029		//单帧
 
 
-#define POP_MENU_VA_WARNING_AREA		10031		//???
+#define POP_MENU_VA_WARNING_AREA		10031		//警戒区
 
 #define POP_MENU_ELECTORIC_ZOOM			10060
-#define POP_MENU_VIDEO_FLIP				10062		//????
-#define POP_MENU_SET_OVERLAY_TEXT		10100		//??????
-#define POP_MENU_CLEAR_OVERLAY_TEXT		10101		//??????
+#define POP_MENU_VIDEO_FLIP				10062		//视频翻转
+#define POP_MENU_SET_OVERLAY_TEXT		10100		//设置叠加文字
+#define POP_MENU_CLEAR_OVERLAY_TEXT		10101		//清除叠加文字
 
-#define POP_MENU_SHOW_TOOLBAR			10200		//?????
+#define POP_MENU_SHOW_TOOLBAR			10200		//显示工具栏
 
 #define POP_MENU_MEDIA_INFO				10500		//????
+
+#define POP_MENU_EXIT_FULLSCREEN		10600		//????
 
 void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 {
@@ -158,9 +159,12 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 			hMenu = CreatePopupMenu();
 			if (NULL != hMenu)
 			{
-				//播放声音
+				//AppendMenu(hMenu, MF_STRING, POP_MENU_OPEN_FILE, TEXT("????"));
+				
+
+				//????
 				channelStatus.audio = (libEasyPlayerPro_SoundPlaying(playerHandle, mChannelId) == 0x00?0x01:0x00);
-				AppendMenu(hMenu, MF_STRING|(channelStatus.audio==0x00?MF_CHECKED:MF_UNCHECKED), POP_MENU_AUDIO, TEXT("静音"));
+				AppendMenu(hMenu, MF_STRING|(channelStatus.audio==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_AUDIO, TEXT("声音监听"));
 
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 
@@ -249,6 +253,12 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 				AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
 				AppendMenu(hMenu, MF_STRING, POP_MENU_MEDIA_INFO, TEXT("媒体信息"));
+
+				if (proConfig.fullScreen == 0x01)
+				{
+					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+					AppendMenu(hMenu, MF_STRING, POP_MENU_EXIT_FULLSCREEN, TEXT("全屏"));
+				}
 			
 				CPoint	pMousePosition;
 				GetCursorPos(&pMousePosition);
@@ -263,6 +273,11 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 			{
 				AppendMenu(hMenu, MF_STRING, POP_MENU_OPEN_FILE, TEXT("打开文件"));
 
+				if (proConfig.fullScreen == 0x01)
+				{
+					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
+					AppendMenu(hMenu, MF_STRING, POP_MENU_EXIT_FULLSCREEN, TEXT("退出全屏"));
+				}
 
 				CPoint	pMousePosition;
 				GetCursorPos(&pMousePosition);
@@ -561,6 +576,15 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 
 			CDlgMediaInfo dlgMediaInfo(&mediaInfo);
 			dlgMediaInfo.DoModal();
+		}
+		break;
+	case POP_MENU_EXIT_FULLSCREEN:
+		{
+			CWnd *pWnd = ::AfxGetMainWnd();
+			if (NULL != pWnd)
+			{
+				pWnd->PostMessageW(WM_EXIT_FULLSCREEN);
+			}
 		}
 		break;
 	default:

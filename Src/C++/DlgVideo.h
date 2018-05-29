@@ -80,4 +80,6 @@ public:
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	//afx_msg LRESULT OnDBL(WPARAM, LPARAM);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

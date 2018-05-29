@@ -54,7 +54,7 @@ CLivePlayerDlg::CLivePlayerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLivePlayerDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
+	M_bMaxWnd = FALSE;
 	InitialComponents();
 }
 
@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CLivePlayerDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_MESSAGE(WM_WINDOW_MAXIMIZED, OnWindowMaximized)
+	ON_MESSAGE(WM_EXIT_FULLSCREEN, OnExitFullScreen)
 	ON_CBN_SELCHANGE(IDC_COMBO_SPLIT_SCREEN, &CLivePlayerDlg::OnCbnSelchangeComboSplitScreen)
 	ON_CBN_SELCHANGE(IDC_COMBO_RENDER_FORMAT, &CLivePlayerDlg::OnCbnSelchangeComboRenderFormat)
 	ON_BN_CLICKED(IDC_CHECK_SHOWNTOSCALE, &CLivePlayerDlg::OnBnClickedCheckShowntoscale)
@@ -76,6 +77,7 @@ BEGIN_MESSAGE_MAP(CLivePlayerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_FULLSCREEN, &CLivePlayerDlg::OnBnClickedCheckFullscreen)
 	ON_WM_CTLCOLOR()
 	ON_WM_HSCROLL()
+
 END_MESSAGE_MAP()
 
 
@@ -116,7 +118,7 @@ BOOL CLivePlayerDlg::OnInitDialog()
 
 	CreateComponents();
 
-	PRO_CONFIG_T	proConfig;
+	
 	XMLConfig		xmlConfig;
 	memset(&proConfig, 0x00, sizeof(PRO_CONFIG_T));
 	xmlConfig.LoadConfig(XML_CONFIG_FILENAME, &proConfig);
@@ -364,7 +366,7 @@ void	CLivePlayerDlg::UpdateComponents()
 	if (rcClient.IsRectEmpty())		return;
 
 	CRect	rcVideo;
-	rcVideo.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-30);
+	rcVideo.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-(proConfig.fullScreen?0:30));
 	UpdateVideoPosition(&rcVideo);
 
 	CRect	rcSplitScreen;
@@ -490,12 +492,12 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 						}
 
 
-						pVideoWindow->pDlgVideo[n].MoveWindow(&rcTmp);
 						if (! pVideoWindow->pDlgVideo[n].IsWindowVisible())
 						{
 							pVideoWindow->pDlgVideo[n].ShowWindow(SW_SHOW);
 						}
 
+						pVideoWindow->pDlgVideo[n].MoveWindow(&rcTmp);
 
 						n ++;
 
@@ -607,8 +609,8 @@ void	CLivePlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 			}
 		}
 		rcTmp.SetRect(lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
-		pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].MoveWindow(&rcTmp);
 		pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].ShowWindow(SW_SHOW);
+		pVideoWindow->pDlgVideo[pVideoWindow->maximizedId].MoveWindow(&rcTmp);
 	}
 }
 
@@ -731,30 +733,52 @@ BOOL CLivePlayerDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 
 
+LRESULT CLivePlayerDlg::OnExitFullScreen(WPARAM wParam, LPARAM lParam)
+{
+	FullScreen();
 
+	return 0;
+}
 
 void	CLivePlayerDlg::FullScreen()
 {
 	INT		x, y, w, h;
 	DWORD dwStyle = GetWindowLong( this->m_hWnd, GWL_STYLE );
 
-	static bool bFullScreen = false;
+	proConfig.fullScreen = (proConfig.fullScreen==0x01?0x00:0x01);
 
-	bFullScreen = !bFullScreen;
+	bool bFullScreen = proConfig.fullScreen;
 	if (bFullScreen)
 	{
+
+
 		x = 0;
 		y = 0;
 		w = GetSystemMetrics(SM_CXSCREEN);
 		h = GetSystemMetrics(SM_CYSCREEN);
 
+		DWORD dsStyle = GetStyle();
+		if (dsStyle&WS_MAXIMIZE)
+		{
+			M_bMaxWnd = TRUE;
+		}else{
+			M_bMaxWnd = FALSE;
+		}
+		ShowWindow(SW_NORMAL);
+		ShowWindow(SW_HIDE);
+		this->GetWindowRect(&m_rcVideoSingle);
+
 		//SetWindowPos(NULL, 0, 0, w, h, 0);
 		// 去掉标题栏  
-		ModifyStyle(WS_CAPTION, 0); 
+		ModifyStyle(WS_CAPTION|WS_MAXIMIZE, 0); //	
 		 // 去掉边框
 		ModifyStyleEx(WS_EX_DLGMODALFRAME, 0);  
 		//窗口位置和大小保持原来不变
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED); 
+// 		this->SetWindowPos(&CWnd::wndTopMost ,//&CWnd::wndBottom,//
+// 			0, 0, w, h, 
+// 			/*SWP_NOOWNERZORDER | */SWP_SHOWWINDOW );
+
 		//最大化窗口
 		ShowWindow(SW_MAXIMIZE);
 	}
@@ -762,10 +786,34 @@ void	CLivePlayerDlg::FullScreen()
 	{
 		ModifyStyle(0, WS_CAPTION);
 		ModifyStyleEx(0, WS_EX_DLGMODALFRAME);
-		//SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
-		ShowWindow(SW_NORMAL);
+		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+
+// 		WINDOWPLACEMENT wndpl;
+// 		wndpl.length  = sizeof(WINDOWPLACEMENT);
+// 		wndpl.flags   = 0;
+// 		wndpl.showCmd = SW_SHOWNORMAL;
+// 		wndpl.rcNormalPosition = m_rcVideoSingle;
+// 		// 用MoveWindow函数将导致窗口最大化的时候无法退出全屏，用SetWindowPos在360浏览器上不能显示全屏 [2012-8-25  12:59 dingshuai]
+// 		this->SetWindowPlacement(&wndpl);
+		if (M_bMaxWnd)
+		{
+			ShowWindow(SW_MAXIMIZE);
+		} 
+		else
+		{
+			ShowWindow(SW_NORMAL);
+		}
 	}
 
+	if (NULL != pComboxSplitScreen)		pComboxSplitScreen->ShowWindow(bFullScreen ? SW_HIDE : SW_SHOW);
+	if (NULL != pComboxRenderFormat)		pComboxRenderFormat->ShowWindow(bFullScreen ? SW_HIDE : SW_SHOW);
+	if (NULL != pChkShownToScale)		pChkShownToScale->ShowWindow(bFullScreen ? SW_HIDE : SW_SHOW);
+	if (NULL != pChkMultiplex)		pChkMultiplex->ShowWindow(bFullScreen ? SW_HIDE : SW_SHOW);
+	if (NULL != pChkFullScreen)		pChkFullScreen->ShowWindow(bFullScreen ? SW_HIDE : SW_SHOW);
+	if (NULL != pStaticVolume)		pStaticVolume->ShowWindow(bFullScreen ? SW_HIDE : SW_SHOW);
+	if (NULL != pSliderCtrlVolume)	pSliderCtrlVolume->ShowWindow(bFullScreen ? SW_HIDE : SW_SHOW);
+
+	if (NULL != pChkFullScreen)		pChkFullScreen->SetCheck(bFullScreen?1:0);
 }
 
 
@@ -853,4 +901,20 @@ void CLivePlayerDlg::GetApplicationVersion(wchar_t *pVersion)
        
 		wcscpy(pVersion, strVersion);
     }
+}
+
+
+BOOL CLivePlayerDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->wParam == VK_ESCAPE)
+	{
+		if (proConfig.fullScreen==0x01)
+		{
+			FullScreen();
+		}
+
+		return TRUE;
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }
