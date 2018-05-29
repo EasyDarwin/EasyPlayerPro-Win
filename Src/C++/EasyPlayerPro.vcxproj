@@ -105,6 +105,7 @@
     <None Include="res\EasyPlayerPro.ico" />
     <None Include="res\EasyPlayerPro.rc2" />
     <None Include="res\LivePlayer.ico" />
+    <None Include="res\nosignal.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DialogBase.h" />

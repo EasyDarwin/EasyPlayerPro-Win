@@ -16,6 +16,7 @@ CEasyProgressCtrl::CEasyProgressCtrl()
 	mMinVal	=	0;
 	mMaxVal	=	0;
 	mPos		=	0;
+	memset(wszProgressLabel, 0x00, sizeof(wszProgressLabel));
 
 	bDrag	=	false;
 }

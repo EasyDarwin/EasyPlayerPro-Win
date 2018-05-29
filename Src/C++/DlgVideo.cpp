@@ -508,6 +508,10 @@ int CALLBACK __EasyPlayerCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int chan
 
 			if (NULL!=pLiveVideo)		pLiveVideo->PostMessageW(WM_SET_FILE_PROGRESS, 0, (int)frameInfo->timestamp_sec);
 		}
+		else if (mediaType == MEDIA_TYPE_AUDIO && frameInfo->timestamp_sec>0)
+		{
+			if (NULL!=pLiveVideo)		pLiveVideo->PostMessageW(WM_SET_FILE_PROGRESS, 0, (int)frameInfo->timestamp_sec);
+		}
 		//else if (mediaType == 
 
 
