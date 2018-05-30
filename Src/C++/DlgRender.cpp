@@ -257,7 +257,7 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 				if (proConfig.fullScreen == 0x01)
 				{
 					AppendMenu(hMenu, MF_SEPARATOR, POP_MENU_SEPARATOR, TEXT("-"));
-					AppendMenu(hMenu, MF_STRING, POP_MENU_EXIT_FULLSCREEN, TEXT("È«ÆÁ"));
+					AppendMenu(hMenu, MF_STRING, POP_MENU_EXIT_FULLSCREEN, TEXT("ÍË³öÈ«ÆÁ"));
 				}
 			
 				CPoint	pMousePosition;
