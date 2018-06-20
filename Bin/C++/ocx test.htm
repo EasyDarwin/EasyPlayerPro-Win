@@ -1,4 +1,4 @@
-<HTML>
+ï»¿<HTML>
 <HEAD>
 <TITLE>EasyPlayer</TITLE>
 <script type="text/javascript">
@@ -10,9 +10,9 @@
 		var rendertype = document.getElementById("rendertype").value;
 		var rtpovertcp = document.getElementById("rtpovertcp").value;
 		var cache = document.getElementById("cache").value;
-		var playsound = document.getElementById("playsound").value;
+		var playsound = document.getElementById("playsound").checked?1:0;
 		var showtoscale= document.getElementById("showtoscale").value;
-		var showsatic = document.getElementById("showsatic").value;
+		var showsatic = document.getElementById("showsatic").checked?1:0;
 
 		var ret = obj.Start(url, rendertype, rtpovertcp, cache, showtoscale,playsound,showsatic);
 
@@ -42,17 +42,18 @@ EasyPlayer Plugin Example
 
 </OBJECT>
 
-½çÃæĞÅÏ¢<br>
-RTSP URL£º<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks"/>
-RenderFormat£º<input type="text" name="rendertype" id="rendertype" VALUE="0"/>
-UDP Over TCP£º<input type="text" name="rtpovertcp" id="rtpovertcp" size=25 value="1"/>
-²ÉÓÃÓ²½âÂë£º<input type="text" name="harddecode" id="harddecode" size=25 value="1"/>
+ç•Œé¢ä¿¡æ¯<br>
+RTSP URL: <input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks"/>
+ç¼“å­˜ï¼š<input type="text" name="cache" id="cache" size=25 value ="3"/>
+æŒ‰æ¯”ä¾‹æ˜¾ç¤ºï¼š<input type="text" name="showtoscale" id="showtoscale" size=25 value ="1"/><br>
+æ˜¾ç¤ºç ç‡ä¿¡æ¯ï¼š<input type="checkbox" name="showsatic" id="showsatic" checked="checked"/>
+RenderFormat: <input type="checkbox" name="rendertype" id="rendertype" VALUE="0" checked="checked"/>
+UDP Over TCP: <input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 value="1" checked="checked"/>
+é‡‡ç”¨ç¡¬è§£ç ï¼š<input type="checkbox" name="harddecode" id="harddecode" checked="checked"/>
+æ’­æ”¾å£°éŸ³ï¼š<input type="checkbox" name="playsound" id="playsound" type="checked"/>
 
 <br>
-»º´æ£º<input type="text" name="cache" id="cache" size=25 value ="3"/>
-²¥·ÅÉùÒô£º<input type="text" name="playsound" id="playsound" size=25 value ="1"/>
-°´±ÈÀıÏÔÊ¾£º<input type="text" name="showtoscale" id="showtoscale" size=25 value ="1"/>
-ÏÔÊ¾ÂëÂÊĞÅÏ¢£º<input type="text" name="showsatic" id="showsatic" size=25 value ="1"/><br>
+
 
 
 <button type="button" onclick="startplay();">Start</button>
