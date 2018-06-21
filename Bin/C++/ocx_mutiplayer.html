@@ -9,8 +9,8 @@
 
 			var obj = document.getElementById("EasyPlayerOcx");
 			var url = document.getElementById("url").value;
-			var rendertype = document.getElementById("rendertype").value;
-			var rtpovertcp = document.getElementById("rtpovertcp").value;
+			var rendertype = document.getElementById("rendertype").checked ? 1 : 0;
+			var rtpovertcp = document.getElementById("rtpovertcp").checked ? 1 : 0;
 			var cache = document.getElementById("cache").value;
 			var playsound = document.getElementById("playsound").checked ? 1 : 0;
 			var showtoscale = document.getElementById("showtoscale").value;
@@ -40,6 +40,7 @@
 		body {
 			background: #f0f0f0;
 		}
+
 		.box {
 			width: 50%;
 			float: left;
@@ -50,50 +51,111 @@
 			box-sizing: border-box;
 			padding-bottom: 15px;
 			padding-top: 15px;
-			border:1px solid #ccc;
+			border: 1px solid #ccc;
 		}
-		.box:nth-of-type(2){
-			border-left:none;
+
+		.box:nth-of-type(2) {
+			border-left: none;
 		}
-		.box:nth-of-type(3){
-			border-top:none;
+
+		.box:nth-of-type(3) {
+			border-top: none;
 		}
-		.box:nth-of-type(4){
-			border-top:none;
-			border-left:none;
+
+		.box:nth-of-type(4) {
+			border-top: none;
+			border-left: none;
 		}
+
 		.options {
-			width: 50%;
-			float: left;
+			/* width: 50%; */
+			/* float: left; */
 		}
-		.checks {
-			width: 50%;
-		}
+
 		.option {
 			text-align: right;
 			font-size: 14px;
 			padding-top: 15px;
+			width: 50%;
+			float: left;
 		}
+
 		.option input {
 			width: 50%;
 		}
+
 		input {
 			font-size: 14px;
-			line-height: 1.42857143;
 			color: #555;
-
 			background-image: none;
 			border: 1px solid #ccc;
 			border-radius: 4px;
 			margin-top: 15px;
+			padding: 6px 12px;
+		}
+
+		#urlbox {
+			width: 100%;
+			text-align: center;
+		}
+
+		#cachebox {
+			text-align: left;
+		}
+
+		input[type=range] {
+			border-radius: 10px;
+			border: none;
+			margin-top: 0;
+		}
+
+		input[type=range]::-ms-track {
+			border-radius: 10px;
+			border-color: transparent;
+			color: transparent;
+		}
+
+		input[type=range]::-ms-thumb {
+			border: solid 0.125em rgba(205, 224, 230, 0.5);
+			height: 10px;
+			width: 25px;
+			background: #ffffff;
+			box-shadow: 0 .125em .125em #3b4547;
+		}
+
+		input[type=range]::-ms-fill-lower {
+			border-radius: 10px;
+			background: linear-gradient(to right, #059CFA, white 100%, white);
+		}
+
+		input[type=range]::-ms-fill-upper {
+			border-radius: 10px;
+			background: #ffffff;
+		}
+
+		input[type=range]:focus::-ms-fill-lower {
+			background: linear-gradient(to right, #059CFA, white 100%, white);
+		}
+
+		input[type=range]:focus::-ms-fill-upper {
+			background: #ffffff;
+		}
+
+		.checks {
+			/* width: 50%; */
+			height: 150px;
 		}
 
 		.check {
-			text-align: right;
+			text-align: left;
+			width: 20%;
+			float: left;
 		}
 
 		.buttons {
 			padding-top: 10px;
+			position: relative;
+			height: 35px;
 		}
 
 		button {
@@ -117,17 +179,21 @@
 			border-radius: 4px;
 			width: 65px;
 			height: 35px;
+			position: absolute;
+			bottom: 0px;
+			left: 50%;
 		}
 
 		.start {
 			background: #286090;
 			color: #fff;
-			margin-right: 20px;
+			margin-left: -85px;
 		}
 
 		.stop {
 			background: #e6e6e6;
 			color: #000;
+			margin-left: 0px;
 		}
 	</style>
 </HEAD>
@@ -142,29 +208,29 @@
 		<div class="box">
 			<OBJECT id="obj1" WIDTH=640px HEIGHT=480px CLASSID="CLSID:C826A1CE-34E6-4BB1-B844-681E7AC98D9A">
 			</OBJECT>
+			<div class="option" id="urlbox">
+				RTSP URL：
+				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+			</div>
 			<div class="options">
 				<div class="option">
-					RTSP URL：
-					<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+					RenderFormat:
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
 				</div>
-				<div class="option">
-					按比例显示:
-					<input type="text" name="showtoscale" id="showtoscale" size=25 value="1" />
-				</div>
-				<div class="option">
+				<div class="option" id="cachebox">
 					缓存：
-					<input type="text" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
-					RenderFormat:
-					<input type="checkbox" name="rendertype" id="rendertype" VALUE="0" checked="checked" />
+					按比例显示:
+					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
 
 				</div>
 				<div class="check">
 					UDP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 value="1" checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
@@ -193,29 +259,29 @@
 		<div class="box">
 			<OBJECT id="obj2" WIDTH=640px HEIGHT=480px CLASSID="CLSID:C826A1CE-34E6-4BB1-B844-681E7AC98D9A">
 			</OBJECT>
+			<div class="option" id="urlbox">
+				RTSP URL：
+				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+			</div>
 			<div class="options">
 				<div class="option">
-					RTSP URL：
-					<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+					RenderFormat:
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
 				</div>
-				<div class="option">
-					按比例显示:
-					<input type="text" name="showtoscale" id="showtoscale" size=25 value="1" />
-				</div>
-				<div class="option">
+				<div class="option" id="cachebox">
 					缓存：
-					<input type="text" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
-					RenderFormat:
-					<input type="checkbox" name="rendertype" id="rendertype" VALUE="0" checked="checked" />
+					按比例显示:
+					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
 
 				</div>
 				<div class="check">
 					UDP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 value="1" checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
@@ -244,29 +310,29 @@
 		<div class="box">
 			<OBJECT id="obj3" WIDTH=640px HEIGHT=480px CLASSID="CLSID:C826A1CE-34E6-4BB1-B844-681E7AC98D9A">
 			</OBJECT>
+			<div class="option" id="urlbox">
+				RTSP URL：
+				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+			</div>
 			<div class="options">
 				<div class="option">
-					RTSP URL：
-					<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+					RenderFormat:
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
 				</div>
-				<div class="option">
-					按比例显示:
-					<input type="text" name="showtoscale" id="showtoscale" size=25 value="1" />
-				</div>
-				<div class="option">
+				<div class="option" id="cachebox">
 					缓存：
-					<input type="text" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
-					RenderFormat:
-					<input type="checkbox" name="rendertype" id="rendertype" VALUE="0" checked="checked" />
+					按比例显示:
+					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
 
 				</div>
 				<div class="check">
 					UDP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 value="1" checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
@@ -298,29 +364,29 @@
 		<div class="box">
 			<OBJECT id="obj4" WIDTH=640px HEIGHT=480px CLASSID="CLSID:C826A1CE-34E6-4BB1-B844-681E7AC98D9A">
 			</OBJECT>
+			<div class="option" id="urlbox">
+				RTSP URL：
+				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+			</div>
 			<div class="options">
 				<div class="option">
-					RTSP URL：
-					<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+					RenderFormat:
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
 				</div>
-				<div class="option">
-					按比例显示:
-					<input type="text" name="showtoscale" id="showtoscale" size=25 value="1" />
-				</div>
-				<div class="option">
+				<div class="option" id="cachebox">
 					缓存：
-					<input type="text" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
-					RenderFormat:
-					<input type="checkbox" name="rendertype" id="rendertype" VALUE="0" checked="checked" />
+					按比例显示:
+					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
 
 				</div>
 				<div class="check">
 					UDP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 value="1" checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
