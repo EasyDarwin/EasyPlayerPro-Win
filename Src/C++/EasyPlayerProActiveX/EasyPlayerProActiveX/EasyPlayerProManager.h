@@ -4,14 +4,19 @@
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
 */
-// RTSP流接收(播放)管理类，接收音视频流 [11/8/2015 Dingshuai]
+// RTSP锟斤拷锟斤拷锟斤拷(锟斤拷锟斤拷)锟斤拷锟斤拷锟洁，锟斤拷锟斤拷锟斤拷锟斤拷频锟斤拷 [11/8/2015 Dingshuai]
 // Add by SwordTwelve
 
 #pragma once
 
 #include "libEasyPlayerProAPI.h"
 
-//Gavin's Source Struct流信息结构
+/*
+*激活码 可在pvale.com中获取测试激活码, 或者邮件联系support@easydarwin.org
+*/
+#define ACTIVE_KEY "64687538665969576B5A7341676A4662704D35397065354659584E35554778686557567955484A764C6D56345A56634D5671442F70654E4659584E355247467964326C755647566862556C7A5647686C516D567A644541794D4445345A57467A65513D3D"
+
+//Gavin's Source Struct锟斤拷锟斤拷息锟结构
 typedef struct __EASY_LOCAL_SOURCE_T
 {	
 	int		sourceId;
@@ -28,56 +33,62 @@ public:
 
 	//Member Function
 public:
-	//初始化
+	//初始化库文件
 	static int Init()
 	{
+		int ret = libEasyPlayerPro_Activate(ACTIVE_KEY);
+		if(ret != EASY_ACTIVATE_SUCCESS)
+		{
+			printf("Active error! ret = %d\r\n", ret);
+			return ret;
+		}
 		return libEasyPlayerPro_Initialize(128);
 	}
 
-	// 释放
+	// 锟酵凤拷
 	static int UnInit()
 	{
 		return libEasyPlayerPro_Deinitialize();
 	}
 
-	//打开流
+	//锟斤拷锟斤拷
 	int Start(char* szURL, HWND hShowWnd, RENDER_FORMAT renderFormat,  int nRTPOverTCP, int nCache, 
 		BOOL bShownToScale, BOOL bPlaySound, BOOL bStatisticalInfo);
-	//关闭流
+	//锟截憋拷锟斤拷
 	int Close(void);
 	int InRunning();
 
-	//设置OSD
+	//锟斤拷锟斤拷OSD
 	int SetOSD(int show, const char* osd);
 
-	//录像
+	//录锟斤拷
 	int StartRecord(const char *foldername, 
 		const char *filename, 
-		unsigned int filesize/*录像文件大小 MB*/, int duration/*录像时长(second)*/,  
-		unsigned char preRecording/*0x01:预录  0x00:不预录*/);
+		unsigned int filesize/*录锟斤拷锟侥硷拷锟斤拷小 MB*/, int duration/*录锟斤拷时锟斤拷(second)*/,  
+		unsigned char preRecording/*0x01:预录  0x00:锟斤拷预录*/);
 	int StopRecord();
 
 	//抓图
 	int Snapshot( 
-		char *filename, unsigned char sync=0/*0:异步: 1:同步*/, 
-		unsigned char useQueue=0/*1:使用队列 0:不使用队列*/);
+		char *filename, unsigned char sync=0/*0:锟届步: 1:同锟斤拷*/, 
+		unsigned char useQueue=0/*1:使锟矫讹拷锟斤拷 0:锟斤拷使锟矫讹拷锟斤拷*/);
 
-	//声音播放和控制
+	//锟斤拷锟斤拷藕涂锟斤拷锟?
 	int PlaySound(BOOL bPlay);
 	int SetAudioVolume( int volume);
 	int GetAudioVolume();
 
-	//播放控制
-	// 设置播放速度(文件)
+	//锟斤拷锟脚匡拷锟斤拷
+	// 锟斤拷锟矫诧拷锟斤拷锟劫讹拷(锟侥硷拷)
 	int SetPlaySpeed(PLAY_SPEED_ENUM speed);
-	//单帧播放, 可调用libEasyPlayerPro_SetPlaySpeed切换回正常播放模式
+	//锟斤拷帧锟斤拷锟斤拷, 锟缴碉拷锟斤拷libEasyPlayerPro_SetPlaySpeed锟叫伙拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷模式
 	int PlaySingleFrame();
-	//跳转到指定时间播放(文件)
-	int SeekFile( unsigned int playTimeSecs/*秒*/ );
+	//锟斤拷转锟斤拷指锟斤拷时锟戒播锟斤拷(锟侥硷拷)
+	int SeekFile( unsigned int playTimeSecs/*锟斤拷*/ );
 
 	//Member Var
 private:
-	//接收的流信息
+	//锟斤拷锟秸碉拷锟斤拷锟斤拷息
 	EASY_LOCAL_SOURCE_T		m_sSourceInfo;
 };
 

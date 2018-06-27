@@ -40,6 +40,13 @@ namespace EasyPlayerProSDK
         [DllImport(@"Lib\libEasyPlayerPro.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "_libEasyPlayerPro_Release@4")]
         public static extern int LibEasyPlayerPro_Release(ref IntPtr playerHandle);
 
+        /// <summary>
+        /// 使用libEasyPlayerPro_Activate 激活SDK,  只需在初始时调用一次
+        /// </summary>
+        /// <param name="license">激活码 可在pvale.com中获取测试激活码, 或者邮件联系support@easydarwin.org</param>
+        /// <returns></returns>
+        [DllImport(@"Lib\libEasyPlayerPro.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "_libEasyPlayerPro_Activate@4")]
+        public static extern int LibEasyPlayerPro_Activate(string license);
 
         /// <summary>
         /// 使用libEasyPlayerPro_Initialize初始化,  在后面的所有调用中, PLAYER_HANDLE为NULL, 结束调用libEasyPlayerPro_Deinitialize

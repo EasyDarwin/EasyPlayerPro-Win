@@ -122,6 +122,9 @@ extern "C"
 {
 #endif
 
+    //激活SDK 全局只需调用一次
+    LIB_EASYPLAYER_PRO_API EASY_ACTIVATE_ERR_CODE_ENUM LIB_APICALL	libEasyPlayerPro_Activate(const char* license);
+
 	/*
 	libEasyPlayerPro 分为两种调用方式:
 								1. 使用libEasyPlayerPro_Initialize初始化,  在后面的所有调用中, PLAYER_HANDLE为NULL, 结束调用libEasyPlayerPro_Deinitialize
