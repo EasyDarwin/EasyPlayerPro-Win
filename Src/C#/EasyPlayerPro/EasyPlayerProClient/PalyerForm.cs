@@ -22,12 +22,19 @@ namespace EasyPlayerProClient
         private bool isInit = false;
         private bool isElectronicZooming = false;
         private RENDER_FORMAT renderFormat = RENDER_FORMAT.RENDER_FORMAT_RGB24_GDI;
+        private string ACTIVE_KEY = "64687538665969576B5A7341676A4662704D35397065354659584E35554778686557567955484A764C6D56345A56634D5671442F70654E4659584E355247467964326C755647566862556C7A5647686C516D567A644541794D4445345A57467A65513D3D";
+
 
         bool isDarew = false;
 
         public PalyerForm()
         {
             InitializeComponent();
+            int ret = PlayerSDK.LibEasyPlayerPro_Activate(ACTIVE_KEY);
+            if (ret != 0)
+            {
+                //Active Error!
+            }
         }
 
         private int RealProSourceCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, IntPtr userPtr, MEDIA_TYPE mediaType, IntPtr pBuf, ref EASY_FRAME_INFO _frameInfo)
