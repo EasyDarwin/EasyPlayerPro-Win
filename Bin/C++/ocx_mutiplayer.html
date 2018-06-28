@@ -9,14 +9,14 @@
 
 		function startplay(i) {
 
-			var obj = document.getElementById("EasyPlayerOcx");
-			var url = document.getElementById("url").value;
-			var rendertype = document.getElementById("rendertype").checked ? 1 : 0;
-			var rtpovertcp = document.getElementById("rtpovertcp").checked ? 1 : 0;
-			var cache = document.getElementById("cache").value;
-			var playsound = document.getElementById("playsound").checked ? 1 : 0;
-			var showtoscale = document.getElementById("showtoscale").value;
-			var showsatic = document.getElementById("showsatic").checked ? 1 : 0;
+			var obj = document.getElementById("EasyPlayerOcx"+i);
+			var url = document.getElementById("url"+i).value;
+			var rendertype = document.getElementById("rendertype"+i).checked ? 1 : 0;
+			var rtpovertcp = document.getElementById("rtpovertcp"+i).checked ? 1 : 0;
+			var cache = document.getElementById("cache"+i).value;
+			var playsound = document.getElementById("playsound"+i).checked ? 1 : 0;
+			var showtoscale = document.getElementById("showtoscale"+i).value;
+			var showsatic = document.getElementById("showsatic"+i).checked ? 1 : 0;
 			var startNumber = i;
 			start(url, rendertype, rtpovertcp, cache, showtoscale, playsound, showsatic, startNumber);
 			//alert(url+";"+rendertype+";"+cache+";"+showtoscale);
@@ -202,42 +202,42 @@
 			</OBJECT>
 			<div class="option" id="urlbox">
 				RTSP URL：
-				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+				<input type="text" name="url" id="url1" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
 			</div>
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale1" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：
-					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache1" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
 					按比例显示:
-					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
+					<input type="checkbox" name="rendertype" id="rendertype1" checked="checked" />
 
 				</div>
 				<div class="check">
 					RTP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp1" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					采用硬解码
-					<input type="checkbox" name="harddecode" id="harddecode" checked="checked" />
+					<input type="checkbox" name="harddecode" id="harddecode1" checked="checked" />
 
 				</div>
 				<div class="check">
 					播放声音:
-					<input type="checkbox" name="playsound" id="playsound" size=25 checked="checked" />
+					<input type="checkbox" name="playsound" id="playsound1" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					显示码率信息
-					<input type="checkbox" name="showsatic" id="showsatic" checked="checked" />
+					<input type="checkbox" name="showsatic" id="showsatic1" checked="checked" />
 
 				</div>
 			</div>
@@ -253,42 +253,42 @@
 			</OBJECT>
 			<div class="option" id="urlbox">
 				RTSP URL：
-				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+				<input type="text" name="url" id="url2" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
 			</div>
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale2" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：
-					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache2" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
 					按比例显示:
-					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
+					<input type="checkbox" name="rendertype" id="rendertype2" checked="checked" />
 
 				</div>
 				<div class="check">
 					RTP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp2" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					采用硬解码
-					<input type="checkbox" name="harddecode" id="harddecode" checked="checked" />
+					<input type="checkbox" name="harddecode" id="harddecode2" checked="checked" />
 
 				</div>
 				<div class="check">
 					播放声音:
-					<input type="checkbox" name="playsound" id="playsound" size=25 checked="checked" />
+					<input type="checkbox" name="playsound" id="playsound2" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					显示码率信息
-					<input type="checkbox" name="showsatic" id="showsatic" checked="checked" />
+					<input type="checkbox" name="showsatic" id="showsatic2" checked="checked" />
 
 				</div>
 			</div>
@@ -304,42 +304,42 @@
 			</OBJECT>
 			<div class="option" id="urlbox">
 				RTSP URL：
-				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+				<input type="text" name="url" id="url3" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
 			</div>
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale3" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：
-					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache3" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
 					按比例显示:
-					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
+					<input type="checkbox" name="rendertype" id="rendertype3" checked="checked" />
 
 				</div>
 				<div class="check">
 					RTP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp3" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					采用硬解码
-					<input type="checkbox" name="harddecode" id="harddecode" checked="checked" />
+					<input type="checkbox" name="harddecode" id="harddecode3" checked="checked" />
 
 				</div>
 				<div class="check">
 					播放声音:
-					<input type="checkbox" name="playsound" id="playsound" size=25 checked="checked" />
+					<input type="checkbox" name="playsound" id="playsound3" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					显示码率信息
-					<input type="checkbox" name="showsatic" id="showsatic" checked="checked" />
+					<input type="checkbox" name="showsatic" id="showsatic3" checked="checked" />
 
 				</div>
 			</div>
@@ -358,42 +358,42 @@
 			</OBJECT>
 			<div class="option" id="urlbox">
 				RTSP URL：
-				<input type="text" name="url" id="url" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
+				<input type="text" name="url" id="url4" VALUE="rtmp://live.hkstv.hk.lxdns.com/live/hks" />
 			</div>
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale" size=25 value="1" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale4" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：
-					<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
+					<input type="range" max="10" min="1" name="cache" id="cache4" size=25 value="3" />
 				</div>
 			</div>
 			<div class="checks">
 				<div class="check">
 					按比例显示:
-					<input type="checkbox" name="rendertype" id="rendertype" checked="checked" />
+					<input type="checkbox" name="rendertype" id="rendertype4" checked="checked" />
 
 				</div>
 				<div class="check">
 					RTP Over TCP:
-					<input type="checkbox" name="rtpovertcp" id="rtpovertcp" size=25 checked="checked" />
+					<input type="checkbox" name="rtpovertcp" id="rtpovertcp4" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					采用硬解码
-					<input type="checkbox" name="harddecode" id="harddecode" checked="checked" />
+					<input type="checkbox" name="harddecode" id="harddecode4" checked="checked" />
 
 				</div>
 				<div class="check">
 					播放声音:
-					<input type="checkbox" name="playsound" id="playsound" size=25 checked="checked" />
+					<input type="checkbox" name="playsound" id="playsound4" size=25 checked="checked" />
 
 				</div>
 				<div class="check">
 					显示码率信息
-					<input type="checkbox" name="showsatic" id="showsatic" checked="checked" />
+					<input type="checkbox" name="showsatic" id="showsatic4" checked="checked" />
 
 				</div>
 			</div>
