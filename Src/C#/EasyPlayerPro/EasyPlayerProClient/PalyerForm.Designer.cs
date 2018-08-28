@@ -278,7 +278,7 @@
             this.StreamURI.Name = "StreamURI";
             this.StreamURI.Size = new System.Drawing.Size(314, 21);
             this.StreamURI.TabIndex = 6;
-            this.StreamURI.Text = "http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8";
+            this.StreamURI.Text = "rtmp://live.hkstv.hk.lxdns.com/live/hks";
             // 
             // tcpCheck
             // 

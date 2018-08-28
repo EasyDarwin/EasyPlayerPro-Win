@@ -21,7 +21,7 @@ namespace EasyPlayerProSDK
         /// <param name="pBuf">数据指针.</param>
         /// <param name="_frameInfo">帧数据结构体.</param>
         /// <returns>System.Int32.</returns>
-        public delegate int EasyPlayerProCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, IntPtr userPtr, MEDIA_TYPE mediaType, IntPtr pBuf, ref EASY_FRAME_INFO _frameInfo);
+        public delegate int EasyPlayerProCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, IntPtr userPtr, MEDIA_TYPE mediaType, IntPtr pBuf, IntPtr _frameInfo);
 
         /// <summary>
         /// 创建一个PLAYER_HANDLE句柄, 在后面的所有调用中, 填上创建的句柄, 结束调用libEasyPlayerPro_Release.
@@ -603,13 +603,12 @@ namespace EasyPlayerProSDK
     {
         public uint codec;                  /* 音视频格式 */
 
-        public uint type;                   /* 视频帧类型 */
+        public byte type;                   /* 视频帧类型 */
         public byte fps;                    /* 视频帧率 */
+        public byte reserved1;         /* 保留参数1 */
+        public byte reserved2;         /* 保留参数2 */
         public ushort width;               /* 视频宽 */
         public ushort height;              /* 视频高 */
-
-        public uint reserved1;         /* 保留参数1 */
-        public uint reserved2;         /* 保留参数2 */
 
         public uint sample_rate;       /* 音频采样率 */
         public uint channels;          /* 音频声道数 */

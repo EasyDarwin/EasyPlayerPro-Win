@@ -37,8 +37,23 @@ namespace EasyPlayerProClient
             }
         }
 
-        private int RealProSourceCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, IntPtr userPtr, MEDIA_TYPE mediaType, IntPtr pBuf, ref EASY_FRAME_INFO _frameInfo)
+        private int RealProSourceCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, int channelId, IntPtr userPtr, MEDIA_TYPE mediaType, IntPtr pBuf, IntPtr _frameInfo)
         {
+            if(EasyPlayerProSDK.EASY_CALLBACK_TYPE_ENUM.EASY_TYPE_CODEC_DATA == callbackType)
+            {
+                EASY_FRAME_INFO frameInfo = new EASY_FRAME_INFO();
+                byte[] pByte = new byte[512];
+                if (_frameInfo != IntPtr.Zero)
+                {
+                    Marshal.Copy(_frameInfo, pByte, 0, Marshal.SizeOf(typeof(EASY_FRAME_INFO)));
+                    frameInfo = (EASY_FRAME_INFO)BytesToStruct(pByte, frameInfo.GetType());
+                }
+                if (mediaType == EasyPlayerProSDK.MEDIA_TYPE.MEDIA_TYPE_VIDEO)
+                    Console.WriteLine("FrameInfo: 视频==========分辨率：[" + frameInfo.width + "，" + frameInfo.height + "]====Fps: " + frameInfo.fps + "====码率：" + frameInfo.bitrate);
+                else if (mediaType == EasyPlayerProSDK.MEDIA_TYPE.MEDIA_TYPE_AUDIO)
+                    Console.WriteLine("FrameInfo: 音频==========采样率：[" + frameInfo.sample_rate + "]====通道数: " + frameInfo.channels + "====采样位宽：" + frameInfo.bits_per_sample);
+            }
+
             return 0;
         }
 
@@ -75,6 +90,20 @@ namespace EasyPlayerProClient
             }
         }
 
+        public static object BytesToStruct(byte[] bytes, Type strcutType)
+        {
+            int size = Marshal.SizeOf(strcutType);
+            IntPtr buffer = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.Copy(bytes, 0, buffer, size);
+                return Marshal.PtrToStructure(buffer, strcutType);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
         private void StatisticTML_Click(object sender, EventArgs e)
         {
             if (channelID <= 0)
