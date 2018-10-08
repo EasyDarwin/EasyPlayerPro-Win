@@ -10,7 +10,7 @@
 		function startplay() {
 			var obj = document.getElementById("EasyPlayerOcx");
 			var url = document.getElementById("url").value;
-			var rendertype = document.getElementById("rendertype").checked ? 1 : 0;
+			var rendertype = document.getElementById("rendertype").value;
 			var rtpovertcp = document.getElementById("rtpovertcp").checked ? 1 : 0;
 			var cache = document.getElementById("cache").value;
 			var playsound = document.getElementById("playsound").checked ? 1 : 0;
@@ -133,7 +133,7 @@
 		<input type="range" max="10" min="1" name="cache" id="cache" size=25 value="3" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		RenderFormat:
-		<input type="range" max="7" min="1" name="rendertype" id="rendertype" VALUE="0" checked="checked" />
+		<input type="range" max="7" min="1" name="rendertype" id="rendertype" VALUE="7" />
 		
 		<br> 显示码率信息:
 		<input type="checkbox" name="showtoscale" id="showtoscale" size=25 value="1" checked="checked" /> 
