@@ -12,9 +12,9 @@
 #include "libEasyPlayerProAPI.h"
 
 /*
-*¼¤»îÂë ¿ÉÔÚpvale.comÖÐ»ñÈ¡²âÊÔ¼¤»îÂë, »òÕßÓÊ¼þÁªÏµsupport@easydarwin.org
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½pvale.comï¿½Ð»ï¿½È¡ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ïµsupport@easydarwin.org
 */
-#define ACTIVE_KEY "64687538665969576B5A7341676A4662704D35397065354659584E35554778686557567955484A764C6D56345A56634D5671442F70654E4659584E355247467964326C755647566862556C7A5647686C516D567A644541794D4445345A57467A65513D3D"
+#define ACTIVE_KEY "64687538665969576B5A73416E727062704556687065354659584E35554778686557567955484A764C6D56345A56634D5671442F70654E4659584E355247467964326C755647566862556C7A5647686C516D567A644541794D4445345A57467A65513D3D"
 
 //Gavin's Source Structï¿½ï¿½ï¿½ï¿½Ï¢ï¿½á¹¹
 typedef struct __EASY_LOCAL_SOURCE_T
@@ -33,7 +33,7 @@ public:
 
 	//Member Function
 public:
-	//³õÊ¼»¯¿âÎÄ¼þ
+	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 	static int Init()
 	{
 		int ret = libEasyPlayerPro_Activate(ACTIVE_KEY);
@@ -73,7 +73,7 @@ public:
 		char *filename, unsigned char sync=0/*0:ï¿½ì²½: 1:Í¬ï¿½ï¿½*/, 
 		unsigned char useQueue=0/*1:Ê¹ï¿½Ã¶ï¿½ï¿½ï¿½ 0:ï¿½ï¿½Ê¹ï¿½Ã¶ï¿½ï¿½ï¿½*/);
 
-	//ï¿½ï¿½ï¿½ï¿½ÅºÍ¿ï¿½ï¿½ï¿?
+	//ï¿½ï¿½ï¿½ï¿½ÅºÍ¿ï¿½ï¿½ï¿½?
 	int PlaySound(BOOL bPlay);
 	int SetAudioVolume( int volume);
 	int GetAudioVolume();
