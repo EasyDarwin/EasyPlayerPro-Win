@@ -45,8 +45,6 @@ EasyPlayerPro是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP�
 
 - 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
 
-- Tel：13718530929
-
 - QQ交流群：[544917793](http://jq.qq.com/?_wv=1027&k=2IDkJId "EasyPlayer")
 
 > EasyPlayerPro是一款非常稳定的全协议/全功能播放器组件，各平台版本需要经过授权才能商业使用，商业授权方案可以通过以上渠道进行更深入的技术与合作咨询；
