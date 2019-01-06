@@ -11,7 +11,7 @@
 
 			var obj = document.getElementById("EasyPlayerOcx"+i);
 			var url = document.getElementById("url"+i).value;
-			var rendertype = document.getElementById("rendertype"+i).value;
+			var rendertype = document.getElementById("rendertype"+i).checked ? 1 : 0;
 			var rtpovertcp = document.getElementById("rtpovertcp"+i).checked ? 1 : 0;
 			var cache = document.getElementById("cache"+i).value;
 			var playsound = document.getElementById("playsound"+i).checked ? 1 : 0;
@@ -207,7 +207,7 @@
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale1" size=25 value="7" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale1" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：
@@ -258,7 +258,7 @@
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale2" size=25 value="7" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale2" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：
@@ -309,7 +309,7 @@
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale3" size=25 value="7" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale3" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：
@@ -363,7 +363,7 @@
 			<div class="options">
 				<div class="option">
 					RenderFormat:
-					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale4" size=25 value="7" />
+					<input type="range" max="7" min="1" name="showtoscale" id="showtoscale4" size=25 value="1" />
 				</div>
 				<div class="option" id="cachebox">
 					缓存：

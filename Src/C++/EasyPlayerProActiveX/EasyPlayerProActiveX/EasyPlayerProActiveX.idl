@@ -36,10 +36,10 @@ library EasyPlayerProActiveXLib
 			//  事件接口没有任何属性
 
 		methods:
-			[id(1)] LONG Start(BSTR sURL, BSTR sRenderFormat, BSTR sRTPOverTCP, BSTR sCache, BSTR sShownToScale, BSTR sPlaySound, BSTR sStatisticalInfo);
+			[id(1)] LONG Start(BSTR sURL, BSTR sRenderFormat, BSTR sRTPOverTCP, BSTR sCache, BSTR sShownToScale, BSTR sVolume, BSTR sStatisticalInfo);
 			[id(2)] void Close(void);
-			[id(3)] void SetOSD(BSTR show, BSTR osd);
-			[id(4)] LONG StartRecord(BSTR sFoldername, BSTR sFilename, BSTR sFilesize/*录像文件大小 MB*/, BSTR sDuration/*录像时长(second)*/,  BSTR sPreRecording/*0x01:预录  0x00:不预录*/);
+			[id(3)] void SetOSD(BSTR show, BSTR x, BSTR y, BSTR color, BSTR osd);
+			[id(4)] LONG StartRecord(BSTR sFilename, BSTR sDuration/*录像时长(second)*/);
 			[id(5)] LONG StopRecord(void);
 			[id(6)] LONG Snapshot( BSTR sFilename);
 			[id(7)] LONG PlaySound(BSTR sbPlay);
@@ -48,6 +48,9 @@ library EasyPlayerProActiveXLib
 			[id(10)] LONG SetPlaySpeed(BSTR sSpeed);
 			[id(11)] LONG PlaySingleFrame(void);
 			[id(12)] LONG SeekFile( BSTR sPlayTimeSecs/*秒*/ );
+			[id(13)] LONG Pause();
+			[id(14)] LONG Play(BSTR sSpeed);
+
 	};
 
 	//  CEasyPlayerProActiveXCtrl 的类信息

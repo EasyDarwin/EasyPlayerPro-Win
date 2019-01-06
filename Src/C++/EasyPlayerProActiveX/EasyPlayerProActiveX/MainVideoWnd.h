@@ -5,7 +5,7 @@
 #include "afxdialogex.h"
 
 // CMainVideoWnd ¶Ô»°¿ò
-
+class CEasyPlayerProActiveXCtrl;
 class CMainVideoWnd : public CDialogEx
 {
 	DECLARE_DYNAMIC(CMainVideoWnd)
@@ -29,11 +29,11 @@ private:
 	CImageEx	* m_pEasyLogo;
 	BOOL m_bFuulScreen ;
 	CRect m_rcVideoSingle;
-	CWnd* m_pMainCtrl;
-
+	CEasyPlayerProActiveXCtrl* m_pMainCtrl;
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	void SetFullScreen();
 
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

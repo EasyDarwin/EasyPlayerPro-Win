@@ -16,6 +16,7 @@ IMPLEMENT_DYNAMIC(CMainVideoWnd, CDialogEx)
 	m_pEasyLogo = new CImageEx;
 	m_bFuulScreen = FALSE;
 	m_pMainCtrl = NULL;
+
 }
 
 CMainVideoWnd::~CMainVideoWnd()
@@ -35,6 +36,7 @@ void CMainVideoWnd::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CMainVideoWnd, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_LBUTTONDBLCLK()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -90,7 +92,7 @@ void CMainVideoWnd::SetFullScreen()
 
 	if (m_bFuulScreen)
 	{
-		m_pMainCtrl = this->GetParent();
+		m_pMainCtrl = (CEasyPlayerProActiveXCtrl*)this->GetParent();
 		this->SetParent(GetDesktopWindow());
 
 		m_pMainCtrl->ShowWindow(SW_HIDE);
@@ -152,4 +154,20 @@ void CMainVideoWnd::SetFullScreen()
 	}
 
 	//	this->SetFocus();
+}
+
+
+void CMainVideoWnd::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO: 
+	//m_pMainCtrl = (CEasyPlayerProActiveXCtrl*)this->GetParent();
+	if (m_pMainCtrl&&m_pMainCtrl->GetSafeHwnd())
+	{
+		RECT rcClient;
+		GetClientRect(&rcClient);
+		m_pMainCtrl->m_player.Resize(rcClient);
+	}
+
 }

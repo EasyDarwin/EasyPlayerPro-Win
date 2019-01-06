@@ -1,2 +1,0 @@
-rtsp://admin:admin12345@192.168.10.100
-file://F:\1080p-4.ts

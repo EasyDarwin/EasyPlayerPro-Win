@@ -1,18 +1,23 @@
 /*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2018 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
 */
 #include "StdAfx.h"
 #include "EasyPlayerProManager.h"
+#include <io.h>
+#include <direct.h>
+
 #include <string>
 using namespace std;
+
+#define gap_char ('\\')
 
 EasyPlayerProManager::EasyPlayerProManager(void)
 {
 	memset(&m_sSourceInfo, 0x0, sizeof(EASY_LOCAL_SOURCE_T));
-	m_sSourceInfo.sourceId = -1;
+	m_sSourceInfo.sourceId = 0;
 
 }
 
@@ -21,8 +26,8 @@ EasyPlayerProManager::~EasyPlayerProManager(void)
 }
 
 //打开流
-int EasyPlayerProManager::Start(char* szURL, HWND hShowWnd, RENDER_FORMAT renderFormat, int nRTPOverTCP, int nCache, 
-	BOOL bShownToScale, BOOL bPlaySound, BOOL bStatisticalInfo)
+int EasyPlayerProManager::Start(char* szURL, HWND hShowWnd, int renderFormat,  int nRTPOverTCP, int nCache, 
+	BOOL bShownToScale, int nVolume, BOOL bStatisticalInfo)
 {
 	//Stop
 	if (InRunning())
@@ -32,40 +37,33 @@ int EasyPlayerProManager::Start(char* szURL, HWND hShowWnd, RENDER_FORMAT render
 		return -1;
 	}
 
-	EASY_CHANNEL_SOURCE_TYPE_ENUM		sourceType = EASY_CHANNEL_SOURCE_TYPE_RTSP;
-	if (0 == strncmp(szURL, "rtsp", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_RTSP;
+	char* file_url = szURL;
+	EASY_CHANNEL_SOURCE_TYPE_ENUM				sourceType = EASY_CHANNEL_SOURCE_TYPE_RTSP;
+	if (0 == strncmp(szURL, "rtsp", 4))			sourceType = EASY_CHANNEL_SOURCE_TYPE_RTSP;
 	else if (0 == strncmp(szURL, "rtmp", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_RTMP;
 	else if (0 == strncmp(szURL, "http", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_HLS;
-	else if (0 == strncmp(szURL, "file", 4))	sourceType = EASY_CHANNEL_SOURCE_TYPE_FILE;
-
-	int queueSize = 1024 * 1024 * 2;		//2MB
-	if (sourceType == EASY_CHANNEL_SOURCE_TYPE_HLS)		
-		queueSize = 1024 * 1024 * 5;		//5MB
-
-	m_sSourceInfo.sourceId = libEasyPlayerPro_OpenStream(NULL, sourceType, szURL, 
-		nRTPOverTCP, 
-		MEDIA_TYPE_VIDEO|MEDIA_TYPE_AUDIO|MEDIA_TYPE_EVENT,
-		NULL, NULL, 0x01, 0x01, queueSize, 0x01);
-
-#if 0
-	CString strTemp;
-	strTemp.Format(_T("m_sSourceInfo.sourceId = %d"), m_sSourceInfo.sourceId); 
-	AfxMessageBox(strTemp);
-#endif
-
-	if (m_sSourceInfo.sourceId > 0)
+	else if (0 == strncmp(szURL, "file", 4))
 	{
-		//libEasyPlayerPro_StartPlayStream(playerHandle, m_ChannelId, hWnd, RenderFormat);
-		libEasyPlayerPro_StartPlayStream(NULL, m_sSourceInfo.sourceId, hShowWnd, renderFormat);
-
-		libEasyPlayerPro_SetPlayFrameCache(NULL, m_sSourceInfo.sourceId, nCache);		//设置缓存
-		if(bPlaySound)
-			libEasyPlayerPro_StartPlaySound(NULL, m_sSourceInfo.sourceId);				//播放声音
-
-		libEasyPlayerPro_SetScaleDisplay(NULL, m_sSourceInfo.sourceId, bShownToScale, RGB(0x26,0x26,0x26));
-		libEasyPlayerPro_ShowStatisticalInfo(NULL, m_sSourceInfo.sourceId, bStatisticalInfo);
+		sourceType = EASY_CHANNEL_SOURCE_TYPE_FILE;
+		file_url = szURL + 7;
 	}
-	return m_sSourceInfo.sourceId;
+
+	// player open file
+	m_sSourceInfo.sourceId = EasyPlayerPro_Open(file_url, hShowWnd, EASY_VIDEO_RENDER_TYPE_D3D,
+		(EASY_VIDEO_SCALE_MODE)bShownToScale, (EASY_STREAM_LINK_MODE)nRTPOverTCP, 100, nVolume-182);
+	if (m_sSourceInfo.sourceId)
+	{
+		m_sSourceInfo.nVolume = nVolume;
+		//SetTimer(TIMER_ID_PROGRESS, 1000, NULL);
+// 		if (NULL != pDlgRender)
+// 		{
+// 			pDlgRender->SetChannelId(m_ChannelId);
+// 			pDlgRender->SetSourceType(sourceType);
+// 		}
+
+	}
+
+	return (int)m_sSourceInfo.sourceId;
 }
 
 
@@ -75,9 +73,8 @@ int EasyPlayerProManager::Close(void)
 	if (!InRunning())
 		return -1;
 
-	libEasyPlayerPro_StopPlayStream(NULL, m_sSourceInfo.sourceId);
-	libEasyPlayerPro_CloseStream(NULL, m_sSourceInfo.sourceId);
-	m_sSourceInfo.sourceId = -1;
+	EasyPlayerPro_Close(m_sSourceInfo.sourceId);
+	m_sSourceInfo.sourceId = 0;
 	return 0;
 }
 int EasyPlayerProManager::InRunning()
@@ -86,44 +83,121 @@ int EasyPlayerProManager::InRunning()
 }
 
 //设置OSD
-int EasyPlayerProManager::SetOSD(int show, const char* osd)
+int EasyPlayerProManager::SetOSD(int show,  int x, int y, int color, const char* osd)
 {
 	if (!InRunning())
 		return -1;
 
 	if (show)
 	{
-		return libEasyPlayerPro_SetOverlayText(NULL, m_sSourceInfo.sourceId, osd);
+		//需要整改
+		return EasyPlayerPro_SetOSD(m_sSourceInfo.sourceId, show, 0,0,0,0,0,0,0,0,0,0,0);
 	}
 	else
 	{
-		return libEasyPlayerPro_ClearOverlayText(NULL, m_sSourceInfo.sourceId);
+		return EasyPlayerPro_SetOSD(m_sSourceInfo.sourceId, 0, 0,0,0,0,0,0,0,0,0,0,0);
 	}
 }
 
+int EasyPlayerProManager::EnsureDirExist(CString dir)
+{
+	int len = 0;
+	char temp_dir[MAX_PATH];
+	char * pindex = NULL;
+	int access_flag = 0;
+	USES_CONVERSION;
+	const char * p_dir = T2A(dir.GetBuffer(dir.GetLength()));
+
+	if (!_access(p_dir, 0))
+	{
+		return 1;
+	}
+	//
+	len = strlen(p_dir);
+	if (len >= MAX_PATH)
+	{
+		return 0;
+	}
+
+	memset(temp_dir, 0, MAX_PATH);
+	memcpy(temp_dir, p_dir, len);
+
+	pindex = temp_dir;
+	pindex = strrchr(pindex, gap_char);
+	if (pindex >= (temp_dir + len - 1))
+	{
+		*pindex = 0;
+	}
+
+	pindex = temp_dir;
+	pindex = strchr(pindex, gap_char);
+	if (!pindex)
+	{
+		return 0;
+	}
+	pindex++;
+
+	access_flag = 0;
+	do
+	{
+		pindex = strchr(pindex, gap_char);
+
+		if (pindex)
+		{
+			*pindex = 0;
+		}
+
+		access_flag = _access(temp_dir, 0);
+
+		if (access_flag)
+		{
+#ifdef _WIN32
+			if (_mkdir(temp_dir))
+#else
+			if (mkdir(temp_dir, 0x777))
+#endif
+			{
+				return 0;
+			}
+		}
+
+		if (pindex)
+		{
+			*pindex = gap_char;
+			pindex++;
+		}
+	} while (pindex);
+
+	//
+	if (_access(p_dir, 0))
+	{
+		return 0;
+	}
+	return 1;
+}
+
 //录像
-int EasyPlayerProManager::StartRecord(const char *foldername, 
-	const char *filename, 
-	unsigned int filesize/*录像文件大小 MB*/, int duration/*录像时长(second)*/,  
-	unsigned char preRecording/*0x01:预录  0x00:不预录*/)
+int EasyPlayerProManager::StartRecord(const char *filename, int duration/*录像切片时长(min), 为0则表示不切片*/)
 {
 	if (!InRunning())
 		return -1;
 	m_sSourceInfo.recording = (m_sSourceInfo.recording==0x00?0x01:0x00);
 
+#if 0
 	char sztmp[36] = {0};
 	time_t tt = time(NULL);
 	struct tm *_time = localtime(&tt);
 	memset(sztmp, 0x00, sizeof(sztmp));
 	strftime(sztmp, 32, "%Y%m%d_%H%M%S", _time);
-
 	char szFilename[MAX_PATH] = {0};
 	sprintf(szFilename, "ch%d_%s.mpg", m_sSourceInfo.sourceId, sztmp);
+#endif
+	CString sFileName = (CString)filename;
+	bool bSec = EnsureDirExist(sFileName);
 
 	if (m_sSourceInfo.recording == 0x01)
 	{
-		int ret = libEasyPlayerPro_StartRecording(NULL, m_sSourceInfo.sourceId, foldername, 
-			szFilename, filesize, duration, preRecording, 0x01);
+		int ret = EasyPlayerPro_Record(m_sSourceInfo.sourceId, (char*)filename, duration);
 		if (ret < 0)	
 			m_sSourceInfo.recording = 0x00;
 	}
@@ -136,14 +210,13 @@ int EasyPlayerProManager::StopRecord()
 		return -1;
 	if (m_sSourceInfo.recording)
 	{
-		return libEasyPlayerPro_StopRecording(NULL, m_sSourceInfo.sourceId );
+		return EasyPlayerPro_Stoprecord( m_sSourceInfo.sourceId );
 	}
 	return 0;
 }
 
 //抓图
-int EasyPlayerProManager::Snapshot( char *filename, unsigned char sync/*0:异步: 1:同步*/, 
-	unsigned char useQueue/*1:使用队列 0:不使用队列*/)
+int EasyPlayerProManager::Snapshot( char *filename,  int width, int height, int waitTime)
 {
 	if (!InRunning())
 		return -1;
@@ -152,14 +225,7 @@ int EasyPlayerProManager::Snapshot( char *filename, unsigned char sync/*0:异步: 
 	int nFind = sFilename.rfind("bmp",0);
 	imageFormat = (nFind>=0)?0:1;
 
-	for (int i=0; i<1; i++)
-	{
-		while (0 != libEasyPlayerPro_SnapshotToFile(NULL, m_sSourceInfo.sourceId, imageFormat, filename, 0,1))
-		{
-			Sleep(1);
-		}
-	}
-	return 0;
+	return EasyPlayerPro_Snapshot(m_sSourceInfo.sourceId, filename, width,height, waitTime);
 }
 
 //声音播放和控制
@@ -167,16 +233,21 @@ int EasyPlayerProManager::PlaySound(BOOL bPlay)
 {
 	if (!InRunning())
 		return -1;
-	if (m_sSourceInfo.bPlaySound == 0x00)
+	if (bPlay)
 	{
-		int ret = libEasyPlayerPro_StartPlaySound(NULL, m_sSourceInfo.sourceId);
-		if (ret < 0)		m_sSourceInfo.bPlaySound = 0x00;
-		else	
-			m_sSourceInfo.bPlaySound = 0x01;
+		int nVolume = -255;
+		EasyPlayerPro_Getparam(m_sSourceInfo.sourceId, EASY_PARAM_AUDIO_VOLUME, &nVolume);
+		if (nVolume > -182)//-182 ~ 73
+		{
+			nVolume = -182;
+		}
+
+		EasyPlayerPro_Setparam(m_sSourceInfo.sourceId, EASY_PARAM_AUDIO_VOLUME, &nVolume);	
+		m_sSourceInfo.bPlaySound = 0x01;
 	}
 	else
 	{
-		libEasyPlayerPro_StopPlaySound(NULL, m_sSourceInfo.sourceId);
+		EasyPlayerPro_Setparam(m_sSourceInfo.sourceId, EASY_PARAM_AUDIO_VOLUME, &m_sSourceInfo.nVolume);
 		m_sSourceInfo.bPlaySound = 0x00;
 	}
 	return 0;
@@ -186,24 +257,68 @@ int EasyPlayerProManager::SetAudioVolume( int volume)
 {
 	if (!InRunning())
 		return -1;
-	return libEasyPlayerPro_SetAudioVolume(NULL, volume);
+	int nVolume = volume-182;
+	if (m_sSourceInfo.bPlaySound == 0x01)
+	{
+		EasyPlayerPro_Setparam(m_sSourceInfo.sourceId, EASY_PARAM_AUDIO_VOLUME, &nVolume);	
+	}
+	m_sSourceInfo.nVolume = volume;
+
 }
 
 int EasyPlayerProManager::GetAudioVolume()
 {
 	if (!InRunning())
 		return -1;
+	int nVolume = -255;
+	EasyPlayerPro_Getparam(m_sSourceInfo.sourceId, EASY_PARAM_AUDIO_VOLUME, &nVolume);
 
-	return libEasyPlayerPro_GetAudioVolume(NULL);
+	return nVolume+182;//m_sSourceInfo.nVolume;
 }
 
 //播放控制
 // 设置播放速度(文件)
-int EasyPlayerProManager::SetPlaySpeed(PLAY_SPEED_ENUM speed)
+int EasyPlayerProManager::SetPlaySpeed(SPEED_RATE speed)
 {
 	if (!InRunning())
 		return -1;
-	return	libEasyPlayerPro_SetPlaySpeed(NULL, m_sSourceInfo.sourceId, speed);
+	int nRate = 100;
+	switch(speed)
+	{		 
+	case SPEED_SLOW_X16:
+		nRate =  300;
+		break;
+	case SPEED_SLOW_X8 :
+		nRate = 250;
+		break;
+	case SPEED_SLOW_X4: 
+		nRate = 200;
+		break;
+	case SPEED_SLOW_X2:
+		nRate = 150;
+		break;
+	case SPEED_NORMAL:   
+		nRate = 100;
+		break;
+	case SPEED_FAST_X2:   
+		nRate = 75;
+		break;
+	case SPEED_FAST_X4 :  
+		nRate = 50;
+		break;
+	case SPEED_FAST_X8:   
+		nRate = 35;
+		break;
+	case SPEED_FAST_X16 :
+		nRate = 25;
+		break;
+	case SPEED_FAST_X64 :
+		nRate = 15;
+		break;
+	}
+	//EasyPlayerPro_Play(m_sSourceInfo.sourceId);	//恢复
+	EasyPlayerPro_Setparam(m_sSourceInfo.sourceId, EASY_PARAM_PLAY_SPEED, &nRate);
+	return	1;
 }
 
 //单帧播放, 可调用libEasyPlayerPro_SetPlaySpeed切换回正常播放模式
@@ -211,14 +326,65 @@ int EasyPlayerProManager::PlaySingleFrame()
 {
 	if (!InRunning())
 		return -1;
-	return libEasyPlayerPro_PlaySingleFrame(NULL, m_sSourceInfo.sourceId);
+	EasyPlayerPro_StepPlay(m_sSourceInfo.sourceId);
+	return 1;
 }
 
 //跳转到指定时间播放(文件)
-int EasyPlayerProManager::SeekFile(  unsigned int playTimeSecs/*秒*/ )
+int EasyPlayerProManager::SeekFile( unsigned int playTimeMSecs/*毫秒*/ )
 {
 	if (!InRunning())
 		return -1;
-	return libEasyPlayerPro_SeekFile(NULL, m_sSourceInfo.sourceId, playTimeSecs);
+	EasyPlayerPro_Seek(m_sSourceInfo.sourceId, playTimeMSecs);
+	return 1;
+}
 
+int EasyPlayerProManager::Pause()
+{
+	if (!InRunning())
+		return -1;
+	EasyPlayerPro_Pause(m_sSourceInfo.sourceId);
+}
+	
+
+int EasyPlayerProManager::Play(SPEED_RATE speed)
+{
+		
+		EasyPlayerPro_Play(m_sSourceInfo.sourceId);	//恢复
+	int nRate = 100;
+	switch(speed)
+	{		 
+	case SPEED_SLOW_X16:
+		nRate =  300;
+		break;
+	case SPEED_SLOW_X8 :
+		nRate = 250;
+		break;
+	case SPEED_SLOW_X4: 
+		nRate = 200;
+		break;
+	case SPEED_SLOW_X2:
+		nRate = 150;
+		break;
+	case SPEED_NORMAL:   
+		nRate = 100;
+		break;
+	case SPEED_FAST_X2:   
+		nRate = 75;
+		break;
+	case SPEED_FAST_X4 :  
+		nRate = 50;
+		break;
+	case SPEED_FAST_X8:   
+		nRate = 35;
+		break;
+	case SPEED_FAST_X16 :
+		nRate = 25;
+		break;
+	case SPEED_FAST_X64 :
+		nRate = 15;
+		break;
+	}
+	EasyPlayerPro_Setparam(m_sSourceInfo.sourceId, EASY_PARAM_PLAY_SPEED, &nRate);
+	return 1;
 }

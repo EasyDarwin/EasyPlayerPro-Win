@@ -1,27 +1,28 @@
 /*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2018 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
 */
-// RTSPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ [11/8/2015 Dingshuai]
 // Add by SwordTwelve
 
 #pragma once
 
-#include "libEasyPlayerProAPI.h"
+#include "EasyDefine.h"
+#include "EasyPlayerProAPI.h"
 
 /*
-*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½pvale.comï¿½Ð»ï¿½È¡ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ïµsupport@easydarwin.org
+*¼¤»îÂë ¿ÉÔÚpvale.comÖÐ»ñÈ¡²âÊÔ¼¤»îÂë, »òÕßÓÊ¼þÁªÏµsupport@easydarwin.org
 */
-#define ACTIVE_KEY "64687538665969576B5A73416E727062704556687065354659584E35554778686557567955484A764C6D56345A56634D5671442F70654E4659584E355247467964326C755647566862556C7A5647686C516D567A644541794D4445345A57467A65513D3D"
+#define ACTIVE_KEY "6A342B4E6B4969576B5A73416236316270464B517065354659584E35554778686557567955484A764C6D56345A56634D5671442F7065424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D"
 
-//Gavin's Source Structï¿½ï¿½ï¿½ï¿½Ï¢ï¿½á¹¹
+//Gavin's Source Struct½á¹¹
 typedef struct __EASY_LOCAL_SOURCE_T
 {	
-	int		sourceId;
+	void*	  sourceId;
 	BOOL recording;
 	BOOL bPlaySound;
+	int      nVolume;
 	void* pMaster;
 }EASY_LOCAL_SOURCE_T;
 
@@ -33,58 +34,77 @@ public:
 
 	//Member Function
 public:
-	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
-	static int Init()
+	//³õÊ¼»¯¿âÎÄ¼þ
+	static int Init(char* key)
 	{
-		int ret = libEasyPlayerPro_Activate(ACTIVE_KEY);
-		if(ret != EASY_ACTIVATE_SUCCESS)
+		char* sKey = key;
+		if (sKey == NULL)
 		{
-			printf("Active error! ret = %d\r\n", ret);
+			sKey = ACTIVE_KEY;
+		}
+
+		int ret = EasyPlayerPro_Authorize(sKey);
+		if(ret != AUTH_SUCCESS)
+		{
+			CString strTemp;
+			strTemp.Format(_T("Active error! ret = %d\r\n"), ret);
+			AfxMessageBox(strTemp);
 			return ret;
 		}
-		return libEasyPlayerPro_Initialize(128);
+		return 1;
 	}
 
-	// ï¿½Í·ï¿½
 	static int UnInit()
 	{
-		return libEasyPlayerPro_Deinitialize();
+		return 1;
 	}
 
-	//ï¿½ï¿½ï¿½ï¿½
-	int Start(char* szURL, HWND hShowWnd, RENDER_FORMAT renderFormat,  int nRTPOverTCP, int nCache, 
-		BOOL bShownToScale, BOOL bPlaySound, BOOL bStatisticalInfo);
-	//ï¿½Ø±ï¿½ï¿½ï¿½
+	//¿ªÊ¼À­Á÷/²¥·ÅÎÄ¼þ
+	int Start(char* szURL, HWND hShowWnd, int renderFormat,  int nRTPOverTCP, int nCache, 
+		BOOL bShownToScale, int nVolume, BOOL bStatisticalInfo);
+	//Í£Ö¹À­Á÷/²¥·ÅÎÄ¼þ
 	int Close(void);
 	int InRunning();
+	int Pause();
+	int Play(SPEED_RATE speed);
+	// ÉèÖÃ²¥·ÅËÙ¶È
+	int SetPlaySpeed(SPEED_RATE speed);
 
-	//ï¿½ï¿½ï¿½ï¿½OSD
-	int SetOSD(int show, const char* osd);
+	//ÉèÖÃOSD
+	int SetOSD(int show, int x, int y, int color,  const char* osd);
 
-	//Â¼ï¿½ï¿½
-	int StartRecord(const char *foldername, 
-		const char *filename, 
-		unsigned int filesize/*Â¼ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ð¡ MB*/, int duration/*Â¼ï¿½ï¿½Ê±ï¿½ï¿½(second)*/,  
-		unsigned char preRecording/*0x01:Ô¤Â¼  0x00:ï¿½ï¿½Ô¤Â¼*/);
+	//¿ªÊ¼Â¼Ïñ
+	int StartRecord(const char *filename, int duration/*Â¼ÏñÇÐÆ¬Ê±³¤(min), Îª0Ôò±íÊ¾²»ÇÐÆ¬*/);
 	int StopRecord();
 
 	//×¥Í¼
-	int Snapshot( 
-		char *filename, unsigned char sync=0/*0:ï¿½ì²½: 1:Í¬ï¿½ï¿½*/, 
-		unsigned char useQueue=0/*1:Ê¹ï¿½Ã¶ï¿½ï¿½ï¿½ 0:ï¿½ï¿½Ê¹ï¿½Ã¶ï¿½ï¿½ï¿½*/);
+	// 		filePath			- Í¼Æ¬´æ·ÅÂ·¾¶£¬ÒÔ.xxx½áÊø£¨xxx Ä¿Ç°Ö»Ö§³Ö jpeg ¸ñÊ½£©
+	// 		width, height       - Ö¸¶¨Í¼Æ¬¿í¸ß£¬Èç¹û <= 0 ÔòÄ¬ÈÏÊ¹ÓÃÊÓÆµ¿í¸ß
+	// 		waittime			- ÊÇ·ñµÈ´ý½ØÍ¼Íê³É 0 - ²»µÈ´ý£¬>0 µÈ´ý³¬Ê± ms Îªµ¥Î»
+	int Snapshot( char *filename,  int width, int height, int waitTime);
 
-	//ï¿½ï¿½ï¿½ï¿½ÅºÍ¿ï¿½ï¿½ï¿½?
+	//ÊÇ·ñ¾²Òô
 	int PlaySound(BOOL bPlay);
+	//ÉèÖÃ²¥·ÅÒôÁ¿
 	int SetAudioVolume( int volume);
+	//»ñÈ¡µ±Ç°²¥·ÅÒôÁ¿
 	int GetAudioVolume();
-
-	//ï¿½ï¿½ï¿½Å¿ï¿½ï¿½ï¿½
-	// ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½(ï¿½Ä¼ï¿½)
-	int SetPlaySpeed(PLAY_SPEED_ENUM speed);
-	//ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½, ï¿½Éµï¿½ï¿½ï¿½libEasyPlayerPro_SetPlaySpeedï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
+	//µ¥Ö¡²¥·Å
 	int PlaySingleFrame();
-	//ï¿½ï¿½×ªï¿½ï¿½Ö¸ï¿½ï¿½Ê±ï¿½ä²¥ï¿½ï¿½(ï¿½Ä¼ï¿½)
-	int SeekFile( unsigned int playTimeSecs/*ï¿½ï¿½*/ );
+	//²¥·ÅÆ÷½ø¶Èseek(µ¥Î»£º Ãë)
+	int SeekFile( unsigned int playTimeSecs );
+	void Resize(RECT rc)
+	{
+		if (m_sSourceInfo.sourceId)
+		{
+			EasyPlayerPro_Resize(m_sSourceInfo.sourceId, 0, 0, 0, rc.right, (rc.bottom - 2));
+			EasyPlayerPro_Resize(m_sSourceInfo.sourceId, 1, 0, 0, rc.right, rc.bottom - 2);
+		}
+	}
+
+protected:
+	int EnsureDirExist(CString dir);
+
 
 	//Member Var
 private:

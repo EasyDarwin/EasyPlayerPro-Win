@@ -1,4 +1,4 @@
-// EasyPlayerProActiveXCtrl.cpp : CEasyPlayerProActiveXCtrl ActiveX ¿Ø¼şÀàµÄÊµÏÖ¡£
+ï»¿// EasyPlayerProActiveXCtrl.cpp : CEasyPlayerProActiveXCtrl ActiveX æ§ä»¶ç±»çš„å®ç°ã€‚
 
 #include "stdafx.h"
 #include "EasyPlayerProActiveX.h"
@@ -14,7 +14,7 @@
 
 IMPLEMENT_DYNCREATE(CEasyPlayerProActiveXCtrl, COleControl)
 
-// ÏûÏ¢Ó³Éä
+// æ¶ˆæ¯æ˜ å°„
 
 BEGIN_MESSAGE_MAP(CEasyPlayerProActiveXCtrl, COleControl)
 	ON_OLEVERB(AFX_IDS_VERB_EDIT, OnEdit)
@@ -23,18 +23,47 @@ BEGIN_MESSAGE_MAP(CEasyPlayerProActiveXCtrl, COleControl)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
 
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
+// è°ƒåº¦æ˜ å°„
 
-// µ÷¶ÈÓ³Éä
+// 	LONG Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTSTR sRTPOverTCP, LPCTSTR sCache, 
+// 		LPCTSTR sShownToScale, LPCTSTR sVolume, LPCTSTR sStatisticalInfo);
+// 	void Close(void);
+// 	void SetOSD(LPCTSTR show, LPCTSTR x, LPCTSTR y, LPCTSTR color, LPCTSTR osd);
+// 
+// 	//å½•åƒ
+// 	LONG StartRecord(LPCTSTR sFilename, LPCTSTR sDuration/*å½•åƒæ—¶é•¿(second)*/);
+// 	LONG StopRecord();
+// 
+// 	//æŠ“å›¾
+// 	LONG Snapshot( LPCTSTR sFilename);
+// 
+// 	//å£°éŸ³æ’­æ”¾å’Œæ§åˆ¶
+// 	LONG PlaySound(LPCTSTR sbPlay);
+// 	LONG SetAudioVolume( LPCTSTR sVolume);
+// 	LONG GetAudioVolume();
+// 
+// 	//æ’­æ”¾æ§åˆ¶
+// 	// è®¾ç½®æ’­æ”¾é€Ÿåº¦(æ–‡ä»¶)
+// 	LONG SetPlaySpeed(LPCTSTR sSpeed);
+// 	//å•å¸§æ’­æ”¾, å¯è°ƒç”¨libEasyPlayerPro_SetPlaySpeedåˆ‡æ¢å›æ­£å¸¸æ’­æ”¾æ¨¡å¼
+// 	LONG PlaySingleFrame();
+// 	//è·³è½¬åˆ°æŒ‡å®šæ—¶é—´æ’­æ”¾(æ–‡ä»¶)
+// 	LONG SeekFile( LPCTSTR sPlayTimeSecs/*ç§’*/ );
+// 	
+// 	// 	//æš‚åœ/æ’­æ”¾
+// 	LONG Pause();
+// 	LONG Play(LPCTSTR sSpeed);
 
 BEGIN_DISPATCH_MAP(CEasyPlayerProActiveXCtrl, COleControl)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "Start", dispidStart, Start, VT_I4, VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "Close", dispidClose, Close, VT_EMPTY, VTS_NONE)
-	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "SetOSD", dispiSetOSD, SetOSD, VT_EMPTY, VTS_BSTR VTS_BSTR)
-	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "StartRecord", dispiStartRecord, StartRecord, VT_I4, VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR)
+	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "SetOSD", dispiSetOSD, SetOSD, VT_EMPTY, VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR)
+	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "StartRecord", dispiStartRecord, StartRecord, VT_I4, VTS_BSTR VTS_BSTR)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "StopRecord", dispiStopRecord, StopRecord, VT_I4, VTS_NONE)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "Snapshot", dispiSnapshot, Snapshot, VT_I4, VTS_BSTR)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "PlaySound", dispiPlaySound, PlaySound, VT_I4, VTS_BSTR)
@@ -43,46 +72,49 @@ BEGIN_DISPATCH_MAP(CEasyPlayerProActiveXCtrl, COleControl)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "SetPlaySpeed", dispiSetPlaySpeed, SetPlaySpeed, VT_I4, VTS_NONE)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "PlaySingleFrame", dispiPlaySingleFrame, PlaySingleFrame, VT_I4, VTS_NONE)
 	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "SeekFile", dispiSeekFile, SeekFile, VT_I4, VTS_BSTR)
+	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "Pause", dispiPause, Pause, VT_I4, VTS_NONE)
+	DISP_FUNCTION_ID(CEasyPlayerProActiveXCtrl, "Play", dispiPlay, Play, VT_I4, VTS_BSTR)
+
 END_DISPATCH_MAP()
 
 
 
-// ÊÂ¼şÓ³Éä
+// äº‹ä»¶æ˜ å°„
 
 BEGIN_EVENT_MAP(CEasyPlayerProActiveXCtrl, COleControl)
 END_EVENT_MAP()
 
 
 
-// ÊôĞÔÒ³
+// å±æ€§é¡µ
 
-// TODO: °´ĞèÒªÌí¼Ó¸ü¶àÊôĞÔÒ³¡£Çë¼Ç×¡Ôö¼Ó¼ÆÊı!
+// TODO: æŒ‰éœ€è¦æ·»åŠ æ›´å¤šå±æ€§é¡µã€‚è¯·è®°ä½å¢åŠ è®¡æ•°!
 BEGIN_PROPPAGEIDS(CEasyPlayerProActiveXCtrl, 1)
 	PROPPAGEID(CEasyPlayerProActiveXPropPage::guid)
 END_PROPPAGEIDS(CEasyPlayerProActiveXCtrl)
 
 
 
-// ³õÊ¼»¯Àà¹¤³§ºÍ guid
+// åˆå§‹åŒ–ç±»å·¥å‚å’Œ guid
 
 IMPLEMENT_OLECREATE_EX(CEasyPlayerProActiveXCtrl, "EASYPLAYERPROACT.EasyPlayerProActCtrl.1",
 	0xc826a1ce, 0x34e6, 0x4bb1, 0xb8, 0x44, 0x68, 0x1e, 0x7a, 0xc9, 0x8d, 0x9a)
 
 
 
-// ¼üÈë¿â ID ºÍ°æ±¾
+// é”®å…¥åº“ ID å’Œç‰ˆæœ¬
 
 IMPLEMENT_OLETYPELIB(CEasyPlayerProActiveXCtrl, _tlid, _wVerMajor, _wVerMinor)
 
 
 
-// ½Ó¿Ú ID
+// æ¥å£ ID
 
 const IID IID_DEasyPlayerProActiveX = { 0x4FEB3DC3, 0x9794, 0x4E94, { 0xA9, 0x28, 0x5, 0xE0, 0x2B, 0xAD, 0xE8, 0x55 } };
 const IID IID_DEasyPlayerProActiveXEvents = { 0x194E1B18, 0x4C63, 0x4155, { 0x97, 0x83, 0xEB, 0x38, 0x3F, 0x95, 0xDF, 0xFD } };
 
 
-// ¿Ø¼şÀàĞÍĞÅÏ¢
+// æ§ä»¶ç±»å‹ä¿¡æ¯
 
 static const DWORD _dwEasyPlayerProActiveXOleMisc =
 	OLEMISC_ACTIVATEWHENVISIBLE |
@@ -96,15 +128,15 @@ IMPLEMENT_OLECTLTYPE(CEasyPlayerProActiveXCtrl, IDS_EASYPLAYERPROACTIVEX, _dwEas
 
 
 // CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::UpdateRegistry -
-// Ìí¼Ó»òÒÆ³ı CEasyPlayerProActiveXCtrl µÄÏµÍ³×¢²á±íÏî
+// æ·»åŠ æˆ–ç§»é™¤ CEasyPlayerProActiveXCtrl çš„ç³»ç»Ÿæ³¨å†Œè¡¨é¡¹
 
 BOOL CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::UpdateRegistry(BOOL bRegister)
 {
-	// TODO: ÑéÖ¤ÄúµÄ¿Ø¼şÊÇ·ñ·ûºÏµ¥ÔªÄ£ĞÍÏß³Ì´¦Àí¹æÔò¡£
-	// ÓĞ¹Ø¸ü¶àĞÅÏ¢£¬Çë²Î¿¼ MFC ¼¼ÊõËµÃ÷ 64¡£
-	// Èç¹ûÄúµÄ¿Ø¼ş²»·ûºÏµ¥ÔªÄ£ĞÍ¹æÔò£¬Ôò
-	// ±ØĞëĞŞ¸ÄÈçÏÂ´úÂë£¬½«µÚÁù¸ö²ÎÊı´Ó
-	// afxRegApartmentThreading ¸ÄÎª 0¡£
+	// TODO: éªŒè¯æ‚¨çš„æ§ä»¶æ˜¯å¦ç¬¦åˆå•å…ƒæ¨¡å‹çº¿ç¨‹å¤„ç†è§„åˆ™ã€‚
+	// æœ‰å…³æ›´å¤šä¿¡æ¯ï¼Œè¯·å‚è€ƒ MFC æŠ€æœ¯è¯´æ˜ 64ã€‚
+	// å¦‚æœæ‚¨çš„æ§ä»¶ä¸ç¬¦åˆå•å…ƒæ¨¡å‹è§„åˆ™ï¼Œåˆ™
+	// å¿…é¡»ä¿®æ”¹å¦‚ä¸‹ä»£ç ï¼Œå°†ç¬¬å…­ä¸ªå‚æ•°ä»
+	// afxRegApartmentThreading æ”¹ä¸º 0ã€‚
 
 	if (bRegister)
 		return AfxOleRegisterControlClass(
@@ -124,7 +156,7 @@ BOOL CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::UpdateRegistry
 
 
 
-// ÊÚÈ¨×Ö·û´®
+// æˆæƒå­—ç¬¦ä¸²
 
 static const TCHAR _szLicFileName[] = _T("EasyPlayerProActiveX.lic");
 
@@ -132,7 +164,7 @@ static const WCHAR _szLicString[] = L"Copyright (c) 2018 ";
 
 
 // CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::VerifyUserLicense -
-// ¼ì²éÊÇ·ñ´æÔÚÓÃ»§Ğí¿ÉÖ¤
+// æ£€æŸ¥æ˜¯å¦å­˜åœ¨ç”¨æˆ·è®¸å¯è¯
 
 BOOL CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::VerifyUserLicense()
 {
@@ -142,7 +174,7 @@ BOOL CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::VerifyUserLice
 
 
 // CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::GetLicenseKey -
-// ·µ»ØÔËĞĞÊ±ÊÚÈ¨ÃÜÔ¿
+// è¿”å›è¿è¡Œæ—¶æˆæƒå¯†é’¥
 
 BOOL CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::GetLicenseKey(DWORD dwReserved,
 	BSTR *pbstrKey)
@@ -155,30 +187,30 @@ BOOL CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrlFactory::GetLicenseKey(
 }
 
 
-// CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrl - ¹¹Ôìº¯Êı
+// CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrl - æ„é€ å‡½æ•°
 
 CEasyPlayerProActiveXCtrl::CEasyPlayerProActiveXCtrl()
 {
 	InitializeIIDs(&IID_DEasyPlayerProActiveX, &IID_DEasyPlayerProActiveXEvents);
-	// TODO: ÔÚ´Ë³õÊ¼»¯¿Ø¼şµÄÊµÀıÊı¾İ¡£
+	// TODO: åœ¨æ­¤åˆå§‹åŒ–æ§ä»¶çš„å®ä¾‹æ•°æ®ã€‚
 	memset(m_szURL, 0x00, 512);
-	m_eRenderFormat = RENDER_FORMAT_YV12;
+	m_eRenderFormat = EASY_VIDEO_RENDER_TYPE_GDI;
 	m_nRTPOverTCP = 1;
 	m_nFrameCache = 3;
-	m_bPlaySound = TRUE;
+	m_nVolume = 0;
 	m_bShowToScale = FALSE;
 	m_bShowStatisticInfo = TRUE;
-	EasyPlayerProManager::Init();
+	EasyPlayerProManager::Init(ACTIVE_KEY);
 }
 
-// CEasyPlayerProActiveXCtrl::~CEasyPlayerProActiveXCtrl - Îö¹¹º¯Êı
+// CEasyPlayerProActiveXCtrl::~CEasyPlayerProActiveXCtrl - ææ„å‡½æ•°
 
 CEasyPlayerProActiveXCtrl::~CEasyPlayerProActiveXCtrl()
 {
-	// TODO: ÔÚ´ËÇåÀí¿Ø¼şµÄÊµÀıÊı¾İ¡£
+	// TODO: åœ¨æ­¤æ¸…ç†æ§ä»¶çš„å®ä¾‹æ•°æ®ã€‚
 }
 
-// CEasyPlayerProActiveXCtrl::OnDraw - »æÍ¼º¯Êı
+// CEasyPlayerProActiveXCtrl::OnDraw - ç»˜å›¾å‡½æ•°
 
 void CEasyPlayerProActiveXCtrl::OnDraw(
 			CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
@@ -186,7 +218,7 @@ void CEasyPlayerProActiveXCtrl::OnDraw(
 	if (!pdc)
 		return;
 
-	// TODO: ÓÃÄú×Ô¼ºµÄ»æÍ¼´úÂëÌæ»»ÏÂÃæµÄ´úÂë¡£
+	// TODO: ç”¨æ‚¨è‡ªå·±çš„ç»˜å›¾ä»£ç æ›¿æ¢ä¸‹é¢çš„ä»£ç ã€‚
 	// 	pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH)GetStockObject(WHITE_BRUSH)));
 	// 	pdc->Ellipse(rcBounds);
 	// 	
@@ -203,78 +235,78 @@ void CEasyPlayerProActiveXCtrl::OnDraw(
 
 
 
-// CEasyPlayerProActiveXCtrl::DoPropExchange - ³Ö¾ÃĞÔÖ§³Ö
+// CEasyPlayerProActiveXCtrl::DoPropExchange - æŒä¹…æ€§æ”¯æŒ
 
 void CEasyPlayerProActiveXCtrl::DoPropExchange(CPropExchange* pPX)
 {
 	ExchangeVersion(pPX, MAKELONG(_wVerMinor, _wVerMajor));
 	COleControl::DoPropExchange(pPX);
 
-	// TODO: ÎªÃ¿¸ö³Ö¾ÃµÄ×Ô¶¨ÒåÊôĞÔµ÷ÓÃ PX_ º¯Êı¡£
+	// TODO: ä¸ºæ¯ä¸ªæŒä¹…çš„è‡ªå®šä¹‰å±æ€§è°ƒç”¨ PX_ å‡½æ•°ã€‚
 }
 
 
-// CEasyPlayerProActiveXCtrl::OnResetState - ½«¿Ø¼şÖØÖÃÎªÄ¬ÈÏ×´Ì¬
+// CEasyPlayerProActiveXCtrl::OnResetState - å°†æ§ä»¶é‡ç½®ä¸ºé»˜è®¤çŠ¶æ€
 
 void CEasyPlayerProActiveXCtrl::OnResetState()
 {
 	if (m_pClientSite) 
 	{
-		int ret = EasyPlayerProManager::Init();
+		int ret = EasyPlayerProManager::Init(ACTIVE_KEY);
 #if 0
 		CString str = _T("");
 		str.Format(_T("Init = %d"), ret);
 		AfxMessageBox(str);
 #endif
-		//¸¸´°¿Ú¼°Æä´óĞ¡²¢²»ÖØÒª£¬ÒòÎª¿Ø¼şÔÚ±¾µØ¼¤»îÊ±»á×Ô¶¯ÖØ»­ºÍÖØĞÂ¶¨Î»¡£
+		//çˆ¶çª—å£åŠå…¶å¤§å°å¹¶ä¸é‡è¦ï¼Œå› ä¸ºæ§ä»¶åœ¨æœ¬åœ°æ¿€æ´»æ—¶ä¼šè‡ªåŠ¨é‡ç”»å’Œé‡æ–°å®šä½ã€‚
 		VERIFY (CreateControlWindow (::GetDesktopWindow(), CRect(0,0,0,0), CRect(0,0,0,0)));
 		//m_bInit = true;
 	}
 	else
 	{
 		Close();
-		// µ÷ÓÃË¢ĞÂ»á±¨´í [10/12/2017 dingshuai]
+		// è°ƒç”¨åˆ·æ–°ä¼šæŠ¥é”™ [10/12/2017 dingshuai]
 		EasyPlayerProManager::UnInit();
-		AfxMessageBox(_T("Ò³ÃæÒÑ¾­¹Ø±Õ£¬ÖØĞÂ¼ÓÔØOCX"));
+		AfxMessageBox(_T("é¡µé¢å·²ç»å…³é—­ï¼Œé‡æ–°åŠ è½½OCX"));
 		DestroyWindow();
 		//m_bInit = false;
 
 	}
-	COleControl::OnResetState();  // ÖØÖÃ DoPropExchange ÖĞÕÒµ½µÄÄ¬ÈÏÖµ
+	COleControl::OnResetState();  // é‡ç½® DoPropExchange ä¸­æ‰¾åˆ°çš„é»˜è®¤å€¼
 
-	// TODO: ÔÚ´ËÖØÖÃÈÎÒâÆäËû¿Ø¼ş×´Ì¬¡£
+	// TODO: åœ¨æ­¤é‡ç½®ä»»æ„å…¶ä»–æ§ä»¶çŠ¶æ€ã€‚
 }
 
 void CEasyPlayerProActiveXCtrl::OnSetClientSite()
 {
 	if (m_pClientSite) 
 	{
-		int ret = EasyPlayerProManager::Init();
+		int ret = EasyPlayerProManager::Init(ACTIVE_KEY);
 #if 0
 		CString str = _T("");
 		str.Format(_T("Init = %d"), ret);
 		AfxMessageBox(str);
 #endif
-		//¸¸´°¿Ú¼°Æä´óĞ¡²¢²»ÖØÒª£¬ÒòÎª¿Ø¼şÔÚ±¾µØ¼¤»îÊ±»á×Ô¶¯ÖØ»­ºÍÖØĞÂ¶¨Î»¡£
+		//çˆ¶çª—å£åŠå…¶å¤§å°å¹¶ä¸é‡è¦ï¼Œå› ä¸ºæ§ä»¶åœ¨æœ¬åœ°æ¿€æ´»æ—¶ä¼šè‡ªåŠ¨é‡ç”»å’Œé‡æ–°å®šä½ã€‚
 		VERIFY (CreateControlWindow (::GetDesktopWindow(), CRect(0,0,0,0), CRect(0,0,0,0)));
 		//m_bInit = true;
 	}
 	else
 	{
 		Close();
-		// µ÷ÓÃË¢ĞÂ»á±¨´í [10/12/2017 dingshuai]
+		// è°ƒç”¨åˆ·æ–°ä¼šæŠ¥é”™ [10/12/2017 dingshuai]
 		EasyPlayerProManager::UnInit();
-		AfxMessageBox(_T("Ò³ÃæÒÑ¾­¹Ø±Õ£¬ÖØĞÂ¼ÓÔØOCX"));
+		AfxMessageBox(_T("é¡µé¢å·²ç»å…³é—­ï¼Œé‡æ–°åŠ è½½OCX"));
 		DestroyWindow();
 		//m_bInit = false;
 
 	}
-	COleControl::OnResetState();  // ÖØÖÃ DoPropExchange ÖĞÕÒµ½µÄÄ¬ÈÏÖµ
+	COleControl::OnResetState();  // é‡ç½® DoPropExchange ä¸­æ‰¾åˆ°çš„é»˜è®¤å€¼
 
 }
 
 
-// CEasyPlayerProActiveXCtrl::AboutBox - ÏòÓÃ»§ÏÔÊ¾¡°¹ØÓÚ¡±¿ò
+// CEasyPlayerProActiveXCtrl::AboutBox - å‘ç”¨æˆ·æ˜¾ç¤ºâ€œå…³äºâ€æ¡†
 
 void CEasyPlayerProActiveXCtrl::AboutBox()
 {
@@ -283,14 +315,14 @@ void CEasyPlayerProActiveXCtrl::AboutBox()
 }
 
 
-// CEasyPlayerProActiveXCtrl ÏûÏ¢´¦Àí³ÌĞò
+// CEasyPlayerProActiveXCtrl æ¶ˆæ¯å¤„ç†ç¨‹åº
 int CEasyPlayerProActiveXCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (COleControl::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	// TODO:  ÔÚ´ËÌí¼ÓÄú×¨ÓÃµÄ´´½¨´úÂë
-	// OCXÄÚÖÃ´°¿Ú±ØĞëÒÔOCX¿Ø¼şÎª¸¸Àà´°¿ÚµÄ×Ó´°¿Ú£¬·ñÔò½çÃæÏÔÊ¾»áÓĞÎÊÌâ [4/14/2014-10:12:38 Dingshuai]
+	// TODO:  åœ¨æ­¤æ·»åŠ æ‚¨ä¸“ç”¨çš„åˆ›å»ºä»£ç 
+	// OCXå†…ç½®çª—å£å¿…é¡»ä»¥OCXæ§ä»¶ä¸ºçˆ¶ç±»çª—å£çš„å­çª—å£ï¼Œå¦åˆ™ç•Œé¢æ˜¾ç¤ºä¼šæœ‰é—®é¢˜ [4/14/2014-10:12:38 Dingshuai]
 	m_pActiveDlg.Create(CMainVideoWnd::IDD, this);
 	return 0;
 }
@@ -299,16 +331,16 @@ int CEasyPlayerProActiveXCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CEasyPlayerProActiveXCtrl::OnDestroy()
 {
 	COleControl::OnDestroy();
-	// TODO: ÔÚ´Ë´¦Ìí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂë
+	// TODO: åœ¨æ­¤å¤„æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç 
 	m_pActiveDlg.DestroyWindow();
 }
 
 LONG CEasyPlayerProActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, 
 	LPCTSTR sRTPOverTCP, LPCTSTR sCache, 
-	LPCTSTR sShownToScale, LPCTSTR sPlaySound, LPCTSTR sStatisticalInfo)
+	LPCTSTR sShownToScale, LPCTSTR sVolume, LPCTSTR sStatisticalInfo)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	// TODO: ÔÚ´ËÌí¼Óµ÷¶È´¦Àí³ÌĞò´úÂë
+	// TODO: åœ¨æ­¤æ·»åŠ è°ƒåº¦å¤„ç†ç¨‹åºä»£ç 
 	int nRet = 0;
 	char szRenderFormat[128] ;
 	char szRTPOverTCP[128] ;
@@ -333,10 +365,10 @@ LONG CEasyPlayerProActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat,
 		__WCharToMByte(sCache, szCache, sizeof(szCache)/sizeof(szCache[0]));
 		m_nFrameCache = atoi(szCache);
 	}
-	if (wcslen(sPlaySound) > 0)
+	if (wcslen(sVolume) > 0)
 	{
-		__WCharToMByte(sPlaySound, szPlaySound, sizeof(szPlaySound)/sizeof(szPlaySound[0]));
-		m_bPlaySound = atoi(szPlaySound);
+		__WCharToMByte(sVolume, szPlaySound, sizeof(szPlaySound)/sizeof(szPlaySound[0]));
+		m_nVolume = atoi(szPlaySound);
 	}
 	if (wcslen(sShownToScale) > 0)
 	{
@@ -349,114 +381,112 @@ LONG CEasyPlayerProActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat,
 		m_bShowStatisticInfo = atoi(szStatisticalInfo);
 	}
 
+// 	// vdev render type
+// 	typedef enum tagEASY_VIDEO_RENDER_TYPE
+// 	{
+// 		EASY_VIDEO_RENDER_TYPE_GDI = 0,
+// 		EASY_VIDEO_RENDER_TYPE_D3D,
+// 		//	EASY_VIDEO_RENDER_TYPE_OPENGL,
+// 		EASY_VIDEO_RENDER_TYPE_MAX_NUM,
+// 	}EASY_VIDEO_RENDER_TYPE;
+
 	int nRenderType = atoi(szRenderFormat);
-	m_eRenderFormat = RENDER_FORMAT_YV12;
+	m_eRenderFormat = EASY_VIDEO_RENDER_TYPE_GDI;
 	switch (nRenderType)
 	{
 	case 0:
-		m_eRenderFormat =  RENDER_FORMAT_YV12;
+		m_eRenderFormat =  EASY_VIDEO_RENDER_TYPE_GDI;
 		break;				    
 	case 1:					    
-		m_eRenderFormat =  RENDER_FORMAT_YUY2;
+		m_eRenderFormat =  EASY_VIDEO_RENDER_TYPE_D3D;
 		break;				    
 	case 2:					    
-		m_eRenderFormat =  RENDER_FORMAT_UYVY;
+		//m_eRenderFormat =  EASY_VIDEO_RENDER_TYPE_OPENGL;
 		break;				    
-	case 3:					    
-		m_eRenderFormat =  RENDER_FORMAT_A8R8G8B8;
-		break;				    
-	case 4:					    
-		m_eRenderFormat =  RENDER_FORMAT_X8R8G8B8;
-		break;				    
-	case 5:					    
-		m_eRenderFormat =  RENDER_FORMAT_RGB565;
-		break;				    
-	case 6:					    
-		m_eRenderFormat =  RENDER_FORMAT_RGB555;
-		break;				    
-	case 7:					    
-		m_eRenderFormat =  RENDER_FORMAT_RGB24_GDI;
-		break;
 	}
 
 	nRet = m_player.Start(m_szURL, m_pActiveDlg.GetSafeHwnd(), m_eRenderFormat , m_nRTPOverTCP, 
-		m_nFrameCache, m_bShowToScale, m_bPlaySound, m_bShowStatisticInfo);
+		m_nFrameCache, m_bShowToScale, m_nVolume, m_bShowStatisticInfo);
 	return nRet;
 }
 void CEasyPlayerProActiveXCtrl::Close(void)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	// TODO: ÔÚ´ËÌí¼Óµ÷¶È´¦Àí³ÌĞò´úÂë
+	// TODO: åœ¨æ­¤æ·»åŠ è°ƒåº¦å¤„ç†ç¨‹åºä»£ç 
 	m_player.Close();
 }
-void CEasyPlayerProActiveXCtrl::SetOSD(LPCTSTR show, LPCTSTR osd)
+void CEasyPlayerProActiveXCtrl::SetOSD(LPCTSTR show, LPCTSTR x, LPCTSTR y, LPCTSTR color, LPCTSTR osd)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	int nRet = 0;
 	char szShow[128] = {0,};
+	char szX[128] = {0,};
+	char szY[128] = {0,};
+	char szColor[128] = {0,};
 	char szOsd[512]  = {0,};
 	int nShow = 0;
-
+	int nx = 0;
+	int ny = 0;
+	int nColor = 0;
 	if (wcslen(show) > 0)
 	{
 		__WCharToMByte(show, szShow, sizeof(szShow)/sizeof(szShow[0]));
 		nShow = atoi(szShow);
 	}
+	if (wcslen(x) > 0)
+	{
+		__WCharToMByte(x, szX, sizeof(szX)/sizeof(szX[0]));
+		nx = atoi(szX);
+	}
+	if (wcslen(y) > 0)
+	{
+		__WCharToMByte(y, szY, sizeof(szY)/sizeof(szY[0]));
+		ny = atoi(szY);
+	}
+	if (wcslen(color) > 0)
+	{
+		__WCharToMByte(color, szColor, sizeof(szColor)/sizeof(szColor[0]));
+		nColor = atoi(szColor);
+	}
+
 	if (wcslen(osd) > 0)
 	{
 		__WCharToMByte(osd, szOsd, sizeof(szOsd)/sizeof(szOsd[0]));
 	}
-	m_player.SetOSD(nShow, szOsd);
+	m_player.SetOSD(nShow, nx, ny, nColor, szOsd);
 }
 
-//Â¼Ïñ
-LONG CEasyPlayerProActiveXCtrl::StartRecord(LPCTSTR sFoldername, LPCTSTR sFilename, 
-	LPCTSTR sFilesize/*Â¼ÏñÎÄ¼ş´óĞ¡ MB*/, LPCTSTR sDuration/*Â¼ÏñÊ±³¤(second)*/,  
-	LPCTSTR sPreRecording/*0x01:Ô¤Â¼  0x00:²»Ô¤Â¼*/)
+//å½•åƒ
+LONG CEasyPlayerProActiveXCtrl::StartRecord(LPCTSTR sFilename, LPCTSTR sDuration/*å½•åƒæ—¶é•¿(second)*/)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	char szFoldername[512] ;
 	char szFilename[128] ;
-	char szFilesize[128] ;
 	char szDuration[128] ;
 	char szPreRecording[128] ;
 	int nFileSize = 0 ;
 	int nDuration = 0 ;
 	BOOL bPreRecording =FALSE;
-	if (wcslen(sFoldername) > 0)
-	{
-		__WCharToMByte(sFoldername, szFoldername, sizeof(szFoldername)/sizeof(szFoldername[0]));
-	}
 	if (wcslen(sFilename) > 0)
 	{
 		__WCharToMByte(sFilename, szFilename, sizeof(szFilename)/sizeof(szFilename[0]));
 	}
 
-	if (wcslen(sFilesize) > 0)
-	{
-		__WCharToMByte(sFilesize, szFilesize, sizeof(szFilesize)/sizeof(szFilesize[0]));
-		nFileSize = atoi(szFilesize);
-	}
 	if (wcslen(sDuration) > 0)
 	{
 		__WCharToMByte(sDuration, szDuration, sizeof(szDuration)/sizeof(szDuration[0]));
 		nDuration = atoi(szDuration);
 	}
-	if (wcslen(sPreRecording) > 0)
-	{
-		__WCharToMByte(sPreRecording, szPreRecording, sizeof(szPreRecording)/sizeof(szPreRecording[0]));
-		bPreRecording = atoi(szPreRecording);
-	}
-	return m_player.StartRecord(szFoldername,szFilename, nFileSize, nDuration,bPreRecording );
+	return m_player.StartRecord(szFilename, nDuration );
 }
+
 LONG CEasyPlayerProActiveXCtrl::StopRecord()
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	return m_player.StopRecord();
 }
 
-//×¥Í¼
+//æŠ“å›¾
 LONG CEasyPlayerProActiveXCtrl::Snapshot( LPCTSTR sFilename)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -465,10 +495,10 @@ LONG CEasyPlayerProActiveXCtrl::Snapshot( LPCTSTR sFilename)
 	{
 		__WCharToMByte(sFilename, szFilename, sizeof(szFilename)/sizeof(szFilename[0]));
 	}
-	return m_player.Snapshot(szFilename);
+	return m_player.Snapshot(szFilename,0,0,0);
 }
 
-//ÉùÒô²¥·ÅºÍ¿ØÖÆ
+//å£°éŸ³æ’­æ”¾å’Œæ§åˆ¶
 LONG CEasyPlayerProActiveXCtrl::PlaySound(LPCTSTR sbPlay)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -501,8 +531,29 @@ LONG CEasyPlayerProActiveXCtrl::GetAudioVolume(void)
 	return m_player.GetAudioVolume();
 }
 
-//²¥·Å¿ØÖÆ
-// ÉèÖÃ²¥·ÅËÙ¶È(ÎÄ¼ş)
+LONG CEasyPlayerProActiveXCtrl::Pause()
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	return m_player.Pause();
+}
+
+LONG CEasyPlayerProActiveXCtrl::Play(LPCTSTR sSpeed)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	char szSpeed[128]  = {0,};
+	int speed = 0;
+	if (wcslen(sSpeed) > 0)
+	{
+		__WCharToMByte(sSpeed, szSpeed, sizeof(szSpeed)/sizeof(szSpeed[0]));
+		speed = atoi(szSpeed);
+	}
+
+	return m_player.Play((SPEED_RATE)speed);
+}
+
+
+//æ’­æ”¾æ§åˆ¶
+// è®¾ç½®æ’­æ”¾é€Ÿåº¦(æ–‡ä»¶)
 LONG CEasyPlayerProActiveXCtrl::SetPlaySpeed(LPCTSTR sSpeed)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -513,17 +564,17 @@ LONG CEasyPlayerProActiveXCtrl::SetPlaySpeed(LPCTSTR sSpeed)
 		__WCharToMByte(sSpeed, szSpeed, sizeof(szSpeed)/sizeof(szSpeed[0]));
 		speed = atoi(szSpeed);
 	}
-	return m_player.SetPlaySpeed((PLAY_SPEED_ENUM)speed);
+	return m_player.SetPlaySpeed((SPEED_RATE)speed);
 
 }
-//µ¥Ö¡²¥·Å, ¿Éµ÷ÓÃlibEasyPlayerPro_SetPlaySpeedÇĞ»»»ØÕı³£²¥·ÅÄ£Ê½
+//å•å¸§æ’­æ”¾, å¯è°ƒç”¨libEasyPlayerPro_SetPlaySpeedåˆ‡æ¢å›æ­£å¸¸æ’­æ”¾æ¨¡å¼
 LONG CEasyPlayerProActiveXCtrl::PlaySingleFrame()
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	return m_player.PlaySingleFrame();
 }
-//Ìø×ªµ½Ö¸¶¨Ê±¼ä²¥·Å(ÎÄ¼ş)
-LONG CEasyPlayerProActiveXCtrl::SeekFile( LPCTSTR sPlayTimeSecs/*Ãë*/ )
+//è·³è½¬åˆ°æŒ‡å®šæ—¶é—´æ’­æ”¾(æ–‡ä»¶)
+LONG CEasyPlayerProActiveXCtrl::SeekFile( LPCTSTR sPlayTimeSecs/*ç§’*/ )
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	char szPlayTimeSecs[128]  = {0,};
@@ -533,5 +584,13 @@ LONG CEasyPlayerProActiveXCtrl::SeekFile( LPCTSTR sPlayTimeSecs/*Ãë*/ )
 		__WCharToMByte(sPlayTimeSecs, szPlayTimeSecs, sizeof(szPlayTimeSecs)/sizeof(szPlayTimeSecs[0]));
 		playTimeSecs = atoi(szPlayTimeSecs);
 	}
-	return m_player.SeekFile(playTimeSecs);
+	return m_player.SeekFile(playTimeSecs*1000);
+}
+
+void CEasyPlayerProActiveXCtrl::OnSize(UINT nType, int cx, int cy)
+{
+	COleControl::OnSize(nType, cx, cy);
+
+	// TODO: 
+
 }

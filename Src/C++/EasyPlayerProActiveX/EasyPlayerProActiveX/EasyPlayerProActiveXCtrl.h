@@ -51,6 +51,8 @@ protected:
 // 调度和事件 ID
 public:
 	enum {
+		dispiPlay = 14L,
+		dispiPause = 13L,
 		dispiSeekFile = 12L,
 		dispiPlaySingleFrame = 11L,
 		dispiSetPlaySpeed = 10L,
@@ -103,15 +105,17 @@ public:
 // 	int SeekFile( unsigned int playTimeSecs/*秒*/ );
 
 	LONG Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTSTR sRTPOverTCP, LPCTSTR sCache, 
-		LPCTSTR sShownToScale, LPCTSTR sPlaySound, LPCTSTR sStatisticalInfo);
+		LPCTSTR sShownToScale, LPCTSTR sVolume, LPCTSTR sStatisticalInfo);
 	void Close(void);
-	void SetOSD(LPCTSTR show, LPCTSTR osd);
+	void SetOSD(LPCTSTR show, LPCTSTR x, LPCTSTR y, LPCTSTR color, LPCTSTR osd);
 
 	//录像
-	LONG StartRecord(LPCTSTR sFoldername, LPCTSTR sFilename, 
-		LPCTSTR sFilesize/*录像文件大小 MB*/, LPCTSTR sDuration/*录像时长(second)*/,  
-		LPCTSTR sPreRecording/*0x01:预录  0x00:不预录*/);
+	LONG StartRecord(LPCTSTR sFilename, LPCTSTR sDuration/*录像时长(second)*/);
 	LONG StopRecord();
+
+	//暂停/播放
+	LONG Pause();
+	LONG Play(LPCTSTR sSpeed);
 
 	//抓图
 	LONG Snapshot( LPCTSTR sFilename);
@@ -129,18 +133,21 @@ public:
 	//跳转到指定时间播放(文件)
 	LONG SeekFile( LPCTSTR sPlayTimeSecs/*秒*/ );
 
-private:
+public:
 	CMainVideoWnd m_pActiveDlg; 
 	EasyPlayerProManager m_player;
 
+private:
 	//配置参数
 	char m_szURL[512] ;
-	RENDER_FORMAT m_eRenderFormat;
+	EASY_VIDEO_RENDER_TYPE m_eRenderFormat;
 	int  m_nRTPOverTCP ;
-	int	   m_nFrameCache ;
-	BOOL m_bPlaySound ;
+	int	  m_nFrameCache ;
+	int  m_nVolume ;
 	BOOL m_bShowToScale ;
 	BOOL m_bShowStatisticInfo ;
 
+public:
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
 
