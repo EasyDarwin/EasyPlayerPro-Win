@@ -105,7 +105,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="res\APP_EXIT.bmp" />
     <None Include="res\APP_MAX_RESTORE.bmp" />
     <None Include="res\APP_MIN.bmp" />
