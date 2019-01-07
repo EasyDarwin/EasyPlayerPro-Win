@@ -57,6 +57,6 @@ EasyPlayerPro是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP�
 
 **EasyNVR**无插件直播方案：[www.EasyNVR.com](http://www.easynvr.com)
 
-Copyright &copy; EasyDarwin Team 2012-2017
+Copyright &copy; EasyDSS.com Team 2012-2019
 
 ![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
