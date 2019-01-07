@@ -874,7 +874,7 @@ void CLivePlayerDlg::GetApplicationVersion(wchar_t *pVersion)
         m_nProdVersion[3] = LOWORD(pFileInfo->dwProductVersionLS);
        
         CString strVersion ;
-        strVersion.Format(_T("EasyPlayerPro V%d.%d.%d%d"),m_nProdVersion[0],
+        strVersion.Format(_T("EasyPlayerPro V%d.%d.%d.%d"),m_nProdVersion[0],
             m_nProdVersion[1],m_nProdVersion[2],m_nProdVersion[3]);
        
         GlobalUnlock(hMem);
