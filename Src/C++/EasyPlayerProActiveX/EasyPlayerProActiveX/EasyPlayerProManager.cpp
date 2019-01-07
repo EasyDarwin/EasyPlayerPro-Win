@@ -49,7 +49,7 @@ int EasyPlayerProManager::Start(char* szURL, HWND hShowWnd, int renderFormat,  i
 	}
 
 	// player open file
-	m_sSourceInfo.sourceId = EasyPlayerPro_Open(file_url, hShowWnd, EASY_VIDEO_RENDER_TYPE_D3D,
+	m_sSourceInfo.sourceId = EasyPlayerPro_Open(m_sSourceInfo.sourceId, file_url, hShowWnd, EASY_VIDEO_RENDER_TYPE_D3D,
 		(EASY_VIDEO_SCALE_MODE)bShownToScale, (EASY_STREAM_LINK_MODE)nRTPOverTCP, 100, nVolume-182);
 	if (m_sSourceInfo.sourceId)
 	{
@@ -326,7 +326,7 @@ int EasyPlayerProManager::PlaySingleFrame()
 {
 	if (!InRunning())
 		return -1;
-	EasyPlayerPro_StepPlay(m_sSourceInfo.sourceId);
+	EasyPlayerPro_StepPlay(m_sSourceInfo.sourceId,1);
 	return 1;
 }
 
