@@ -9,8 +9,8 @@
     <Channel>
         <CH No="1" URL="rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
         <CH No="2" URL="http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
-        <CH No="3" URL="rtsp://192.168.0.106:8554/channel=0" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
-        <CH No="4" URL="rtmp://solacn.xicp.net/SolaLive/1" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="3" URL="rtmp://live.hkstv.hk.lxdns.com/live/hks2" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
+        <CH No="4" URL="http://live.hkstv.hk.lxdns.com/live/hks2/playlist.m3u8" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
         <CH No="5" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
         <CH No="6" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
         <CH No="7" URL="" OSD="1" Protocol="1" Cache="3" ShowToolbar="1" AutoPlay="0" />
