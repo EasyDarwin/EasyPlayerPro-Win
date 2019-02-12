@@ -12,11 +12,11 @@
 #include "EasyPlayerProAPI.h"
 
 /*
-*¼¤»îÂë ¿ÉÔÚpvale.comÖÐ»ñÈ¡²âÊÔ¼¤»îÂë, »òÕßÓÊ¼þÁªÏµsupport@easydarwin.org
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½pvale.comï¿½Ð»ï¿½È¡ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ïµsupport@easydarwin.org
 */
-#define ACTIVE_KEY "64687538665969576B5A75416C6A4A636F3831704A65354659584E35554778686557567955484A764C6D56345A56634D5671442F7065424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D"
+#define ACTIVE_KEY "64687538665969576B5A754144474A636F35337A4A65354659584E35554778686557567955484A764C6D56345A56634D5671442F70654E4659584E355247467964326C755647566862556C7A5647686C516D567A644541794D4445345A57467A65513D3D"
 
-//Gavin's Source Struct½á¹¹
+//Gavin's Source Structï¿½á¹¹
 typedef struct __EASY_LOCAL_SOURCE_T
 {	
 	void*	  sourceId;
@@ -34,7 +34,7 @@ public:
 
 	//Member Function
 public:
-	//³õÊ¼»¯¿âÎÄ¼þ
+	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 	static int Init(char* key)
 	{
 		char* sKey = key;
@@ -59,39 +59,39 @@ public:
 		return 1;
 	}
 
-	//¿ªÊ¼À­Á÷/²¥·ÅÎÄ¼þ
+	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 	int Start(char* szURL, HWND hShowWnd, int renderFormat,  int nRTPOverTCP, int nCache, 
 		BOOL bShownToScale, int nVolume, BOOL bStatisticalInfo);
-	//Í£Ö¹À­Á÷/²¥·ÅÎÄ¼þ
+	//Í£Ö¹ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 	int Close(void);
 	int InRunning();
 	int Pause();
 	int Play(SPEED_RATE speed);
-	// ÉèÖÃ²¥·ÅËÙ¶È
+	// ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
 	int SetPlaySpeed(SPEED_RATE speed);
 
-	//ÉèÖÃOSD
+	//ï¿½ï¿½ï¿½ï¿½OSD
 	int SetOSD(int show, int x, int y, int color,  const char* osd);
 
-	//¿ªÊ¼Â¼Ïñ
-	int StartRecord(const char *filename, int duration/*Â¼ÏñÇÐÆ¬Ê±³¤(min), Îª0Ôò±íÊ¾²»ÇÐÆ¬*/);
+	//ï¿½ï¿½Ê¼Â¼ï¿½ï¿½
+	int StartRecord(const char *filename, int duration/*Â¼ï¿½ï¿½ï¿½ï¿½Æ¬Ê±ï¿½ï¿½(min), Îª0ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Æ¬*/);
 	int StopRecord();
 
 	//×¥Í¼
-	// 		filePath			- Í¼Æ¬´æ·ÅÂ·¾¶£¬ÒÔ.xxx½áÊø£¨xxx Ä¿Ç°Ö»Ö§³Ö jpeg ¸ñÊ½£©
-	// 		width, height       - Ö¸¶¨Í¼Æ¬¿í¸ß£¬Èç¹û <= 0 ÔòÄ¬ÈÏÊ¹ÓÃÊÓÆµ¿í¸ß
-	// 		waittime			- ÊÇ·ñµÈ´ý½ØÍ¼Íê³É 0 - ²»µÈ´ý£¬>0 µÈ´ý³¬Ê± ms Îªµ¥Î»
+	// 		filePath			- Í¼Æ¬ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.xxxï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xxx Ä¿Ç°Ö»Ö§ï¿½ï¿½ jpeg ï¿½ï¿½Ê½ï¿½ï¿½
+	// 		width, height       - Ö¸ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ <= 0 ï¿½ï¿½Ä¬ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½
+	// 		waittime			- ï¿½Ç·ï¿½È´ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ 0 - ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½>0 ï¿½È´ï¿½ï¿½ï¿½Ê± ms Îªï¿½ï¿½Î»
 	int Snapshot( char *filename,  int width, int height, int waitTime);
 
-	//ÊÇ·ñ¾²Òô
+	//ï¿½Ç·ï¿½ï¿½ï¿½
 	int PlaySound(BOOL bPlay);
-	//ÉèÖÃ²¥·ÅÒôÁ¿
+	//ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	int SetAudioVolume( int volume);
-	//»ñÈ¡µ±Ç°²¥·ÅÒôÁ¿
+	//ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	int GetAudioVolume();
-	//µ¥Ö¡²¥·Å
+	//ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½
 	int PlaySingleFrame();
-	//²¥·ÅÆ÷½ø¶Èseek(µ¥Î»£º Ãë)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½seek(ï¿½ï¿½Î»ï¿½ï¿½ ï¿½ï¿½)
 	int SeekFile( unsigned int playTimeSecs );
 	void Resize(RECT rc)
 	{
