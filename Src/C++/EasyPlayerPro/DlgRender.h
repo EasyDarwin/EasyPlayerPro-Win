@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../libEasyPlayerPro/EasyDefine.h"
-#include "../libEasyPlayerPro/EasyPlayerProAPI.h"
-
+#include "../libEasyPlayerPro/include/EasyDefine.h"
+#include "../libEasyPlayerPro/include/EasyPlayerProAPI.h"
 
 typedef struct __CHANNEL_STATUS
 {

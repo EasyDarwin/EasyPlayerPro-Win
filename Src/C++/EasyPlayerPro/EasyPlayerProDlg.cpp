@@ -9,8 +9,11 @@
 #define new DEBUG_NEW
 #endif
 
-#pragma comment(lib, "../libEasyPlayerPro/libEasyPlayerPro.lib")
-
+#ifdef _WIN64
+	#pragma comment(lib, "../libEasyPlayerPro/x64/libEasyPlayerPro.lib")
+#else
+	#pragma comment(lib, "../libEasyPlayerPro/x86/libEasyPlayerPro.lib")
+#endif
 #pragma comment (lib, "Version.lib")
 wchar_t wszApplicationVersion[64] = {0};
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -182,8 +185,8 @@ BOOL CLivePlayerDlg::OnInitDialog()
 
 	OnCbnSelchangeComboRenderFormat();
 
-    int ret = EasyPlayerPro_Authorize("64687538665969576B5A754144474A636F35337A4A65354659584E35554778686557567955484A764C6D56345A56634D5671442F70654E4659584E355247467964326C755647566862556C7A5647686C516D567A644541794D4445345A57467A65513D3D");
-    if(ret != AUTH_SUCCESS)
+    int ret = EasyPlayerPro_Authorize("64687538665969576B5A754161356C636F3261554A65354659584E35554778686557567955484A764C6D56345A56634D5671442F7065424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D");
+    if(ret <= 0)
     {
         MessageBox(TEXT("激活码不合法或已过期！"), TEXT("OK"), MB_OK);
     }

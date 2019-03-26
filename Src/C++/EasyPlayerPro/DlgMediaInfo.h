@@ -2,7 +2,7 @@
 
 
 #include "DialogBase.h"
-#include "../libEasyPlayerPro/EasyDefine.h"
+#include "../libEasyPlayerPro/include/EasyDefine.h"
 // CDlgMediaInfo dialog
 
 class CDlgMediaInfo : public CDialogBase
