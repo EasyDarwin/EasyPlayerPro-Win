@@ -186,10 +186,15 @@ BOOL CLivePlayerDlg::OnInitDialog()
 	OnCbnSelchangeComboRenderFormat();
 
     int ret = EasyPlayerPro_Authorize("64687538665969576B5A754161356C636F3261554A65354659584E35554778686557567955484A764C6D56345A56634D5671442F7065424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D");
-    if(ret <= 0)
+    if(ret < 0)
     {
         MessageBox(TEXT("激活码不合法或已过期！"), TEXT("OK"), MB_OK);
     }
+	CString strData;
+	//pStaticCopyright->SetWindowTextW(strData);
+	GetApplicationVersion(wszApplicationVersion);
+	strData.Format(TEXT("%s    授权剩余时间：%d 天"), wszApplicationVersion, ret);
+	SetWindowText(strData);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -301,8 +306,6 @@ void	CLivePlayerDlg::CreateComponents()
 	__CREATE_WINDOW(pStaticCopyright, CStatic,		IDC_STATIC_COPYRIGHT);
 
 	pStaticCopyright->ShowWindow(FALSE);
-	GetApplicationVersion(wszApplicationVersion);
-	SetWindowText(wszApplicationVersion);
 
 	if (NULL != pChkShownToScale)		pChkShownToScale->SetWindowText(TEXT("按比例显示"));
 	if (NULL != pChkMultiplex)			pChkMultiplex->SetWindowText(TEXT("复用源"));

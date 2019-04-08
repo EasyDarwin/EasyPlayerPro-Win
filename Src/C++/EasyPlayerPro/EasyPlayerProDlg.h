@@ -31,7 +31,7 @@ public:
 	CStatic			*pStaticVolume;			//IDC_STATIC_VOLUME
 	CSliderCtrl		*pSliderCtrlVolume;	//IDC_SLIDER_VOLUME
 	CStatic			*pStaticCopyright;	//IDC_STATIC_COPYRIGHT
-
+	
 	void	InitialComponents();
 	void	CreateComponents();
 	void	UpdateComponents();

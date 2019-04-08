@@ -67,7 +67,7 @@ namespace PlayerSDK
             EASY_VIDEO_HWACCEL_TYPE_MAX_NUM,
         };
 
-        public enum EASY_PARAM_ID                
+        public enum EASY_PARAM_ID
         {
             //++ public
             // duration & position
@@ -78,29 +78,29 @@ namespace PlayerSDK
             EASY_PARAM_MEDIA_INFO,
             EASY_PARAM_VIDEO_WIDTH,
             EASY_PARAM_VIDEO_HEIGHT,
-          
+
             // video display mode
             EASY_PARAM_VIDEO_MODE,
-        
+
             // audio volume control
             EASY_PARAM_AUDIO_VOLUME,
-          
+
             // playback speed control
             EASY_PARAM_PLAY_SPEED,
             EASY_PARAM_PLAY_SPEED_TYPE,
 
             // video decode thread count
             EASY_PARAM_DECODE_THREAD_COUNT,
-          
+
             // visual effect mode
             EASY_PARAM_VISUAL_EFFECT,
-           
+
             // audio/video sync diff
             EASY_PARAM_AVSYNC_TIME_DIFF,
-           
+
             // player event callback
             EASY_PARAM_PLAYER_CALLBACK,
-          
+
             // audio/video stream
             EASY_PARAM_AUDIO_STREAM_TOTAL,
             EASY_PARAM_VIDEO_STREAM_TOTAL,
@@ -161,7 +161,7 @@ namespace PlayerSDK
         //		valume				- 播放音量，-255 - +255
         // 		返回值				- Easy_PlayerPro_Handle 指针类型，指向 easyplayerpro 对象句柄
         [DllImport("libEasyplayerpro.dll", EntryPoint = "EasyPlayerPro_Open", CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr EasyPlayerPro_Open(IntPtr player, string file, IntPtr hwnd, EASY_VIDEO_RENDER_TYPE render_type, EASY_VIDEO_SCALE_MODE video_mode, EASY_STREAM_LINK_MODE link_mode,int speed, int valume);
+        static extern IntPtr EasyPlayerPro_Open(IntPtr player, string file, IntPtr hwnd, EASY_VIDEO_RENDER_TYPE render_type, EASY_VIDEO_SCALE_MODE video_mode, EASY_STREAM_LINK_MODE link_mode, int speed, int valume);
 
         //关闭视频
         // 	EasyPlayerPro_Close    关闭播放
@@ -243,7 +243,7 @@ namespace PlayerSDK
         static extern void EasyPlayerPro_Getparam(IntPtr player, EASY_PARAM_ID id, ref Int64 param);
 
         private IntPtr mPlayer = IntPtr.Zero;
-        private string ACTIVE_KEY = "64687538665969576B5A75416C6A4A636F3831704A65354659584E35554778686557567955484A764C6D56345A56634D5671442F7065424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D";
+        private string ACTIVE_KEY = "64687538665969576B5A754161356C636F3261554A65354659584E35554778686557567955484A764C6D56345A56634D5671442F7065424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D";
 
         int totalTime = 0;
         int alreadyTime = 0;
@@ -272,7 +272,12 @@ namespace PlayerSDK
             this.skinComboBox1.SelectedItem = "100";
 
             int nRet = EasyPlayerPro_Authorize(ACTIVE_KEY);
-
+            if (nRet <= 0)
+            {
+                 MessageBox.Show("激活码不合法或已过期！", "提示", MessageBoxButtons.OK);
+           }
+            string strTitle = "EasyPlayerPro    " + "授权剩余时间：" + nRet + " 天";
+            this.Text = strTitle;
             mPlayer = EasyPlayerPro_Create();
             bInit = true;
             //RealProCallBack = new PlayerSDK.EasyPlayerProCallBack(RealProSourceCallBack);
