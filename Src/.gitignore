@@ -40,6 +40,5 @@ ipch/
 *.pdb
 *.manifest
 *.ilk
-*.lib
 *.exp
 *.db
