@@ -10,9 +10,9 @@
 #endif
 
 #ifdef _WIN64
-	#pragma comment(lib, "../libEasyPlayerPro/x64/libEasyPlayerPro.lib")
+	#pragma comment(lib, "../libEasyPlayerPro/win64/libEasyPlayerPro.lib")
 #else
-	#pragma comment(lib, "../libEasyPlayerPro/x86/libEasyPlayerPro.lib")
+	#pragma comment(lib, "../libEasyPlayerPro/win32/libEasyPlayerPro.lib")
 #endif
 #pragma comment (lib, "Version.lib")
 wchar_t wszApplicationVersion[64] = {0};
