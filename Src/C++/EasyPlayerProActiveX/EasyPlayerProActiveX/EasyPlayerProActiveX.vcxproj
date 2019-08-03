@@ -63,7 +63,7 @@
       <ModuleDefinitionFile>.\EasyPlayerProActiveX.def</ModuleDefinitionFile>
       <OutputFile>$(OutDir)$(ProjectName).ocx</OutputFile>
       <RegisterOutput>true</RegisterOutput>
-      <AdditionalLibraryDirectories>../../libEasyPlayerPro</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../libEasyPlayerPro/win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>libEasyPlayerPro.lib</AdditionalDependencies>
     </Link>
     <Midl>
@@ -102,7 +102,7 @@
       <OutputFile>$(OutDir)$(ProjectName).ocx</OutputFile>
       <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>libEasyPlayerPro.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../libEasyPlayerPro</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../libEasyPlayerPro/win32</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

@@ -50,7 +50,7 @@ int EasyPlayerProManager::Start(char* szURL, HWND hShowWnd, int renderFormat,  i
 
 	// player open file
 	m_sSourceInfo.sourceId = EasyPlayerPro_Open(m_sSourceInfo.sourceId, file_url, hShowWnd, EASY_VIDEO_RENDER_TYPE_D3D,
-		(EASY_VIDEO_SCALE_MODE)bShownToScale, (EASY_STREAM_LINK_MODE)nRTPOverTCP, 100, nVolume-182);
+		(EASY_VIDEO_SCALE_MODE)bShownToScale, (EASY_STREAM_LINK_MODE)nRTPOverTCP, 100, nVolume-182,1024*1024, 10000000);
 	if (m_sSourceInfo.sourceId)
 	{
 		m_sSourceInfo.nVolume = nVolume;

@@ -422,7 +422,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 		// player open file
 		m_hPlayer = EasyPlayerPro_Open(m_hPlayer, file_url, hWnd, EASY_VIDEO_RENDER_TYPE_D3D,
-			scaleMode, (EASY_STREAM_LINK_MODE)rtpOverTcp, 100, nVolValue);
+			scaleMode, (EASY_STREAM_LINK_MODE)rtpOverTcp, 100, nVolValue, 1024 * 1024, 10000000);
 		if (m_hPlayer)
 		{
 			m_bPlayPause = FALSE;

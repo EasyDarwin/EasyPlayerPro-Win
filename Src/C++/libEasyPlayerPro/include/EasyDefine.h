@@ -11,6 +11,8 @@
 // todo..
 #endif
 
+#define MAX_PATH_LENGTH 1024
+
 //通道源类型 (指定源类型)
 typedef enum __EASY_CHANNEL_SOURCE_TYPE_ENUM
 {
@@ -20,6 +22,8 @@ typedef enum __EASY_CHANNEL_SOURCE_TYPE_ENUM
 	EASY_CHANNEL_SOURCE_TYPE_FILE,				//源为本地文件(内置)
 	EASY_CHANNEL_SOURCE_TYPE_ENCODE_DATA,		//源为外部的编码数据
 	EASY_CHANNEL_SOURCE_TYPE_DECODE_DATA,		//源为外部的解码数据
+	EASY_CHANNEL_SOURCE_TYPE_CAPTURE,			//源为本地数据采集(内置)
+
 }EASY_CHANNEL_SOURCE_TYPE_ENUM;
 
 //水印结构信息
@@ -35,12 +39,12 @@ typedef enum tagWATER_MARK_POS
 
 typedef enum tagWATERMARK_ENTRY_TYPE
 {
-	WATERMARK_TYPE_COVER			   = 0,
-	WATERMARK_TYPE_OVERLYING		   = 1,
-	WATERMARK_TYPE_OVERLYING_COVER	   = 2,
-	WATERMARK_TYPE_ROLL_TO_LEFT		   = 3,
-	WATERMARK_TYPE_JUMP_UP_DOWN		   = 4,
-	WATERMARK_TYPE_ROLL_AND_JUMP	   = 5,
+	WATERMARK_TYPE_COVER = 0,
+	WATERMARK_TYPE_OVERLYING = 1,
+	WATERMARK_TYPE_OVERLYING_COVER = 2,
+	WATERMARK_TYPE_ROLL_TO_LEFT = 3,
+	WATERMARK_TYPE_JUMP_UP_DOWN = 4,
+	WATERMARK_TYPE_ROLL_AND_JUMP = 5,
 	WATERMARK_TYPE_TROTTING_HORSE_LAMP = 6
 
 }WATERMARK_ENTRY_TYPE;
@@ -76,13 +80,13 @@ typedef enum tagSPEED_RATE
 typedef struct tagVideoTittleInfo
 {
 	int nState;//字幕状态：	nState==1运行；nState==0暂停；nState==-1销毁
-	//设置字体等信息
+			   //设置字体等信息
 	int nTittleWidth;
 	int nTittleHeight;
 	int nFontWeight;//权重 FW_NORMAL FW_BOLD、、、
 	char strFontType[64];//字体 "华文新魏");//"华文隶书");"隶书"
 	char strTittleContent[512];//字幕内容
-	// 字幕颜色
+							   // 字幕颜色
 	int nColorR;
 	int nColorG;
 	int nColorB;

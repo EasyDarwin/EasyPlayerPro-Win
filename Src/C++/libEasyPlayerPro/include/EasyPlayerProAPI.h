@@ -1,9 +1,9 @@
 
 /*
-	Copyright (c) 2013-2017 EasyDarwin.ORG.  All rights reserved.
-	Github: https://github.com/EasyDarwin
-	WEChat: EasyDarwin
-	Website: http://www.easydarwin.org
+Copyright (c) 2013-2017 EasyDarwin.ORG.  All rights reserved.
+Github: https://github.com/EasyDarwin
+WEChat: EasyDarwin
+Website: http://www.easydarwin.org
 */
 #ifndef __EasyPlayerProAPI_H__
 #define __EasyPlayerProAPI_H__
@@ -36,7 +36,7 @@ typedef enum tagEASY_VIDEO_RENDER_TYPE
 {
 	EASY_VIDEO_RENDER_TYPE_GDI = 0,
 	EASY_VIDEO_RENDER_TYPE_D3D,
-//	EASY_VIDEO_RENDER_TYPE_OPENGL,
+	//	EASY_VIDEO_RENDER_TYPE_OPENGL,
 	EASY_VIDEO_RENDER_TYPE_MAX_NUM,
 }EASY_VIDEO_RENDER_TYPE;
 
@@ -109,8 +109,10 @@ typedef enum tagEASY_PARAM_ID
 	// audio/video sync diff
 	EASY_PARAM_AVSYNC_TIME_DIFF,
 
-	// player event callback
+	// player event/audio/video callback
 	EASY_PARAM_PLAYER_CALLBACK,
+	// player event/audio/video callback userdata
+	EASY_PARAM_PLAYER_USERDATA,
 
 	// audio/video stream
 	EASY_PARAM_AUDIO_STREAM_TOTAL,
@@ -142,11 +144,74 @@ typedef enum tagEASY_PARAM_ID
 	//-- for vdev
 
 	//++ for render
-	EASY_PARAM_RENDER_UPDATE    = 0x4000,
+	EASY_PARAM_RENDER_UPDATE = 0x4000,
 	EASY_PARAM_RENDER_START_PTS,
 	//-- for render
 
 }EASY_PARAM_ID;
+
+typedef enum __EASY_CALLBACK_TYPE_ENUM
+{
+	EASY_TYPE_CONNECTING = 100,						//当前通道连接中
+	EASY_TYPE_CONNECTED,							//当前通道已连接
+	EASY_TYPE_RECONNECT,							//当前通道连接已断开,正在重连
+	EASY_TYPE_DISCONNECT,							//当前通道连接已中止(内部连接线程已退出),指定了连接次数的情况下会回调该值
+
+	EASY_TYPE_CODEC_DATA,							//编码数据
+	EASY_TYPE_DECODE_DATA,							//解码数据
+	EASY_TYPE_SNAPSHOT,								//抓拍
+	EASY_TYPE_RECORDING,							//录像
+													//	EASY_TYPE_INSTANT_REPLAY_RECORDING,				//即时回放录像完成
+
+													EASY_TYPE_START_PLAY_AUDIO,						//开始播放声音
+													EASY_TYPE_STOP_PLAY_AUDIO,						//停止播放声音
+													EASY_TYPE_CAPTURE_VIDEO_DATA,					//本地采集的视频数据
+													EASY_TYPE_CAPTURE_AUDIO_DATA,					//本地采集的音频数据
+
+													EASY_TYPE_FILE_DURATION							//文件时长
+}EASY_CALLBACK_TYPE_ENUM;
+
+//媒体类型
+typedef enum __EASY_MEDIA_TYPE_ENUM
+{
+	MEDIA_TYPE_VIDEO = 0x00000001,
+	MEDIA_TYPE_AUDIO = 0x00000002,
+	MEDIA_TYPE_EVENT = 0x00000003,
+	MEDIA_TYPE_CODEC_INFO = 0x00000004
+}EASY_MEDIA_TYPE_ENUM;
+
+
+//帧信息
+typedef struct __EASY_FRAME_INFO
+{
+	unsigned int	acodec;			//音频编码格式
+	unsigned int	vcodec;			//视频编码格式
+	char			acodecString[32];
+	char			vcodecString[32];
+
+	unsigned int	type;			//帧类型
+	unsigned int	fps;			//帧率
+	unsigned int	reserved1;
+	unsigned int	reserved2;
+
+	unsigned int	width;			//宽
+	unsigned int  height;			//高
+	unsigned int	sample_rate;	//采样率
+	unsigned int	channels;		//声道
+	unsigned int	bitsPerSample;	//采样精度
+	unsigned int	length;			//帧大小
+	unsigned int    timestamp_sec;	//timestamp	sec
+	unsigned int    timestamp_usec;	//timestamp	usec
+	unsigned int	timeduration_sec;	//文件/回放流时间长度，单位：秒
+
+	float			bitrate;		//Kbps
+	float			fStatisticsBitsrate;
+	float			nStatisticsFPS;
+}EASY_FRAME_INFO;
+
+//define EASY_FRAME_INFO
+
+typedef int(_stdcall *EasyPlayerProCallBack)(EASY_CALLBACK_TYPE_ENUM callbackType, void *userPtr, int mediaType, char *pbuf, EASY_FRAME_INFO *frameInfo);
 
 #ifdef __cplusplus
 extern "C"
@@ -155,6 +220,7 @@ extern "C"
 
 	// EasyPlayerPro接口函数声明
 	int EasyPlayerPro_Authorize(char *license);
+
 	Easy_PlayerPro_Handle EasyPlayerPro_Create();
 	void EasyPlayerPro_Release(Easy_PlayerPro_Handle player);
 
@@ -173,7 +239,8 @@ extern "C"
 		EASY_VIDEO_SCALE_MODE  video_mode,
 		EASY_STREAM_LINK_MODE  link_mode,
 		int					   speed,
-		int					   valume);
+		int					   valume
+		,int probesize, int max_analyze_duration);
 
 	// 	EasyPlayerPro_Close    关闭播放
 	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象
@@ -205,7 +272,7 @@ extern "C"
 	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象
 	// 		type				- 指定区域类型  0 - video rect, 1 - audio visual effect rect
 	// 		x,y,width,height	- 指定显示矩形区域
-	void  EasyPlayerPro_Resize (Easy_PlayerPro_Handle player, int type, int x, int y, int width, int height); 
+	void  EasyPlayerPro_Resize(Easy_PlayerPro_Handle player, int type, int x, int y, int width, int height);
 
 
 	// 	EasyPlayerPro_Snapshot 视频播放截图
@@ -219,13 +286,37 @@ extern "C"
 	// 	EasyPlayerPro_Record   视频播放录像
 	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象
 	// 		filePath			- 图片存放路径，以.xxx结束（xxx 目前只支持 mp4 格式）
-	// 		duration			- 指定图片宽高，如果 <= 0 则默认使用视频宽高
-	int   EasyPlayerPro_Record (Easy_PlayerPro_Handle player, char *filePath, int duration );
+	// 		duration			- 指定录像切片时长，如果 = 0 则默认不切片，单位：分钟
+	int   EasyPlayerPro_Record(Easy_PlayerPro_Handle player, char *filePath, int duration);
 
 
-	// 	EasyPlayerPro_Stoprecord 视频播放停止录像
+	// 	EasyPlayerPro_Record   视频播放停止录像
 	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象
 	int   EasyPlayerPro_Stoprecord(Easy_PlayerPro_Handle player);
+
+	// 	EasyPlayerPro_RealCache   播放器开启实时缓存（预录像）
+	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象
+	// 		cachename			- 指定缓存名称，如设置为null(空)，则播放器自行指定
+	// 		duration			- 指定缓存录像时长，如果 = 0 则默认不切片，单位：分钟
+	// 		bRecord				- 是否缓存数据录像，如果 =true 则实时缓存停止时不删除录像数据
+	// 		bDelSegment			- 是否删除指定缓存，如果 =true 则在缓存时长超过指定时长的3倍时开始删除过期的缓存数据
+	int   EasyPlayerPro_RealCache(Easy_PlayerPro_Handle player, char *cachename, int duration, bool bRecord, bool bDelSegment);
+
+	// 	EasyPlayerPro_RealCache   播放器停止实时缓存（预录像）
+	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象	
+	// 注意：如果EasyPlayerPro_RealCache函数的bRecord参数为false，则该函数调用后会清除缓存录像数据
+	int   EasyPlayerPro_StopRealCache(Easy_PlayerPro_Handle player);
+
+	// 	EasyPlayerPro_RealPlayback   播放器回放实时缓存（预录像回放）
+	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象	
+	// 		hWnd				- 回放指定渲染目标窗口/设备，如：Win32 的窗口句柄/其他平台渲染显示设备句柄
+	//		bPreview			- 回放预览模式，如果 =true 则一直播放实时缓存，=false 则回放设置时间段的实时缓存
+	Easy_PlayerPro_Handle EasyPlayerPro_RealPlayback(Easy_PlayerPro_Handle player, EASY_HANDLE hWnd, bool bPreview, bool bCover);
+
+	// 	EasyPlayerPro_RealCache   播放器停止回放实时缓存（预录像）
+	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象	
+	// 		realplaybacker		- 指向 EasyPlayerPro_RealPlayback 返回的 playback 对象	
+	int   EasyPlayerPro_StopRealPlayback(Easy_PlayerPro_Handle player, Easy_PlayerPro_Handle realplaybacker);
 
 	// 	EasyPlayerPro_SetLogo  设置台标/LOGO
 	// 		player				- 指向 EasyPlayerPro_Open 返回的 player 对象
@@ -237,7 +328,7 @@ extern "C"
 	// 		width				- 宽
 	// 		height				- 高
 	// 		logopath			- 水印图片路径
-	int   EasyPlayerPro_SetLogo (void* hplayer, int bIsUse, int ePos, int eStyle, 
+	int   EasyPlayerPro_SetLogo(void* hplayer, int bIsUse, int ePos, int eStyle,
 		int x, int y, int width, int height, char* logopath);
 
 	// 	EasyPlayerPro_SetOSD  设置叠加字幕
@@ -248,27 +339,27 @@ extern "C"
 	// 		x					- 字幕显示左上角位置x坐标
 	// 		y					- 字幕显示左上角位置y坐标
 	// 		weight				- 字体权重，见如下声明
-											// /* Font Weights */
-											// #define FW_DONTCARE         0
-											// #define FW_THIN             100
-											// #define FW_EXTRALIGHT       200
-											// #define FW_LIGHT            300
-											// #define FW_NORMAL           400
-											// #define FW_MEDIUM           500
-											// #define FW_SEMIBOLD         600
-											// #define FW_BOLD             700
-											// #define FW_EXTRABOLD        800
-											// #define FW_HEAVY            900
-											// #define FW_ULTRALIGHT       FW_EXTRALIGHT
-											// #define FW_REGULAR          FW_NORMAL
-											// #define FW_DEMIBOLD         FW_SEMIBOLD
-											// #define FW_ULTRABOLD        FW_EXTRABOLD
-											// #define FW_BLACK            FW_HEA
+	// /* Font Weights */
+	// #define FW_DONTCARE         0
+	// #define FW_THIN             100
+	// #define FW_EXTRALIGHT       200
+	// #define FW_LIGHT            300
+	// #define FW_NORMAL           400
+	// #define FW_MEDIUM           500
+	// #define FW_SEMIBOLD         600
+	// #define FW_BOLD             700
+	// #define FW_EXTRABOLD        800
+	// #define FW_HEAVY            900
+	// #define FW_ULTRALIGHT       FW_EXTRALIGHT
+	// #define FW_REGULAR          FW_NORMAL
+	// #define FW_DEMIBOLD         FW_SEMIBOLD
+	// #define FW_ULTRABOLD        FW_EXTRABOLD
+	// #define FW_BLACK            FW_HEA
 	// 		width				- 宽
 	// 		height				- 高
 	// 		fontname			- 字体名称，如“宋体”“楷体”“隶书”“华文行楷”......
 	//		tittleContent		- OSD显示内容
-	int   EasyPlayerPro_SetOSD (void *hplayer, int bIsUse, int nMoveType, int R, int G, int B,
+	int   EasyPlayerPro_SetOSD(void *hplayer, int bIsUse, int nMoveType, int R, int G, int B,
 		int weight, int x, int y, int width, int height, char* fontname, char* tittleContent);
 
 	// 	EasyPlayerPro_Setparam 设置参数
@@ -307,8 +398,8 @@ EasyPlayerPro_Getparam(g_hplayer, PARAM_VIDEO_HEIGHT, &vh);
 
 EASY_PARAM_VIDEO_MODE
 用于获取和设置视频显示方式，有两种方式可选：
-    1. EASY_VIDEO_MODE_LETTERBOX - 按比例缩放到显示区域
-    2. EASY_VIDEO_MODE_STRETCHED - 拉伸到显示区域
+1. EASY_VIDEO_MODE_LETTERBOX - 按比例缩放到显示区域
+2. EASY_VIDEO_MODE_STRETCHED - 拉伸到显示区域
 （注：视频显示区域由 EasyPlayerPro_Resize 进行设定）
 int mode = 0;
 EasyPlayerPro_Getparam(g_hplayer, EASY_PARAM_VIDEO_MODE, &mode);
@@ -346,9 +437,9 @@ EasyPlayerPro_Getparam(g_hplayer, EASY_PARAM_VISUAL_EFFECT, &mode);
 mode = EASY_AUDIO_VISUAL_EFFECT_WAVEFORM;
 EasyPlayerPro_Setparam(g_hplayer, EASY_PARAM_VISUAL_EFFECT, &mode);
 目前总共有三种视觉效果：
-    1. VISUAL_EFFECT_DISABLE  - 关闭
-    2. VISUAL_EFFECT_WAVEFORM - 波形
-    3. VISUAL_EFFECT_SPECTRUM - 频谱
+1. VISUAL_EFFECT_DISABLE  - 关闭
+2. VISUAL_EFFECT_WAVEFORM - 波形
+3. VISUAL_EFFECT_SPECTRUM - 频谱
 （注：视觉效果区域由 EasyPlayerPro_Resize 进行设定）
 
 EASY_PARAM_AVSYNC_TIME_DIFF
@@ -361,8 +452,8 @@ EASY_PARAM_PLAYER_CALLBACK
 用于设置播放器事件回调函数，回调函数的原型定义如下：
 typedef void (*EASY_PLAYERPRO_CALLBACK)(__int32 msg, __int64 param);
 回调时的参数定义如下：
-    msg   - PLAY_PROGRESS 播放进行中，PLAY_COMPLETED 播放完成
-    param - 当前播放进度，以毫秒为单位
+msg   - PLAY_PROGRESS 播放进行中，PLAY_COMPLETED 播放完成
+param - 当前播放进度，以毫秒为单位
 
 EASY_PARAM_VDEV_RENDER_TYPE
 用于设置视频渲染方式，目前有 EASY_VIDEO_RENDER_TYPE_GDI 和 EASY_VIDEO_RENDER_TYPE_D3D 两种可选
