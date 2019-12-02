@@ -31,7 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Static</UseOfMfc>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -100,7 +100,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\tinyxml\</AdditionalLibraryDirectories>
     </Link>
     <Midl>

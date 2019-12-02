@@ -113,9 +113,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <COMReference Include="AxSNPlayerLib">
       <Guid>{BEABCC2C-E135-4258-A006-680BF80643E4}</Guid>
       <VersionMajor>1</VersionMajor>
