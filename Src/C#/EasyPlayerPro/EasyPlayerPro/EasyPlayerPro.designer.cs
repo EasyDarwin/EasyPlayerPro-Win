@@ -53,9 +53,9 @@
             // 
             // skinPanel2
             // 
-            this.skinPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.skinPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.skinPanel2.Controls.Add(this.textURL);
             this.skinPanel2.Controls.Add(this.skinTrackBar1);
             this.skinPanel2.Location = new System.Drawing.Point(33, 22);
@@ -69,12 +69,12 @@
             this.textURL.Name = "textURL";
             this.textURL.Size = new System.Drawing.Size(983, 25);
             this.textURL.TabIndex = 10;
-            this.textURL.Text = "rtmp://live.hkstv.hk.lxdns.com/live/hks2";
+            this.textURL.Text = "http://demo.easydss.com:10080/fvod/ULJyMRhZR/video.m3u8";
             // 
             // skinTrackBar1
             // 
-            this.skinTrackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.skinTrackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.skinTrackBar1.AutoSize = false;
             this.skinTrackBar1.Location = new System.Drawing.Point(4, 510);
             this.skinTrackBar1.Name = "skinTrackBar1";
@@ -85,8 +85,8 @@
             // 
             // skinPanel3
             // 
-            this.skinPanel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.skinPanel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.skinPanel3.BackColor = System.Drawing.Color.LightGray;
             this.skinPanel3.Controls.Add(this.button8);
             this.skinPanel3.Controls.Add(this.lblTime);
@@ -235,9 +235,9 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Location = new System.Drawing.Point(33, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(994, 526);
