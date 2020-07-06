@@ -56,6 +56,9 @@ public:
 	HBRUSH	m_BrushEdt;
 	HBRUSH	m_BrushStatic;
 
+	int m_nVideoWidth;
+	int m_nVideoHeight;
+
 // 对话框数据
 	enum { IDD = IDD_DIALOG_VIDEO };
 
@@ -113,4 +116,6 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+
+	static int _stdcall EasyPlayerProCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, void *userPtr, int mediaType, char *pbuf, EASY_FRAME_INFO *frameInfo);
 };

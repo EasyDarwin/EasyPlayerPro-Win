@@ -227,6 +227,7 @@ void	CDlgVideo::SetShownToScale(int _shownToScale)
 		mode++; mode %= EASY_VIDEO_MODE_MAX_NUM;
 	}
 	EasyPlayerPro_Setparam(m_hPlayer, EASY_PARAM_VIDEO_MODE, &mode);
+	EasyPlayerPro_Setparam(m_hPlayer, EASY_PARAM_VDEV_RENDER_SHOW, &_shownToScale);
 	OnResizeVideoWnd();
 }
 
@@ -296,11 +297,72 @@ void CDlgVideo::UpdateComponents()
 	if (pProgressCtrl && pProgressCtrl->IsWindowVisible())		bShowFileToolbar = true;
 
 	CRect	rcRender;
-	rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-(bShowToolbar?20:0));
+	/*rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-(bShowToolbar?20:0));
 	if (bShowFileToolbar)	rcRender.bottom-=20;
 	__MOVE_WINDOW(pDlgRender, rcRender);
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
+
+	CRect	rcFileToolbar;
+	if (bShowFileToolbar)
+	{
+		rcFileToolbar.SetRect(rcRender.left, rcRender.bottom, rcRender.right, rcRender.bottom+20);
+		__MOVE_WINDOW(pProgressCtrl, rcFileToolbar);
+	}
+
+	if (! bShowToolbar)	return;
+
+	CRect	rcURL;
+	rcURL.SetRect(rcClient.left, (bShowFileToolbar?rcFileToolbar.bottom+2:rcRender.bottom+2), rcClient.right-200, rcClient.bottom);
+	__MOVE_WINDOW(pEdtURL, rcURL);
+	if (NULL != pEdtURL)		pEdtURL->Invalidate();
+
+	CRect	rcOSD;
+	rcOSD.SetRect(rcURL.right+2, rcURL.top, rcURL.right+2+45, rcURL.bottom);
+	__MOVE_WINDOW(pChkOSD, rcOSD);
+	if (NULL != pChkOSD)		pChkOSD->Invalidate();
+	CRect	rcTCP;
+	rcTCP.SetRect(rcOSD.right+2, rcOSD.top, rcOSD.right+2+45, rcOSD.bottom);
+	__MOVE_WINDOW(pChkTCP, rcTCP);
+	CRect	rcCache;
+	rcCache.SetRect(rcTCP.right+2, rcTCP.top, rcTCP.right+2+60, rcTCP.bottom);
+	__MOVE_WINDOW(pSliderCache, rcCache);
+	if (NULL != pSliderCache)		pSliderCache->Invalidate();
+
+	CRect	rcPreview;
+	rcPreview.SetRect(rcCache.right+2, rcURL.top, rcClient.right-3, rcURL.bottom);
+	__MOVE_WINDOW(pBtnPreview, rcPreview);
+	if (NULL != pBtnPreview)		pBtnPreview->Invalidate();*/
+	if (m_WindowId == 1 && m_hPlayer>0)
+	{
+		int x = 0;
+		int y = 0;
+		int w = rcClient.Width();
+		int h = rcClient.Height();
+		if (m_nVideoWidth > 0 && m_nVideoHeight > 0)
+		{
+			float fVideScale = (float)(m_nVideoWidth / (float)m_nVideoHeight);
+			float fWndScale = (float)(w / (float)h);
+			if (fVideScale > fWndScale) {
+				h = w / fVideScale;
+				int dx = 0;
+				y += (rcClient.Height() - h) / 2;
+			}
+			else {
+				w = h*fVideScale;
+				x += (rcClient.Width() - w) / 2;
+			}
+		}
+		rcRender.SetRect(x + 1, y + 1, x + w, y + h - 1 - (bShowToolbar ? 20 : 0));
+	}
+	else
+	{
+		rcRender.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom - (bShowToolbar ? 20 : 0));
+	}
+
+	if (bShowFileToolbar)	rcRender.bottom -= 20;
+	__MOVE_WINDOW(pDlgRender, rcRender);
+	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
 	CRect	rcFileToolbar;
 	if (bShowFileToolbar)
@@ -338,6 +400,38 @@ void CDlgVideo::DeleteComponents()
 {
 	__DELETE_WINDOW(pDlgRender);
 	__DELETE_WINDOW(pProgressCtrl);	
+}
+
+int CDlgVideo::EasyPlayerProCallBack(EASY_CALLBACK_TYPE_ENUM callbackType, void *userPtr, int mediaType, char *pbuf, EASY_FRAME_INFO *frameInfo)
+{
+	if (EASY_TYPE_DECODE_DATA == callbackType && mediaType == MEDIA_TYPE_VIDEO)
+	{
+		CString strMsg;
+		strMsg.Format(_T("decode video data: %d  width=%d  height=%d pts_sec=%d pts_usec=%d\n"), frameInfo->length, frameInfo->width, frameInfo->height, frameInfo->timestamp_sec, frameInfo->timestamp_usec);
+		OutputDebugString(strMsg);
+		//for (int i=0; i<frameInfo->length; i+=3)
+		//{
+		//	pbuf[i] = 255;
+		//	pbuf[i+2] = 255;
+		//}
+	}
+		if (callbackType == EASY_TYPE_CONNECTING)
+		{
+			OutputDebugString(TEXT("EASY_TYPE_CONNECTING...\n"));
+		}
+		else if (callbackType == EASY_TYPE_CONNECTED)
+		{
+			OutputDebugString(TEXT("EASY_TYPE_CONNECTED.\n"));
+		}
+		else if (callbackType == EASY_TYPE_DISCONNECT)
+		{
+			OutputDebugString(TEXT("EASY_TYPE_DISCONNECT.\n"));
+		}
+		else if (callbackType == EASY_TYPE_RECONNECT)
+		{
+			OutputDebugString(TEXT("EASY_TYPE_RECONNECT.\n"));
+		}
+	return 1;
 }
 
 void CDlgVideo::OnBnClickedButtonPreview()
@@ -419,6 +513,16 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		int	nVolValue = m_pMainDlg->GetAudioVolume();
 
 		m_hPlayer = EasyPlayerPro_Create();
+
+#if 1
+		EasyPlayerPro_Setparam(m_hPlayer, EASY_PARAM_PLAYER_CALLBACK, &EasyPlayerProCallBack);
+		EasyPlayerPro_Setparam(m_hPlayer, EASY_PARAM_PLAYER_USERDATA, m_hPlayer);
+#endif
+		int param = 1;
+		EasyPlayerPro_Setparam(m_hPlayer, EASY_PARAM_VDEV_RENDER_SHOW, &param);
+		int iIdx = 0;
+		if(m_pMainDlg)
+			iIdx = m_pMainDlg->pComboxRenderFormat->GetCurSel();
 
 		// player open file
 		m_hPlayer = EasyPlayerPro_Open(m_hPlayer, file_url, hWnd, EASY_VIDEO_RENDER_TYPE_D3D,
@@ -553,7 +657,7 @@ LRESULT CDlgVideo::OnRecordingComplete(WPARAM wParam, LPARAM lParam)
 //	}
 //	else if (callbackType == EASY_TYPE_CODEC_DATA)
 //	{
-//		if (mediaType == MEDIA_TYPE_SDP)
+//		if (mediaType == MEDIA_TYPE_VIDEO)
 //		{
 //		}
 //		else if (mediaType == MEDIA_TYPE_CODEC_INFO)
@@ -611,7 +715,7 @@ LRESULT CDlgVideo::OnRecordingComplete(WPARAM wParam, LPARAM lParam)
 //
 //		pLiveVideo->PostMessageW(WM_RECORDING_CMPLETE, MEDIA_TYPE_VIDEO == mediaType ? 0 : -1, 0);
 //	}
-//	else if (callbackType == EASY_TYPE_INSTANT_REPLAY_RECORDING)
+//	else if (callbackType == MEDIA_TYPE_VIDEO)
 //	{
 //		if (mediaType == MEDIA_TYPE_VIDEO)		OutputDebugString(TEXT("即时回放录像成功\n"));
 //		else if (mediaType == MEDIA_TYPE_EVENT)		OutputDebugString(TEXT("即时回放录像失败\n"));
