@@ -1,9 +1,9 @@
-## EasyPlayerPro简介 ##
+## EasyPlayerPro简介
 
-EasyPlayerPro是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP、HLS、UDP、RTP、File等多种流媒体协议播放、支持本地文件播放，支持本地抓拍、本地录像、播放旋转、多屏播放等多种功能特性，核心基于ffmpeg，稳定、高效、可靠，支持Windows、Android、iOS三个平台，EasyPlayerPro播放器可广泛应用于流媒体客户端、互联网直播、在线教育、IPTV、赛事直播、本地视频文件播放等项目中。目前在多家教育、安防、行业型公司都得到稳定的应用，广受好评！
+EasyPlayer是由[TSINGSEE | 开放平台](http://open.tsingsee.com "青犀TSINGSEE")开发和维护的一个流媒体播放器系列项目，EasyPlayerPro是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP、HLS、UDP、RTP、File等多种流媒体协议播放、支持本地文件播放，支持本地抓拍、本地录像、播放旋转、多屏播放等多种功能特性，核心基于ffmpeg，稳定、高效、可靠，支持Windows、Android、iOS三个平台，EasyPlayerPro播放器可广泛应用于流媒体客户端、互联网直播、在线教育、IPTV、赛事直播、本地视频文件播放等项目中。目前在多家教育、安防、行业型公司都得到稳定的应用，广受好评！
 
 
-## 功能特点 ##
+## 功能特点
    
 - 视频支持格式 H264、H265、MJPEG、MPEG4等诸多格式;  
 - 音频支持格式 G711A、G711U、G726、AAC、opus等诸多格式;  
@@ -48,15 +48,25 @@ EasyPlayerPro是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP�
 
 > EasyPlayerPro是一款非常稳定的全协议/全功能播放器组件，各平台版本需要经过授权才能商业使用，商业授权方案可以通过以上渠道进行更深入的技术与合作咨询；
 
+<br/>
 
-## 获取更多信息 ##
+### ✈ 更多视频解决方案资源汇总
 
-**EasyDarwin**开源流媒体服务器：[www.EasyDarwin.org](http://www.easydarwin.org)
+- 流媒体技术：<br/>
+© EasyDarwin开源流媒体服务器：<a href="http://www.easydarwin.org" target="_blank" title="EasyDarwin开源流媒体服务器">http://www.easydarwin.org</a><br/>
+© TSINGSEE视频开放平台：<a href="http://open.tsingsee.com" target="_blank" title="TSINGSEE青犀视频开放平台">http://open.tsingsee.com</a><br/>
 
-**EasyDSS**商用流媒体解决方案：[www.EasyDSS.com](http://www.easydss.com)
+- 视频云服务：<br/>
+© EasyDSS互联网视频云服务：<a href="http://www.easydss.com" target="_blank" title="EasyDSS互联网视频云服务">http://www.easydss.com</a><br/>
+© EasyCVR安防视频云服务：<a href="http://www.easycvr.com" target="_blank" title="EasyCVR安防视频云服务">http://www.easycvr.com</a><br/>
+© EasyGBS国标视频云服务：<a href="http://www.easygbs.com" target="_blank" title="EasyGBS国标视频云服务">http://www.easygbs.com</a><br/>
+© EasyRTC在线视频会议平台：<a href="http://www.easyrtc.cn" target="_blank" title="EasyRTC在线视频会议平台">http://www.easyrtc.cn</a><br/>
+© EasyRTS即时通信云服务：<a href="http://www.easyrts.com" target="_blank" title="EasyRTS即时通信云服务">http://www.easyrts.com</a><br/>
 
-**EasyNVR**无插件直播方案：[www.EasyNVR.com](http://www.easynvr.com)
+- 边缘计算：<br/>
+© EasyNVR视频边缘计算网关：<a href="http://www.easynvr.com" target="_blank" title="EasyNVR视频边缘计算网关">http://www.easynvr.com</a><br/>
+© EasyNTS上云网关：<a href="http://www.easynts.com" target="_blank" title="EasyNTS上云网关">http://www.easynts.com</a><br/>
 
-Copyright &copy; EasyDSS.com Team 2012-2019
+© TSINGSEE Team：<a href="http://www.tsingsee.com" target="_blank" title="青犀TSINGSEE">http://www.tsingsee.com</a><br/>
 
-![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
+![青犀TSINGSEE](http://www.easydarwin.org/public/images/tsingsee_qrcode_160.jpg)
