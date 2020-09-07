@@ -54,7 +54,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Static</UseOfMfc>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -155,7 +155,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>false</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\tinyxml\</AdditionalLibraryDirectories>
     </Link>
     <Midl>
@@ -184,7 +184,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>false</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;tinyxml_64.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml_64.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\tinyxml\</AdditionalLibraryDirectories>
     </Link>
     <Midl>
