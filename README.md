@@ -30,23 +30,14 @@ EasyPlayer是由[TSINGSEE | 开放平台](http://open.tsingsee.com "青犀TSINGS
 
 ## Windows平台初始版本界面如下图所示： ##
 
-![EasyPlayerPro Windows播放器](http://www.easydarwin.org/github/images/easyplayerpro/easyplayerpro_win.png)
-
-
-## 版本下载 ##
-
-- Git Clone源码：https://github.com/EasyDSS/EasyPlayerPro-Win.git
-
-- 直接下载：[Github下载](https://github.com/EasyDSS/EasyPlayerPro-Win/archive/master.zip "EasyPlayerPro Windows")    
+![EasyPlayerPro Windows播放器](http://www.easydarwin.org/github/images/easyplayerpro/easyplayerpro_win.png)  
 
 
 ## 技术支持 ##
 
-- 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
-
 - QQ交流群：[544917793](http://jq.qq.com/?_wv=1027&k=2IDkJId "EasyPlayer")
 
-> EasyPlayerPro是一款非常稳定的全协议/全功能播放器组件，各平台版本需要经过授权才能商业使用，商业授权方案可以通过以上渠道进行更深入的技术与合作咨询；
+> EasyPlayer is Free!
 
 <br/>
 

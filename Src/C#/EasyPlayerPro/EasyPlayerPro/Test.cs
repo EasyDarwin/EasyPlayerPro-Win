@@ -246,7 +246,7 @@ namespace PlayerSDK
         static extern void EasyPlayerPro_Getparam(IntPtr player, EASY_PARAM_ID id, ref Int64 param);
 
         private IntPtr mPlayer = IntPtr.Zero;
-        private string ACTIVE_KEY = "64686473646F69576B5A75416C2F4A656F51316F5065354659584E35554778686557567955484A764C6D56345A56634D5671442F7666396C59584E35";
+        private string ACTIVE_KEY = "EasyPlayer is Free!";
 
         int totalTime = 0;
         int alreadyTime = 0;
