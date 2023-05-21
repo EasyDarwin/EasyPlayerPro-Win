@@ -2,10 +2,12 @@
 
 #define	XML_CONFIG_FILENAME "EasyPlayerPro.xml"
 
+#define URL_LENGTH 256
+
 
 typedef struct __CHANNEL_INFO_T
 {
-	char		url[256];
+	char		url[URL_LENGTH];
 	int			showOSD;
 	int			protocol;	//1:tcp  other:udp
 	int			cache;
@@ -22,7 +24,7 @@ typedef struct __PRO_CONFIG_T
 	int			fullScreen;
 	int			recordingFileSize;
 	int			recordingDuration;
-	int			recordingFileAutoSegmentation;	//录像文件自动分割
+	int			recordingFileAutoSegmentation;	//脗录脧帽脦脛录镁脳脭露炉路脰赂卯
 
 	CHANNEL_INFO_T	channel[16];
 }PRO_CONFIG_T;
