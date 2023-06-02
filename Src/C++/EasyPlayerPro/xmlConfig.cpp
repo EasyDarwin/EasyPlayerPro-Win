@@ -40,7 +40,7 @@ int		XMLConfig::LoadConfig(char *filename, PRO_CONFIG_T *pConfig)
 			proConfig.channel[i].autoPlay = 0;
 		}
 
-		SaveConfig(filename, &proConfig);			//²»´æÔÚÅäÖÃÎÄ¼þ, Éú³ÉÒ»¸öÐÂµÄÅäÖÃÎÄ¼þ
+		SaveConfig(filename, &proConfig);			//ä¸å­˜åœ¨é…ç½®æ–‡ä»¶, ç”Ÿæˆä¸€ä¸ªæ–°çš„é…ç½®æ–‡ä»¶
 		if (NULL != pConfig)		memcpy(pConfig, &proConfig, sizeof(PRO_CONFIG_T));
 		return ret;
 	}
@@ -92,7 +92,7 @@ int		XMLConfig::LoadConfig(char *filename, PRO_CONFIG_T *pConfig)
 					TiXmlAttribute *pAttr = pCh->FirstAttribute();
 					while (NULL != pAttr)
 					{
-						if (0 == strcmp(pAttr->Name(), "URL"))				strcpy(proConfig.channel[chIdx].url, pAttr->Value());
+						if (0 == strcmp(pAttr->Name(), "URL"))				strncpy(proConfig.channel[chIdx].url, pAttr->Value(), URL_LENGTH);
 						else if (0 == strcmp(pAttr->Name(), "OSD"))			proConfig.channel[chIdx].showOSD =  atoi(pAttr->Value());
 						else if (0 == strcmp(pAttr->Name(), "Protocol"))	proConfig.channel[chIdx].protocol =  atoi(pAttr->Value());
 						else if (0 == strcmp(pAttr->Name(), "Cache"))		proConfig.channel[chIdx].cache =  atoi(pAttr->Value());
@@ -186,7 +186,7 @@ void	XMLConfig::SaveConfig(char *filename, PRO_CONFIG_T *pConfig)
 		pCh->SetAttribute("ShowToolbar", proConfig.channel[i].showToolbar);
 		pCh->SetAttribute("AutoPlay", proConfig.channel[i].autoPlay);
 	}
-	pRootElm->LinkEndChild(pChannel);                          //Á´½Óµ½½ÚµãRootLv1ÏÂ  
+	pRootElm->LinkEndChild(pChannel);                          //é“¾æŽ¥åˆ°èŠ‚ç‚¹RootLv1ä¸‹  
 
 	xmlDoc.InsertEndChild(*pRootElm) ;
 
